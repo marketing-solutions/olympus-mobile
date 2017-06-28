@@ -42,3 +42,36 @@
 {"result":"OK","profile":{"profile_id":145,"phone_mobile":"+79299004010","email":"test@bk.ru","dealer":{"name":"Intellectfoto","city":"Екатеринбург","address":"Первомайская 56"},"full_name":"Ivan Ivanov","first_name":"Ivan","last_name":"Ivanov","middle_name":null,"balance":0,"created_at":"2017-06-27 12:17:32","parcel_blocked_at":"2017-06-27 09:17:32","blocking_reason":"Новый пользователь!"}}
 Получение данных участника, ответ - ошибка код 400
 {"result":"FAIL","reason":"Не найден участник по этому номеру телефона"}
+
+---------------------------------------------------------------------------------------------------------------
+
+Получение токена перед восстановлением пароля: http://olympus.msforyou.ru/profiles/api/auth/token-remind
+{"phone":"89299004002"}
+Получение токена, ответ - успешно код 200
+{"result":"OK","token":1493,"phoneNumber":"+79299004003"}
+Получение токена, ответ - ошибка код 400
+{"result":"FAIL","reason":"Ошибка в номере телефона"}
+Получение токена, ответ - ошибка код 400
+{"result":"FAIL","reason":"Не найден участник по данному номеру"}
+
+---------------------------------------------------------------------------------------------------------------
+
+Обновление пароля: http://olympus.msforyou.ru/profiles/api/auth/remind-password
+{"phone":"89299004002","password":"123","passwordCompare":"123"}
+Обновление пароля, ответ - успешно код 200
+{"result":"OK","profile":{"profile_id":145,"phone_mobile":"+79299004010","email":"test@bk.ru","dealer":{"name":"Intellectfoto","city":"Екатеринбург","address":"Первомайская 56"},"full_name":"Ivan Ivanov","first_name":"Ivan","last_name":"Ivanov","middle_name":null,"balance":0,"created_at":"2017-06-27 12:17:32","parcel_blocked_at":"2017-06-27 09:17:32","blocking_reason":"Новый пользователь!"}}
+Обновление пароля, ответ - ошибка код 400
+{"result":"FAIL","reason":"Ошибка в номере телефона"}
+Обновление пароля, ответ - ошибка код 400
+{"result":"FAIL","reason":"Ошибка при валидации полей","errors":{"password":"Значение «Повтор пароля» должно соответствовать паролю."}}
+
+---------------------------------------------------------------------------------------------------------------
+
+Обновление данных профиля участника: http://olympus.msforyou.ru/profiles/api/auth/profile-edit
+{"phone":"89299004002", "first_name":"Александр", "last_name":"Иванов", "middle_name":"Иванович", "email":"test@mail.ru"}
+Получение токена, ответ - успешно код 200
+{"result":"OK","profile":{"profile_id":145,"phone_mobile":"+79299004002","email":"test@mail.ru","dealer":{"name":"Intellectfoto","city":"Екатеринбург","address":"Первомайская 56"},"full_name":"Иван Иванов","first_name":"Александр", "last_name":"Иванов", "middle_name":"Иванович","balance":0,"created_at":"2017-06-27 12:17:32","parcel_blocked_at":"2017-06-27 09:17:32","blocking_reason":"Новый пользователь!"}}
+Получение токена, ответ - ошибка код 400
+{"result":"FAIL","reason":"Ошибка в номере телефона"}
+Получение токена, ответ - ошибка код 400
+{"result":"FAIL","reason":"Ошибка при валидации полей","errors":{"email":"Значение «Email» не является правильным email адресом."}}
