@@ -2,5 +2,6 @@
 ---------------------------------------------------------------------------------------------------------------
 
 Список продуктов по дистрибьюьтору, запрос: http://olympus.msforyou.ru/sales/api/sales/products
+{"dealer_name":"Yarkiy Mir"}
 Список продуктов по дистрибьюьтору, ответ 200 успешно:
 {"result":"OK","products":[{{"id":1883,"category_id":1,"name":"TG-Tracker","unit_id":1,"bonuses_formula":"500*q","dealer_name":"Yarkiy Mir",{"id":1865,"category_id":1,"name":"PEN-F Kit 14-42mm EZ","unit_id":1,"bonuses_formula":"1500*q","dealer_name":"Yarkiy Mir"}}]}
