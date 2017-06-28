@@ -1,6 +1,3 @@
-/*jslint browser: true*/
-/*global console, Framework7, MyApp, $document*/
-
 Olymp.angJS.factory('InitService', ['$document', function ($document) {
 
 

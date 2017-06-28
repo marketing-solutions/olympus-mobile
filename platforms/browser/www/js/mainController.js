@@ -69,12 +69,13 @@ this.DropDealer = Olymp.fw7.app.autocomplete({
       Ctrl.DropSelected.name = value;
       //erase next fields
       Ctrl.DropSelected.city = null;
-      $("#dropdown_city").val("");
+      document.getElementById('dropdown_city').value = '';
       Ctrl.DropSelected.address = null;
       //check if city is unique
       var uniqueCheck = $.grep(Ctrl.allDealers, function(e){return (value==e.dealer_name)});
       if (!uniqueCheck[1]) {
         Ctrl.DropSelected.city = uniqueCheck[0].city;
+        document.getElementById('dropdown_city').className += " not-emply-state";
         //check if address is unique
         var uniqueCheck2 = $.grep(Ctrl.allDealers, function(e){return ((Ctrl.DropSelected.name==e.dealer_name)&&(Ctrl.DropSelected.city==e.city))});
         if (!uniqueCheck2[1]) {Ctrl.DropSelected.address = uniqueCheck2[0].address;};

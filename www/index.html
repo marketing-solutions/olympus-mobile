@@ -27,7 +27,7 @@
     <link rel="stylesheet" href="css/styles.css">
 
     <script src="lib/framework7/js/framework7.js"></script>
-    <script src="cordova.js"></script>
+<!--     <script src="cordova.js"></script> -->
     <script src="js/jquery-3.2.1.min.js"></script>
     <script src="js/angular.min.js"></script>
     <script src="js/my-app.js"></script>
@@ -103,6 +103,7 @@
       <div class="view">
         <div class="page">
           <div class="page-content login-screen-content">
+          <img src="img/olympus.png" class="logimg">
             <div class="loginTitle">Авторизация</div>
             <!-- Login form -->
             <form id="login-form">
@@ -152,6 +153,7 @@
         <div class="page">
 
           <div class="page-content login-screen-content">
+          <img src="img/olympus.png" class="logimg">
             <div class="loginTitle">Введите свой телефон</div>
             <!-- Login form -->
             <form id="pre-reg-form">
@@ -186,10 +188,11 @@
 
   </div>
 
-  <div class="login-screen popup reg tablet-fullscreen">
+  <div class="popup reg tablet-fullscreen">
       <div class="view">
         <div class="page">
           <div class="page-content login-screen-content">
+          <img src="img/olympus.png" class="logimg">
             <div class="loginTitle">Регистрация</div>
             <!-- Login form -->
             <form id="reg-form">
@@ -271,7 +274,7 @@
                   <li>
                   <div class="item-content">
                     <div class="item-inner">
-                      <div class="item-title label">Принимаю соглашение</div>
+                      <a href="http://olympus.msforyou.ru/media/uploads/rules.pdf" download class="item-title label">Даю согласие с правилами программы</a>
                       <div class="item-input">
                         <label class="label-switch">
                           <input name="agreeWithTerms" type="checkbox" checked>
