@@ -22,11 +22,11 @@
 
     <title>Olympus</title>
 
-    <link rel="stylesheet" href="lib/framework7/css/framework7.material.min.css">
-    <link rel="stylesheet" href="lib/framework7/css/framework7.material.colors.min.css">
+    <link rel="stylesheet" href="lib/framework7/css/framework7.material.css">
+    <link rel="stylesheet" href="lib/framework7/css/framework7.material.colors.css">
     <link rel="stylesheet" href="css/styles.css">
 
-    <script src="lib/framework7/js/framework7.min.js"></script>
+    <script src="lib/framework7/js/framework7.js"></script>
     <script src="cordova.js"></script>
     <script src="js/jquery-3.2.1.min.js"></script>
     <script src="js/angular.min.js"></script>
@@ -186,7 +186,7 @@
 
   </div>
 
-  <div class="popup reg tablet-fullscreen">
+  <div class="login-screen popup reg tablet-fullscreen">
       <div class="view">
         <div class="page">
           <div class="page-content login-screen-content">
@@ -199,7 +199,7 @@
                     <div class="item-inner">
                       <div class="item-title label">Дилер</div>
                       <div class="item-input">
-                        <input type="text" id="dropdown_dealer" ng-value="mainCtrl.DropSelected.name" ng-click="mainCtrl.DropDealer.open()" readonly placeholder="...">
+                        <input type="text" id="dropdown_dealer" ng-click="mainCtrl.DropDealer.open()" readonly placeholder="...">
                       </div>
                     </div>
                   </li>

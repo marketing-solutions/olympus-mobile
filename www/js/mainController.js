@@ -1,22 +1,39 @@
 Olymp.angJS.controller('mainController',[ '$http','$scope','$rootScope','$timeout','InitService',
-  function($http,$scope,$rootScope,$timeout,InitService){
+function($http,$scope,$rootScope,$timeout,InitService){
+  'use strict';
+  var Ctrl = this;
 
-'use strict';
+/*-----------Wait for DOM------------*/
   InitService.addEventListener('ready', function () {
     // DOM ready
     console.log('mainController: ok, DOM ready');
 
       });
 
-  var Ctrl = this;
+/*-----------Check if logged in------------*/
 
  if ((!localStorage["OlympPass"]) ||(localStorage["OlympPass"]=="")) {
   Olymp.fw7.app.loginScreen();
 
  }
  else {
-
  };
+
+/*-----------Read Token for REST------------*/
+
+$http({method: 'GET', url: 'q.env'}).then(
+  function(response) {
+    Ctrl.Token = response.data;
+    Ctrl.GetDealers();
+  },
+  function(response) {
+    
+  }
+);
+
+
+
+/*-----------initialize some fields------------*/
 
 this.allDealers = [];
 
@@ -29,7 +46,7 @@ this.DropSelected = {
 
 this.phone = "";
 
-this.user = {"profile_id":145,
+this.user = {"profile_id":null,
 "phone_mobile":null,
 "email":null,
 "dealer":{"name":null,"city":null,"address":null},
@@ -43,7 +60,7 @@ this.user = {"profile_id":145,
 "blocking_reason":null};
 
 
-/*---------DROPDOWNS------------*/
+/*--------------DROPDOWNS-----------------*/
 
 this.DropDealer = Olymp.fw7.app.autocomplete({
     input: '#dropdown_dealer',
@@ -52,6 +69,7 @@ this.DropDealer = Olymp.fw7.app.autocomplete({
       Ctrl.DropSelected.name = value;
       //erase next fields
       Ctrl.DropSelected.city = null;
+      $("#dropdown_city").val("");
       Ctrl.DropSelected.address = null;
       //check if city is unique
       var uniqueCheck = $.grep(Ctrl.allDealers, function(e){return (value==e.dealer_name)});
@@ -124,20 +142,29 @@ this.DropAddress = Olymp.fw7.app.autocomplete({
     }
 });
 
-
+/*-----------Regular functions------------*/
 
 this.refresh = function() {
 $timeout(function () {
     $scope.$apply();
-    },50);
-};
+    },50)
+}
 
-/*-----------REST API------------*/
+this.Logout = function () {
+      localStorage["OlympPhone"] = "";
+      localStorage["OlympPass"] = "";
+      Olymp.fw7.app.loginScreen();
+}
+
+/*---------------REST API-----------------*/
+
+this.GetDealers = function(){
   var req = {
    method: 'POST',
    url: 'http://olympus.msforyou.ru/profiles/api/auth/register-info',
    headers: {
-       'Content-Type': 'application/json'
+       'Content-Type': 'application/json',
+       'X-Token' : Ctrl.Token
      }
     };
   $http(req).then(
@@ -149,6 +176,9 @@ $timeout(function () {
     function errorCallback(response){
   console.log(response);
     });
+}
+
+  
 
 
 
@@ -161,7 +191,8 @@ this.PullLoginForm = function () {
    method: 'POST',
    url: 'http://olympus.msforyou.ru/profiles/api/auth/login',
    headers: {
-       'Content-Type': 'application/json'
+       'Content-Type': 'application/json',
+       'X-Token' : Ctrl.Token
      },
      data: loginfo
     };
@@ -183,9 +214,8 @@ this.PullLoginForm = function () {
   console.log(response);
     });
 
+}
 
-
-};
 
 this.SendSMS = function () {
   Olymp.fw7.app.showPreloader(["Подождите..."]);
@@ -196,7 +226,8 @@ this.SendSMS = function () {
    method: 'POST',
    url: 'http://olympus.msforyou.ru/profiles/api/auth/token',
    headers: {
-       'Content-Type': 'application/json'
+       'Content-Type': 'application/json',
+       'X-Token' : Ctrl.Token
      },
      data: loginfo
     };
@@ -243,7 +274,8 @@ Olymp.fw7.app.showPreloader(["Подождите..."]);
    method: 'POST',
    url: 'http://olympus.msforyou.ru/profiles/api/auth/register',
    headers: {
-       'Content-Type': 'application/json'
+       'Content-Type': 'application/json',
+       'X-Token' : Ctrl.Token
      },
      data: reginfo
     };
@@ -266,14 +298,5 @@ Olymp.fw7.app.showPreloader(["Подождите..."]);
     });
 
 }
-
-
-this.Logout = function () {
-      localStorage["OlympPhone"] = "";
-      localStorage["OlympPass"] = "";
-      Olymp.fw7.app.loginScreen();
-}
-
-
 
 }]);
