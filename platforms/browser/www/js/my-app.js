@@ -2,10 +2,15 @@
 
 var Olymp = {};
 var $$ = Dom7;
-$$(document).on('deviceready', function() {
+/*$$(document).on('deviceready', function() {
     console.log("Device is ready!");
+    
 });
+*/
 
+function onBackKeyDown() {
+
+}
 
 Olymp.config={};
 
@@ -38,3 +43,5 @@ Olymp.fw7 = {
   };
 
 });
+
+$('.mask_phone').mask('+7 (999) 999-99-99');

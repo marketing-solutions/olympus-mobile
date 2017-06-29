@@ -14,8 +14,8 @@ Olymp.angJS.factory('InitService', ['$document', function ($document) {
   function onReady() {
     var fw7 = Olymp.fw7,
       i;
-  console.log("got to InitService.js");
- 
+
+
     fw7.views.push(fw7.app.addView('.view-main', fw7.options));
     document.addEventListener('backbutton', onBackKeyDown, false);
     for (i = 0; i < eventListeners.ready.length; i = i + 1) {

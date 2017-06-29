@@ -143,6 +143,22 @@ this.DropAddress = Olymp.fw7.app.autocomplete({
     }
 });
 
+/*-----------Calendar instance------------*/
+
+this.calendarDefault = Olymp.fw7.app.calendar({
+    input: '#calendar-sell',
+        value: [new Date()],
+    convertToPopover: false,
+    closeOnSelect: true,
+    dateFormat: "dd.mm.yyyy",
+    toolbarCloseText: "Готово",
+    dayNamesShort: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'],
+        monthNames: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь',
+'Июль', 'Август' , 'Сентябрь' , 'Октябрь', 'Ноябрь', 'Декабрь']
+
+});  
+
+
 /*-----------Regular functions------------*/
 
 this.refresh = function() {
@@ -155,6 +171,19 @@ this.Logout = function () {
       localStorage["OlympPhone"] = "";
       localStorage["OlympPass"] = "";
       Olymp.fw7.app.loginScreen();
+}
+
+this.TakePhoto = function(){
+navigator.camera.getPicture(
+function success(imageData) {
+   var image = document.getElementById('billImage');
+   image.src =  imageData;
+}, 
+
+function error(error) {
+  Olymp.fw7.app.alert("Не получилось открыть камеру.");
+},
+{});
 }
 
 /*---------------REST API-----------------*/
@@ -175,7 +204,7 @@ this.GetDealers = function(){
       console.log(response);
     }, 
     function errorCallback(response){
-  console.log(response);
+     Olymp.fw7.app.alert("Проверьте соединение с интернетом!");
     });
 }
 

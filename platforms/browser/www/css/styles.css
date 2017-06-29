@@ -16,6 +16,10 @@
 
 /*-------------Login Screens------------*/
 
+.regText{
+	color: #ffffff !important;
+}
+
 .loginTitle{
 	text-align: center;
 	font-size: 20px;
@@ -43,4 +47,18 @@
 	margin-right: 10px !important;
 	margin-left: 10px !important;
 	border-color: #ff9800 !important;
+}
+
+/*-------------Sell input------------*/
+
+.picker-header{
+	color: #ff9800 !important;
+}
+
+.cropImage{
+	 width: 200px;
+    margin: 20px auto;
+}
+.billImage{
+	width: 200px;
 }

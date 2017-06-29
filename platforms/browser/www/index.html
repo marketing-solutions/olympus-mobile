@@ -11,7 +11,7 @@
                 * Enable inline JS: add 'unsafe-inline' to default-src
         -->
 <!--     <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *"> -->
-<meta http-equiv="Content-Security-Policy" content="default-src *; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; img-src 'self' data:">
+<!-- <meta http-equiv="Content-Security-Policy" content="default-src *; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; img-src 'self' data:"> -->
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
@@ -22,17 +22,11 @@
 
     <title>Olympus</title>
 
-    <link rel="stylesheet" href="lib/framework7/css/framework7.material.css">
-    <link rel="stylesheet" href="lib/framework7/css/framework7.material.colors.css">
-    <link rel="stylesheet" href="css/styles.css">
+      <link rel="stylesheet" href="./lib/framework7/css/framework7.material.css">
+    <link rel="stylesheet" href="./lib/framework7/css/framework7.material.colors.css">
+    <link rel="stylesheet" href="./css/styles.css">
 
-    <script src="lib/framework7/js/framework7.js"></script>
-<!--     <script src="cordova.js"></script> -->
-    <script src="js/jquery-3.2.1.min.js"></script>
-    <script src="js/angular.min.js"></script>
-    <script src="js/my-app.js"></script>
-    <script src="js/InitService.js"></script>
-    <script src="js/mainController.js"></script>
+    
 </head>
 
 <body class="theme-white layout-dark" ng-controller="mainController as mainCtrl">
@@ -87,19 +81,58 @@
                               </div>
                             </div>
                         </div>
-                    </div>
+                      </div>
+                       <div class="list-block">
+                        <ul>
+                          <li>
+                            <a href="#" data-popup=".sell-popup" class="open-popup item-link button button-big color-white bg-black">Новая продажа</a>
+                          </li>
+                        </ul>
+                      </div>
                 </div>
-
-
 
             </div>
 
         </div>
-
     </div>
 
+
+      <div class="popup sell-popup">
+      
+      <div class="view">
+        <div class="page">
+          <div class="page-content">
+          <div class="content-block-title">Новая продажа</div>
+          <div class="list-block">
+            <ul>
+              <li class="item-content">
+                <div class="item-inner">
+                  <div class="item-title label">Дата</div>
+                  <div class="item-input">
+                    <input id="calendar-sell" type="text" name="phone" readonly placeholder="сегодня">
+                  </div>
+                </div>
+              </li>
+              <li>
+                <a href="#" ng-click="mainCtrl.TakePhoto()" class="item-link button button-big color-white bg-black">Фото чека</a>
+              </li>
+              <li>
+              <div class="cropImage"><img id="billImage" class="billImage" src=""> </div>
+                
+              </li>
+            </ul>
+
+          </div>
+
+
+          </div>
+        </div>
+      </div>
+
+  </div>
+
 <!-- ===========Login Screen============ -->
-    <div class="login-screen popup log tablet-fullscreen">
+    <div class="login-screen theme-white popup log tablet-fullscreen">
       <div class="view">
         <div class="page">
           <div class="page-content login-screen-content">
@@ -113,7 +146,7 @@
                     <div class="item-inner">
                       <div class="item-title label">Телефон</div>
                       <div class="item-input">
-                        <input type="text" name="phone" placeholder="+7-495-1234567">
+                        <input type="text" class="mask_phone" name="phone">
                       </div>
                     </div>
                   </li>
@@ -130,7 +163,7 @@
               <div class="list-block">
                 <ul>
                   <li>
-                    <a href="#" ng-click="mainCtrl.PullLoginForm()" class="item-link button button-raised button-big color-white bg-black">Войти</a>
+                    <a href="#" ng-click="mainCtrl.PullLoginForm()" class="item-link button button-big color-white bg-black">Войти</a>
                   </li>
                 </ul>
                 <div class="list-block-label">
@@ -172,7 +205,7 @@
               <div class="list-block">
                 <ul>
                   <li>
-                    <a href="#" ng-click="mainCtrl.SendSMS()" class="item-link button button-raised button-big color-white bg-black">Отправить СМС</a>
+                    <a href="#" ng-click="mainCtrl.SendSMS()" class="item-link button button-big color-white bg-black">Отправить СМС</a>
                   </li>
                 </ul>
                 <div class="list-block-label">
@@ -302,7 +335,7 @@
               <div class="list-block">
                 <ul>
                   <li>
-                    <a href="#" ng-click="mainCtrl.Register()" class="item-link button button-raised button-big color-white bg-black">Регистрация</a>
+                    <a href="#" ng-click="mainCtrl.Register()" class="item-link button button-big color-white bg-black">Регистрация</a>
                   </li>
                 </ul>
                 <div class="list-block-label">
@@ -316,8 +349,14 @@
     </div>
   </div>
 
-
-    
+  <script src="cordova.js"></script> 
+  <script src="./lib/framework7/js/framework7.js"></script>
+  <script src="./js/jquery-3.2.1.min.js"></script>
+  <script src="./js/jquery.mask.min.js"></script>
+  <script src="./js/angular.min.js"></script>
+  <script src="./js/my-app.js"></script>
+  <script src="./js/InitService.js"></script>
+  <script src="./js/mainController.js"></script>
 </body>
 
 </html>
