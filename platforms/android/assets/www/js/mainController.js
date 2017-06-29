@@ -19,7 +19,7 @@ function($http,$scope,$rootScope,$timeout,InitService){
  else {
  };
 
-/*-----------Read Token for REST------------*/
+/*-----------Some var-s for REST------------*/
 
 $http({method: 'GET', url: 'q.env'}).then(
   function(response) {
@@ -31,11 +31,12 @@ $http({method: 'GET', url: 'q.env'}).then(
   }
 );
 
-
+this.REST_URL = "http://test.olympus.msforyou.ru/";
 
 /*-----------initialize some fields------------*/
 
 this.allDealers = [];
+this.products = [];
 
 this.DropSelected = {
   'id': "",
@@ -46,19 +47,8 @@ this.DropSelected = {
 
 this.phone = "";
 
-this.user = {"profile_id":null,
-"phone_mobile":null,
-"email":null,
-"dealer":{"name":null,"city":null,"address":null},
-"full_name":null,
-"first_name":null,
-"last_name":null,
-"middle_name":null,
-"balance":0,
-"created_at": null,
-"parcel_blocked_at":null,
-"blocking_reason":null};
-
+this.user = {};
+this.sell =[];
 
 /*--------------DROPDOWNS-----------------*/
 
@@ -143,6 +133,19 @@ this.DropAddress = Olymp.fw7.app.autocomplete({
     }
 });
 
+
+this.DropProducts = Olymp.fw7.app.autocomplete({
+      input: '#products-dropdown',
+      openIn: 'dropdown',
+      source: function (autocomplete, query, render) {
+        var results = [];
+        for (var i = 0; i < Ctrl.products.length; i++) {
+          results.push(Ctrl.products[i].name);
+        }
+        render(results);
+      }
+  });
+
 /*-----------Calendar instance------------*/
 
 this.calendarDefault = Olymp.fw7.app.calendar({
@@ -157,6 +160,7 @@ this.calendarDefault = Olymp.fw7.app.calendar({
 'Июль', 'Август' , 'Сентябрь' , 'Октябрь', 'Ноябрь', 'Декабрь']
 
 });  
+
 
 
 /*-----------Regular functions------------*/
@@ -186,12 +190,41 @@ function error(error) {
 {});
 }
 
+this.ForgotPass = function(){
+  Olymp.fw7.app.prompt('Введите свой номер телефона', function (value) {
+    Ctrl.phone = value;
+    Ctrl.TokenPass(value);
+  });
+
+}
+
+this.SetupProfile = function(profile){
+  Olymp.fw7.app.closeModal();
+  Olymp.fw7.app.alert("Авторизация прошла успешно!");
+/*      localStorage["OlympPhone"] = loginfo.phone;
+      localStorage["OlympPass"] = loginfo.password;*/
+  Ctrl.user = profile;
+  console.log(profile);
+  this.GetProducts(profile.dealer.name);
+
+}
+
+this.AddProduct = function(){
+    var prod = Olymp.fw7.app.formToJSON('#product-form');
+    Ctrl.sell.push(prod);
+    document.getElementById('products-dropdown').value = "";
+    document.getElementById('prod-num').value = "";
+}
+
+
+
+
 /*---------------REST API-----------------*/
 
 this.GetDealers = function(){
   var req = {
    method: 'POST',
-   url: 'http://olympus.msforyou.ru/profiles/api/auth/register-info',
+   url: this.REST_URL+'profiles/api/auth/register-info',
    headers: {
        'Content-Type': 'application/json',
        'X-Token' : Ctrl.Token
@@ -208,9 +241,96 @@ this.GetDealers = function(){
     });
 }
 
-  
+this.GetProducts = function(name){
+  var info = {"dealer_name": name}
+  var req = {
+    method: 'POST',
+    url: this.REST_URL+'sales/api/sales/products',
+    headers: {
+       'Content-Type': 'application/json',
+       'X-Token' : Ctrl.Token
+    },
+    data: info
+  };
+  $http(req).then(
 
+  function successCallback(response){
+    Ctrl.products = response.data.products;
+    console.log(response);
+  }, 
+  function errorCallback(response){
+    Olymp.fw7.app.alert("Проверьте соединение с интернетом!");
+  });
 
+}
+
+this.TokenPass = function(num){
+  Olymp.fw7.app.showPreloader(["Подождите..."]);
+  var info = {'phone': num};
+  var req = {
+   method: 'POST',
+   url: this.REST_URL+'profiles/api/auth/token-remind',
+   headers: {
+       'Content-Type': 'application/json',
+       'X-Token' : Ctrl.Token
+     },
+     data: info
+    };
+
+  $http(req).then(
+    function successCallback(response){
+      Olymp.fw7.app.hidePreloader();
+      Olymp.fw7.app.prompt("Введите присланный код", "",
+        function(code){
+          if (code==response.data.token){
+            Olymp.fw7.app.modalLogin('Придумайте новый пароль:', function (pass1,pass2) {
+            Ctrl.ResetPass(Ctrl.phone,pass1,pass2);
+            });
+          }
+          else{
+            Olymp.fw7.app.alert("Убедитесь в правильности введённого кода!");
+          };
+        }, 
+        function(){
+          
+        });
+      console.log(response);
+    }, 
+    function errorCallback(response){
+  Olymp.fw7.app.hidePreloader();
+  Olymp.fw7.app.alert(response.data.reason);
+  console.log(response);
+    });
+}
+
+this.ResetPass = function(phone,pass1,pass2){
+  Olymp.fw7.app.showPreloader(["Подождите..."]);
+  var info = {
+    "phone": phone,
+    "password": pass1,
+    "passwordCompare": pass2
+  };
+  var req = {
+   method: 'POST',
+   url: this.REST_URL+'profiles/api/auth/remind-password',
+   headers: {
+       'Content-Type': 'application/json',
+       'X-Token' : Ctrl.Token
+     },
+     data: info
+    };
+
+  $http(req).then(
+    function successCallback(response){
+      Olymp.fw7.app.hidePreloader();
+      Ctrl.SetupProfile(response.data.profile);
+    }, 
+    function errorCallback(response){
+  Olymp.fw7.app.hidePreloader();
+  Olymp.fw7.app.alert(response.data.reason);
+  console.log(response);
+    });
+}
 
 this.PullLoginForm = function () {
   Olymp.fw7.app.showPreloader(["Подождите..."]);
@@ -219,7 +339,7 @@ this.PullLoginForm = function () {
 
   var req = {
    method: 'POST',
-   url: 'http://olympus.msforyou.ru/profiles/api/auth/login',
+   url: this.REST_URL+'profiles/api/auth/login',
    headers: {
        'Content-Type': 'application/json',
        'X-Token' : Ctrl.Token
@@ -231,12 +351,7 @@ this.PullLoginForm = function () {
 
     function successCallback(response){
         Olymp.fw7.app.hidePreloader();
-      Olymp.fw7.app.alert("Авторизация прошла успешно!", function () {Olymp.fw7.app.closeModal();});
-/*      localStorage["OlympPhone"] = loginfo.phone;
-      localStorage["OlympPass"] = loginfo.password;*/
-      Ctrl.user = response.data.profile;
-      
-      console.log(response);
+      Ctrl.SetupProfile(response.data.profile);
     }, 
     function errorCallback(response){
   Olymp.fw7.app.hidePreloader();
@@ -254,7 +369,7 @@ this.SendSMS = function () {
   this.phone=loginfo.phone;
   var req = {
    method: 'POST',
-   url: 'http://olympus.msforyou.ru/profiles/api/auth/token',
+   url: this.REST_URL+'profiles/api/auth/token',
    headers: {
        'Content-Type': 'application/json',
        'X-Token' : Ctrl.Token
@@ -302,7 +417,7 @@ Olymp.fw7.app.showPreloader(["Подождите..."]);
   console.log(reginfo);
   var req = {
    method: 'POST',
-   url: 'http://olympus.msforyou.ru/profiles/api/auth/register',
+   url: this.REST_URL+'profiles/api/auth/register',
    headers: {
        'Content-Type': 'application/json',
        'X-Token' : Ctrl.Token
@@ -314,12 +429,7 @@ Olymp.fw7.app.showPreloader(["Подождите..."]);
 
     function successCallback(response){
       Olymp.fw7.app.hidePreloader();
-      Olymp.fw7.app.alert("Регистрация прошла успешно!", function () {Olymp.fw7.app.closeModal();});
-/*    localStorage["OlympPhone"] = loginfo.phone;
-      localStorage["OlympPass"] = loginfo.password;*/
-      Ctrl.user = response.data.profile;
-
-      console.log(response);
+      Ctrl.SetupProfile(response.data.profile);
     }, 
     function errorCallback(response){
   Olymp.fw7.app.hidePreloader();

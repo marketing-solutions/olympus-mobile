@@ -19,6 +19,9 @@
 .regText{
 	color: #ffffff !important;
 }
+.forgotText{
+	color: #ff9800 !important;
+}
 
 .loginTitle{
 	text-align: center;
@@ -51,14 +54,33 @@
 
 /*-------------Sell input------------*/
 
-.picker-header{
-	color: #ff9800 !important;
+.picker-calendar,.picker-header,.toolbar,.picker-footer,.picker-calendar-week-days{
+	color: #ffffff !important;
+	background-color: #000000 !important;
 }
-
+.picker-calendar-day-selected span{
+	color: #000000 !important;
+}
 .cropImage{
 	 width: 200px;
     margin: 20px auto;
 }
 .billImage{
 	width: 200px;
+}
+
+.new-product-block{
+	border: 2px solid #ffffff;
+	border-radius: 4px;
+	padding: 10px;
+	margin: 0 5px 10px 5px;
+}
+
+.product-title{
+	margin-right: 10px;
+}
+.product-serial,.product-title{
+	display:block !important;
+	text-overflow: clip !important;
+	white-space: normal !important;
 }

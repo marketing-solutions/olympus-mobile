@@ -33,7 +33,9 @@ Olymp.fw7 = {
     swipeout: false,
     scrollTopOnNavbarClick: true,
     swipePanelThreshold: 50,
-    swipePanelActiveArea:50
+    swipePanelActiveArea:50,
+    modalUsernamePlaceholder: 'пароль',
+    modalPasswordPlaceholder: 'повторите пароль'
   }),
   options : {
     domCache: true,
@@ -44,4 +46,5 @@ Olymp.fw7 = {
 
 });
 
-$('.mask_phone').mask('+7 (999) 999-99-99');
+$('.mask_phone').mask("+7 (999) 999-99-99", {'translation': {9: {pattern: /[0-9*]/}}, placeholder: "+7 (___) ___-__-__"});
+$('.mask_phone').focus(function() {$(this).val('+7 (')});
