@@ -13,6 +13,20 @@
 .statusbar-overlay {
     background: #000000;
 }
+.Olympus-navbar{
+	background-color: #000000 !important;
+}
+.Olympus-header{
+    position: absolute !important;
+    width: 100vw;
+    top: 5px !important;
+    margin: 0 !important;
+	display: block;
+    background-repeat: no-repeat;
+    background-position: center top;
+    background-size: 150px;
+    background-image: url('../img/olympus.png');
+}
 
 /*-------------Login Screens------------*/
 
@@ -32,7 +46,10 @@
 .modal-button{
 	color: #212121 !important;
 }
+.input-field:after{
+	background-color: #000000 !important;
 
+}
 .popup-overlay{
 	display: none !important;
 }
@@ -52,6 +69,79 @@
 	border-color: #ff9800 !important;
 }
 
+/*-------------Left Menu------------*/
+
+.leftPanelName{
+    text-align: right;
+    padding: 0 20px 0 0;
+    margin: 0px 0 10px 0;
+    font-size: 20px;
+    color:#FFFFFF;
+}
+.leftPanelPoints{
+    text-align: right;
+    padding: 0 20px 0 0;
+    margin: 0px 0 20px 0;
+    font-size: 15px;
+    color:#ff9800;
+}
+.leftPanelExit{
+    text-align: right;
+    padding: 0 20px 0 0;
+    margin: 0px 0 40px 0;
+    font-size: 15px;
+    color:#FFFFFF;
+    text-decoration: underline;
+}
+
+
+.leftPanelColumn{
+    display: inline-block;
+  
+}
+
+.leftPanelButton{
+    display: inline-block;
+    background-repeat: no-repeat;
+    background-position: left;
+    background-size: 35px;
+    width: 220px;
+    color:#FFFFFF;
+    height: 60px;
+    box-sizing: border-box;
+    line-height: 60px;
+    text-align: left;
+    padding: 0 0 0 50px;
+    font-size: 19px;
+    border-top-style: solid;
+    border-top-width:1px;
+    border-color: #FFFFFF;
+}
+
+.leftPanelButton.active-state{
+
+    background-color: #333333;
+}
+
+.profilePanel{
+	background-image: url('../img/Profile.png');
+}
+.salePanel{
+	background-image: url('../img/Sale.png');
+}
+.transPanel{
+	background-image: url('../img/Money.png');
+}
+.catPanel{
+	background-image: url('../img/Catalog.png');
+}
+.sertPanel{
+	background-image: url('../img/Sert.png');
+}
+.contactPanel{
+	background-image: url('../img/Contact.png');
+}
+
 /*-------------Sell input------------*/
 
 .picker-calendar,.picker-header,.toolbar,.picker-footer,.picker-calendar-week-days{
@@ -62,14 +152,14 @@
 	color: #000000 !important;
 }
 .cropImage{
-	 width: 200px;
-    margin: 20px auto;
+	 width: 100vw;
+    margin: 10px auto;
 }
 .billImage{
-	width: 200px;
+	max-width: 200px;
 }
 
-.new-product-block{
+.white-border-block{
 	border: 2px solid #ffffff;
 	border-radius: 4px;
 	padding: 10px;

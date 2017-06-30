@@ -10,28 +10,45 @@ function($http,$scope,$rootScope,$timeout,InitService){
 
       });
 
-/*-----------Check if logged in------------*/
-
- if ((!localStorage["OlympPass"]) ||(localStorage["OlympPass"]=="")) {
-  Olymp.fw7.app.loginScreen();
-
- }
- else {
- };
-
 /*-----------Some var-s for REST------------*/
+
+this.REST_URL = "http://test.olympus.msforyou.ru/";
 
 $http({method: 'GET', url: 'q.env'}).then(
   function(response) {
     Ctrl.Token = response.data;
     Ctrl.GetDealers();
+
+        /*---Check if logged in---*/
+       if ((!localStorage["OlympPass"]) ||(localStorage["OlympPass"]=="")) {
+        Olymp.fw7.app.loginScreen();
+       }
+       else {
+        var loginfo = {"phone":localStorage["OlympPhone"], "password":localStorage["OlympPass"]};
+        var req = {
+         method: 'POST',
+         url: Ctrl.REST_URL+'profiles/api/auth/login',
+         headers: {
+             'Content-Type': 'application/json',
+             'X-Token' : Ctrl.Token
+           },
+           data: loginfo
+          };
+        $http(req).then(
+          function successCallback(response){
+            Ctrl.SetupProfile(response.data.profile,loginfo.password);
+          }, 
+          function errorCallback(response){
+            Olymp.fw7.app.alert(response.data.reason);
+            console.log(response);
+          });
+       };
+
   },
   function(response) {
     
   }
 );
-
-this.REST_URL = "http://test.olympus.msforyou.ru/";
 
 /*-----------initialize some fields------------*/
 
@@ -161,8 +178,40 @@ this.calendarDefault = Olymp.fw7.app.calendar({
 
 });  
 
+/*----------Navigation functions-----------*/
 
+this.GotoProfile = function () {
+  Olymp.fw7.app.views[0].router.loadPage("#index");
+  Olymp.fw7.app.closePanel();
+};
+this.GotoSale = function () {
+  Olymp.fw7.app.views[0].router.loadPage("#sale");
+  Olymp.fw7.app.closePanel()
+  ;
+};
+this.GotoTransaction = function () {
+  Olymp.fw7.app.views[0].router.loadPage("#transaction");
+  Olymp.fw7.app.closePanel();
+};
+this.GotoCatalog = function () {
+  Olymp.fw7.app.views[0].router.loadPage("#catalog");
+  Olymp.fw7.app.closePanel();
+};
+this.GotoSertificate = function () {
+  Olymp.fw7.app.views[0].router.loadPage("#sertificate");
+  Olymp.fw7.app.closePanel();
+};
+this.GotoContact = function () {
+  Olymp.fw7.app.views[0].router.loadPage("#contact");
+  Olymp.fw7.app.closePanel();
+};
 
+this.Logout = function () {
+  Olymp.fw7.app.closePanel();
+  localStorage["OlympPhone"] = "";
+  localStorage["OlympPass"] = "";
+  Olymp.fw7.app.loginScreen();
+}
 /*-----------Regular functions------------*/
 
 this.refresh = function() {
@@ -171,23 +220,17 @@ $timeout(function () {
     },50)
 }
 
-this.Logout = function () {
-      localStorage["OlympPhone"] = "";
-      localStorage["OlympPass"] = "";
-      Olymp.fw7.app.loginScreen();
-}
-
 this.TakePhoto = function(){
-navigator.camera.getPicture(
-function success(imageData) {
-   var image = document.getElementById('billImage');
-   image.src =  imageData;
-}, 
+  navigator.camera.getPicture(
+  function success(imageData) {
+     var image = document.getElementById('billImage');
+     image.src =  imageData;
+  }, 
 
-function error(error) {
-  Olymp.fw7.app.alert("Не получилось открыть камеру.");
-},
-{});
+  function error(error) {
+    Olymp.fw7.app.alert("Не получилось открыть камеру.");
+  },
+  {});
 }
 
 this.ForgotPass = function(){
@@ -198,11 +241,10 @@ this.ForgotPass = function(){
 
 }
 
-this.SetupProfile = function(profile){
+this.SetupProfile = function(profile,pass){
   Olymp.fw7.app.closeModal();
-  Olymp.fw7.app.alert("Авторизация прошла успешно!");
-/*      localStorage["OlympPhone"] = loginfo.phone;
-      localStorage["OlympPass"] = loginfo.password;*/
+      localStorage["OlympPhone"] = profile.phone_mobile;
+      localStorage["OlympPass"] = pass;
   Ctrl.user = profile;
   console.log(profile);
   this.GetProducts(profile.dealer.name);
@@ -319,11 +361,10 @@ this.ResetPass = function(phone,pass1,pass2){
      },
      data: info
     };
-
   $http(req).then(
     function successCallback(response){
       Olymp.fw7.app.hidePreloader();
-      Ctrl.SetupProfile(response.data.profile);
+      Ctrl.SetupProfile(response.data.profile, pass1);
     }, 
     function errorCallback(response){
   Olymp.fw7.app.hidePreloader();
@@ -335,8 +376,6 @@ this.ResetPass = function(phone,pass1,pass2){
 this.PullLoginForm = function () {
   Olymp.fw7.app.showPreloader(["Подождите..."]);
   var loginfo = Olymp.fw7.app.formToJSON('#login-form');
-  console.log(loginfo);
-
   var req = {
    method: 'POST',
    url: this.REST_URL+'profiles/api/auth/login',
@@ -346,19 +385,16 @@ this.PullLoginForm = function () {
      },
      data: loginfo
     };
-
   $http(req).then(
-
     function successCallback(response){
         Olymp.fw7.app.hidePreloader();
-      Ctrl.SetupProfile(response.data.profile);
+      Ctrl.SetupProfile(response.data.profile,loginfo.password);
     }, 
     function errorCallback(response){
   Olymp.fw7.app.hidePreloader();
   Olymp.fw7.app.alert(response.data.reason);
   console.log(response);
     });
-
 }
 
 
@@ -376,9 +412,7 @@ this.SendSMS = function () {
      },
      data: loginfo
     };
-
   $http(req).then(
-
     function successCallback(response){
       Olymp.fw7.app.hidePreloader();
 /*      Ctrl.testToken = response.data.token;*/
@@ -393,10 +427,8 @@ this.SendSMS = function () {
             Olymp.fw7.app.alert("Убедитесь в правильности введённого кода!");
           };
         }, 
-        function(){
-          
+        function(){ 
         })
-
       console.log(response);
     }, 
     function errorCallback(response){
@@ -424,19 +456,46 @@ Olymp.fw7.app.showPreloader(["Подождите..."]);
      },
      data: reginfo
     };
-
   $http(req).then(
-
     function successCallback(response){
       Olymp.fw7.app.hidePreloader();
-      Ctrl.SetupProfile(response.data.profile);
+      Ctrl.SetupProfile(response.data.profile,reginfo.password);
     }, 
     function errorCallback(response){
   Olymp.fw7.app.hidePreloader();
   Olymp.fw7.app.alert(response.data.reason);
   console.log(response);
     });
-
 }
+
+this.UpdateProfile = function(){
+Olymp.fw7.app.showPreloader(["Подождите..."]);
+  var info = Olymp.fw7.app.formToJSON('#update-profile-form');
+  info.phone = localStorage["OlympPhone"];
+  console.log(info);
+  var req = {
+   method: 'POST',
+   url: this.REST_URL+'profiles/api/auth/profile-edit',
+   headers: {
+       'Content-Type': 'application/json',
+       'X-Token' : Ctrl.Token
+     },
+     data: info
+    };
+  $http(req).then(
+    function successCallback(response){
+      Olymp.fw7.app.hidePreloader();
+      Ctrl.SetupProfile(response.data.profile,localStorage["OlympPass"]);
+      myApp.alert('Данные успешно обновлены!', function () {
+        Olymp.fw7.app.views[0].router.loadPage("#index");
+    });
+    }, 
+    function errorCallback(response){
+  Olymp.fw7.app.hidePreloader();
+  Olymp.fw7.app.alert(response.data.reason);
+  console.log(response);
+    });
+}
+
 
 }]);
