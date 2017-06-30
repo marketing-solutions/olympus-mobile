@@ -24,6 +24,7 @@
 
       <link rel="stylesheet" href="./lib/framework7/css/framework7.material.css">
     <link rel="stylesheet" href="./lib/framework7/css/framework7.material.colors.css">
+    <link rel="stylesheet" href="./lib/framework7/css/framework7.keypad.min.css">
     <link rel="stylesheet" href="./css/styles.css">
 
     
@@ -36,7 +37,7 @@
     <div class="panel-overlay"></div>
     <div class="panel panel-left panel-reveal">
       <div class="page-content">
-        <div class="content-block">
+        <div class="content-block left-block">
           <div class="leftPanelName">Привет, {{mainCtrl.user.first_name}}!</div>
           <div class="leftPanelPoints">Бонусный баланс: {{mainCtrl.user.balance}} баллов</div>
           <div class="leftPanelExit" ng-click="mainCtrl.Logout()">Выйти</div>
@@ -85,18 +86,13 @@
                     <div class="card" ng-hide="mainCtrl.user.blocking_reason==null">
                       <div class="card-content">
                         <div class="card-content-inner">
+                        Пользователь временно заблокирован.<br>Причина:<br>
                           {{mainCtrl.user.blocking_reason}}
                       </div>
                     </div>
                 </div>
               </div>
-              <div class="list-block">
-                <ul>
-                  <li>
-                    <a href="#setup-profile" class="item-link button button-big color-white bg-black">Настроить профиль</a>
-                  </li>
-                </ul>
-              </div>
+                <a href="#setup-profile" class="item-link button button-normal color-white bg-black">Настроить профиль</a>
             </div>
           </div>
 
@@ -155,7 +151,45 @@
               </div>
             </div>
           </div>
+          <div data-page="transaction" class="page ng-scope cached">
+            <div class="navbar Olympus-navbar no-border">
+              <div class="navbar-inner">
+                <div class="center Olympus-header sliding">&nbsp;</div>
+                <div class="left sliding"><a href="#" class="open-panel link icon-only">
+                  <i class="icon color-white icon-bars"></i></a>
+                </div>
+              </div>
+            </div>
+            <div class="page-content">
+              <div class="content-block-title">Реквизиты</div>
+              <div class="list-block white-border-block">
+                <form id="update-profile-form">
+                  <ul>
+                    <li class="item-content">
+                      <div class="item-inner">
+                        <div class="item-title label">Номер карты</div>
+                        <div class="item-input">
+                          <input type="text" name="number" class="mask_card" placeholder="____ ____ ____ ____">
+                        </div>
+                      </div>
+                    </li>
+                    <li class="item-content">
+                      <div class="item-inner">
+                        <div class="item-title label">Сумма, руб</div>
+                        <div class="item-input">
+                          <input type="text" class="mask_money" name="sum" placeholder="...">
+                        </div>
+                      </div>
+                    </li>
+                    <li>
+                      <a href="#" ng-click="" class="item-link button button-big color-white bg-black">&#8381; &nbsp;&nbsp;&nbsp;оплатить</a>
+                    </li>
+                  </ul>
 
+                </form>
+              </div>
+            </div>
+          </div>
           <div data-page="sale" class="page ng-scope cached">
             <div class="navbar Olympus-navbar no-border">
               <div class="navbar-inner">
@@ -180,8 +214,9 @@
                   </li>
                 </ul>
                 <ul>
-                  <li ng-repeat="element in mainCtrl.sell">
+                  <li ng-repeat="element in mainCtrl.sell track by $index">
                     <div class="item-content">
+                      <div class="item-media" ng-click="mainCtrl.DeleteProduct($index)"><img src="img/Delete.png" width="20"></div>
                       <div class="item-inner">
                         <div class="item-title-row">
                           <div class="item-title product-title">{{element.name}}</div>
@@ -213,7 +248,7 @@
                     </li>
                   </ul>
                 </form>
-                <a href="#" ng-click="mainCtrl.AddProduct()" class="item-link button button-big color-white bg-black">+ добавить позицию</a>
+                <a href="#" ng-click="mainCtrl.AddProduct()" class="item-link button button-normal color-white bg-black">+ добавить позицию</a>
               </div>
               <div class="list-block">
                 <ul>
@@ -221,7 +256,7 @@
                     <div class="cropImage"><img id="billImage" class="billImage" src="">&nbsp;</div>
                   </li>
                   <li>
-                    <a href="#" ng-click="mainCtrl.TakePhoto()" class="item-link button button-big color-white bg-black">Фото чека</a>
+                    <a href="#" ng-click="mainCtrl.TakePhoto()" class="item-link button button-normal color-white bg-black">Фото чека</a>
                   </li>
                 </ul>
               </div>
@@ -245,7 +280,7 @@
                     <div class="item-inner">
                       <div class="item-title label">Телефон</div>
                       <div class="item-input">
-                        <input type="text" maxlength="12" data-mask-selectonfocus="true" class="mask_phone" name="phone">
+                        <input type="text" ng-model='PhoneInput' class="mask_phone" name="phone">
                       </div>
                     </div>
                   </li>
@@ -295,7 +330,7 @@
                     <div class="item-inner">
                       <div class="item-title label">Телефон</div>
                       <div class="item-input">
-                        <input type="text" name="phone" placeholder="+7 (___) ___-__-__">
+                        <input type="text" ng-model='PhoneInput' class="mask_phone" name="phone">
                       </div>
                     </div>
                   </li>
@@ -449,6 +484,7 @@
 
   <script src="cordova.js"></script> 
   <script src="./lib/framework7/js/framework7.js"></script>
+  <script src="./lib/framework7/js/framework7.keypad.min.js"></script>
   <script src="./js/jquery-3.2.1.min.js"></script>
   <script src="./js/jquery.mask.min.js"></script>
   <script src="./js/angular.min.js"></script>

@@ -5,9 +5,7 @@ function($http,$scope,$rootScope,$timeout,InitService){
 
 /*-----------Wait for DOM------------*/
   InitService.addEventListener('ready', function () {
-    // DOM ready
     console.log('mainController: ok, DOM ready');
-
       });
 
 /*-----------Some var-s for REST------------*/
@@ -178,6 +176,36 @@ this.calendarDefault = Olymp.fw7.app.calendar({
 
 });  
 
+/*-----------Fancy Keypads------------*/
+
+this.CardKeypad = Olymp.fw7.app.keypad({
+    input: '.mask_card',
+    valueMaxLength: 16,
+    dotButton: false,
+    toolbarCloseText: 'Готово'
+});
+
+this.MoneyKeypad = Olymp.fw7.app.keypad({
+    input: '.mask_money',
+    dotButton: true,
+    toolbarCloseText: 'Готово'
+});
+
+this.PhoneKeypad = Olymp.fw7.app.keypad({
+    input: '.mask_phone',
+    valueMaxLength: 13,
+    dotButton: false,
+    toolbarCloseText: 'Готово'
+});
+
+$scope.$watch('PhoneInput', function() {
+  var empty = "____ ____ ____ ____";
+  if ((!$scope.PhoneInput)||(!$scope.PhoneInput[3])){
+    $scope.PhoneInput = "+7 ";
+    Ctrl.PhoneKeypad.value = "+7 ";
+  }
+  });
+
 /*----------Navigation functions-----------*/
 
 this.GotoProfile = function () {
@@ -258,7 +286,9 @@ this.AddProduct = function(){
     document.getElementById('prod-num').value = "";
 }
 
-
+this.DeleteProduct = function(i){
+  this.sell.splice(i,1);
+}
 
 
 /*---------------REST API-----------------*/

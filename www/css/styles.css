@@ -27,7 +27,21 @@
     background-size: 150px;
     background-image: url('../img/olympus.png');
 }
-
+.page-content{
+	padding-top: 50px !important;
+}
+.picker-keypad-button-letters{
+	display: none;
+}
+.picker-keypad-button{
+	background-color: #000000 !important;
+	color: #ffffff;
+	border-color: #ffffff;
+}
+.picker-keypad-button-dark{
+	background-color: #ffffff !important;
+	color: #000000 !important;
+}
 /*-------------Login Screens------------*/
 
 .regText{
@@ -68,9 +82,17 @@
 	margin-left: 10px !important;
 	border-color: #ff9800 !important;
 }
+.button-normal{
+	border: 2px solid;
+	margin: 0 auto;
+	width: 200px !important;
+	border-color: #ff9800 !important;
+}
 
 /*-------------Left Menu------------*/
-
+.left-block{
+	margin-top: -25px !important;
+}
 .leftPanelName{
     text-align: right;
     padding: 0 20px 0 0;
