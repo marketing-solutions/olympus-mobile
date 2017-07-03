@@ -196,3 +196,10 @@
 	text-overflow: clip !important;
 	white-space: normal !important;
 }
+
+
+.back-button{
+    display: block;
+    width: 100px !important;
+    margin: 20px  auto -10px 10px !important;
+}
