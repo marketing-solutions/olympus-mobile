@@ -1,3 +1,6 @@
+
+
+
 Olymp.angJS.controller('mainController',[ '$http','$scope','$rootScope','$timeout','InitService',
 function($http,$scope,$rootScope,$timeout,InitService){
   'use strict';
@@ -10,7 +13,7 @@ function($http,$scope,$rootScope,$timeout,InitService){
 
 /*-----------Some var-s for REST------------*/
 
-this.REST_URL = "http://test.olympus.msforyou.ru/";
+this.REST_URL = "http://olympus.msforyou.ru/";
 
 $http({method: 'GET', url: 'q.env'}).then(
   function(response) {
@@ -18,14 +21,15 @@ $http({method: 'GET', url: 'q.env'}).then(
     Ctrl.GetDealers();
 
         /*---Check if logged in---*/
-       if ((!localStorage["OlympPass"]) ||(localStorage["OlympPass"]=="")) {
+       if ((!localStorage["OlympPhone"]) ||(localStorage["OlympPhone"]=="")) {
         Olymp.fw7.app.loginScreen();
        }
        else {
-        var loginfo = {"phone":localStorage["OlympPhone"], "password":localStorage["OlympPass"]};
+       // var loginfo = {"phone":localStorage["OlympPhone"], "password":localStorage["OlympPass"]};
+        var loginfo = {"phone":localStorage["OlympPhone"]};
         var req = {
          method: 'POST',
-         url: Ctrl.REST_URL+'profiles/api/auth/login',
+         url: Ctrl.REST_URL+'profiles/api/auth/profile-info',
          headers: {
              'Content-Type': 'application/json',
              'X-Token' : Ctrl.Token
@@ -64,6 +68,7 @@ this.phone = "";
 
 this.user = {};
 this.sell =[];
+this.sales_array = [];
 
 /*--------------DROPDOWNS-----------------*/
 
@@ -213,7 +218,7 @@ this.GotoProfile = function () {
   Olymp.fw7.app.closePanel();
 };
 this.GotoSale = function () {
-  Olymp.fw7.app.views[0].router.loadPage("#sale");
+  Olymp.fw7.app.views[0].router.loadPage("#old_sales");
   Olymp.fw7.app.closePanel()
   ;
 };
@@ -243,6 +248,7 @@ this.Logout = function () {
 /*-----------Regular functions------------*/
 
 this.refresh = function() {
+//helps to update inputs when choosing dealer
 $timeout(function () {
     $scope.$apply();
     },50)
@@ -276,7 +282,7 @@ this.SetupProfile = function(profile,pass){
   Ctrl.user = profile;
   console.log(profile);
   this.GetProducts(profile.dealer.name);
-
+  this.GetSales();
 }
 
 this.AddProduct = function(){
@@ -370,7 +376,7 @@ this.TokenPass = function(num){
     }, 
     function errorCallback(response){
   Olymp.fw7.app.hidePreloader();
-  Olymp.fw7.app.alert(response.data.reason);
+  Olymp.fw7.app.alert(response.data);
   console.log(response);
     });
 }
@@ -395,6 +401,30 @@ this.ResetPass = function(phone,pass1,pass2){
     function successCallback(response){
       Olymp.fw7.app.hidePreloader();
       Ctrl.SetupProfile(response.data.profile, pass1);
+    }, 
+    function errorCallback(response){
+  Olymp.fw7.app.hidePreloader();
+  Olymp.fw7.app.alert(response.data.reason);
+  console.log(response);
+    });
+}
+
+this.CheatLogin = function () {
+  Olymp.fw7.app.showPreloader(["Подождите..."]);
+  var loginfo = Olymp.fw7.app.formToJSON('#login-form');
+  var req = {
+   method: 'POST',
+   url: this.REST_URL+'profiles/api/auth/profile-info',
+   headers: {
+       'Content-Type': 'application/json',
+       'X-Token' : Ctrl.Token
+     },
+     data: {"phone":loginfo.phone}
+    };
+  $http(req).then(
+    function successCallback(response){
+        Olymp.fw7.app.hidePreloader();
+      Ctrl.SetupProfile(response.data.profile,loginfo.password);
     }, 
     function errorCallback(response){
   Olymp.fw7.app.hidePreloader();
@@ -527,5 +557,27 @@ Olymp.fw7.app.showPreloader(["Подождите..."]);
     });
 }
 
+this.GetSales = function(){
+  var info = {"phone": localStorage["OlympPhone"]}
+  var req = {
+   method: 'POST',
+   url: this.REST_URL+'sales/api/sales/sales',
+   headers: {
+       'Content-Type': 'application/json',
+       'X-Token' : Ctrl.Token
+     },
+     data: info
+    };
+  $http(req).then(
+    function successCallback(response){
+      Olymp.fw7.app.hidePreloader();
+      Ctrl.sales_array = response.data.sales;
+    }, 
+    function errorCallback(response){
+  Olymp.fw7.app.hidePreloader();
+  Olymp.fw7.app.alert(response.data.reason);
+  console.log(response);
+    });
+}
 
 }]);

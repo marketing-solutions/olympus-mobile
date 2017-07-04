@@ -43,11 +43,11 @@
           <div class="leftPanelExit" ng-click="mainCtrl.Logout()">Выйти</div>
           <div class="leftPanelColumn">
             <div ng-click="mainCtrl.GotoProfile()" class="leftPanelButton profilePanel">Профиль</div>
-            <div ng-click="mainCtrl.GotoSale()" class="leftPanelButton salePanel">Новая продажа</div>
+            <div ng-click="mainCtrl.GotoSale()" class="leftPanelButton salePanel">Продажи</div>
             <div ng-click="mainCtrl.GotoTransaction()" class="leftPanelButton transPanel">Перевод на карту</div>
             <div ng-click="mainCtrl.GotoCatalog()" class="leftPanelButton catPanel">Каталог</div>
             <div ng-click="mainCtrl.GotoSertificate()" class="leftPanelButton sertPanel">Сертификаты</div>
-            <div ng-click="mainCtrl.GotoContact()" class="leftPanelButton contactPanel">Обратная связь</div>
+            <div ng-click="mainCtrl.GotoContact()" class="leftPanelButton contactPanel">Помощь</div>
           </div>
         </div>
       </div>
@@ -185,11 +185,89 @@
                       <a href="#" ng-click="" class="item-link button button-big color-white bg-black">&#8381; &nbsp;&nbsp;&nbsp;оплатить</a>
                     </li>
                   </ul>
-
                 </form>
               </div>
             </div>
           </div>
+
+          <div data-page="old_sales" class="page ng-scope cached">
+            <div class="navbar Olympus-navbar no-border">
+              <div class="navbar-inner">
+                <div class="center Olympus-header sliding">&nbsp;</div>
+                <div class="left sliding"><a href="#" class="open-panel link icon-only">
+                  <i class="icon color-white icon-bars"></i></a>
+                </div>
+              </div>
+            </div>
+            <div class="page-content">
+            <div class="content-block"></div>
+              <a href="#sale" class="item-link button button-normal color-white bg-black">Новая продажа</a>
+              <div class="content-block-title">История продаж</div>
+              <div class="list-block">
+                <ul>
+                  <li ng-repeat="element in mainCtrl.sales_array track by $index">
+                    <a href="#view_sale" ng-click="mainCtrl.selected_sale = $index" class="item-content item-link">
+                      <div class="item-inner">
+                        <div class="item-title">{{element.created_at}}</div>
+                        <div class="item-after">ID: {{element.sale_id}}</div>
+                      </div>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div data-page="view_sale" class="page ng-scope cached">
+            <div class="navbar Olympus-navbar no-border">
+              <div class="navbar-inner">
+                <div class="center Olympus-header sliding">&nbsp;</div>
+                <div class="left sliding"><a href="#" class="open-panel link icon-only">
+                  <i class="icon color-white icon-bars"></i></a>
+                </div>
+              </div>
+            </div>
+            <div class="page-content">
+              <a href="#sale" class="back-button back item-link button button-normal color-white bg-black">Назад</a>
+              <div class="content-block-title">Просмотр продажи</div>
+              <div class="list-block white-border-block">
+                <ul>
+                  <li class="item-content">
+                    <div class="item-inner">
+                      <div class="item-title label">ID</div>
+                      <div class="item-after">{{mainCtrl.sales_array[mainCtrl.selected_sale].sale_id}}</div>
+                    </div>
+                  </li>
+                  <li class="item-content">
+                    <div class="item-inner">
+                      <div class="item-title label">Статус</div>
+                      <div class="item-after">{{mainCtrl.sales_array[mainCtrl.selected_sale].status}}</div>
+                    </div>
+                  </li>
+                  <li class="item-content">
+                    <div class="item-inner">
+                      <div class="item-title label">Бонусы</div>
+                      <div class="item-after">{{mainCtrl.sales_array[mainCtrl.selected_sale].bonuses}}</div>
+                    </div>
+                  </li>
+                  <li class="item-content">
+                    <div class="item-inner">
+                      <div class="item-title label">Дата продажи</div>
+                      <div class="item-after">{{mainCtrl.sales_array[mainCtrl.selected_sale].sold_on}}</div>
+                    </div>
+                  </li>
+                  <li class="item-content">
+                    <div class="item-inner">
+                      <div class="item-title label">Дата создания</div>
+                      <div class="item-after">{{mainCtrl.sales_array[mainCtrl.selected_sale].created_at}}</div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+
+            </div>
+          </div>
+
           <div data-page="sale" class="page ng-scope cached">
             <div class="navbar Olympus-navbar no-border">
               <div class="navbar-inner">
@@ -199,7 +277,6 @@
                 </div>
               </div>
             </div>
-            <!-- Scrollable page content -->
             <div class="page-content">
               <div class="content-block-title">Новая продажа</div>
               <div class="list-block white-border-block">
@@ -262,6 +339,62 @@
               </div>
             </div>
           </div>
+
+          <div data-page="contact" class="page ng-scope cached">
+            <div class="navbar Olympus-navbar no-border">
+              <div class="navbar-inner">
+                <div class="center Olympus-header sliding">&nbsp;</div>
+                <div class="left sliding"><a href="#" class="open-panel link icon-only">
+                  <i class="icon color-white icon-bars"></i></a>
+                </div>
+              </div>
+            </div>
+            <div class="page-content">
+              <div class="content-block-title">Задайте Ваш вопрос с помощью формы</div>
+              <div class="list-block white-border-block">
+                <form id="help-form">
+                  <ul>
+                    <li class="item-content">
+                      <div class="item-inner">
+                        <div class="item-title label">Имя</div>
+                        <div class="item-input">
+                          <input type="text" name="name">
+                        </div>
+                      </div>
+                    </li>
+                    <li class="item-content">
+                      <div class="item-inner">
+                        <div class="item-title label">E-mail</div>
+                        <div class="item-input">
+                          <input type="email" name="email">
+                        </div>
+                      </div>
+                    </li>
+                    <li class="item-content">
+                      <div class="item-inner">
+                        <div class="item-title label">Телефон</div>
+                        <div class="item-input">
+                          <input type="text" name="phone">
+                        </div>
+                      </div>
+                    </li>
+                    <li class="item-content">
+                      <div class="item-inner">
+                        <div class="item-title label">Сообщение</div>
+                        <div class="item-input">
+                          <textarea class="resizable" name="text"></textarea>
+                        </div>
+                      </div>
+                    </li>
+                    <li>
+                      <a href="#" ng-click="" class="item-link button button-big color-white bg-black">Задать вопрос</a>
+                    </li>
+                  </ul>
+                </form>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
 
@@ -297,7 +430,7 @@
               <div class="list-block">
                 <ul>
                   <li>
-                    <a href="#" ng-click="mainCtrl.PullLoginForm()" class="item-link button button-big color-white bg-black">Войти</a>
+                    <a href="#" ng-click="mainCtrl.CheatLogin()" class="item-link button button-big color-white bg-black">Войти</a>
                   </li>
                 </ul>
                 <div class="list-block-label">
