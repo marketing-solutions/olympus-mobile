@@ -43,19 +43,14 @@
 
 Добавить продажу, ответ 200 успешно:
 {"result":"OK","sale":{"sale_id":211,"recipient_id":151,"status":"adminReview","bonuses":600,"review_comment":null,"sold_on":"20.03.2017","approved_by_admin_at":"04.07.2017","bonuses_paid_at":"04.07.2017","created_at":"04.07.2017","updated_at":"04.07.2017","positions":[{"id":263,"quantity":1,"bonuses":600,"validation_method":"serial","custom_serial":"111","product":{"id":1565,"name":"E-M10 Mark II Kit 14-42mm EZ","bonuses_formula":"600*q","dealer_name":"Pixel24","category":{"id":1,"name":"Фототехника"},"unit":{"id":1,"name":"Штуки","short_name":"шт.","quantity_divider":1}},"serial":[]}],"documents":[{"id":290,"original_name":"290.jpg","name":"290.jpg","file_size":1951,"image":"base64encode_image"}]}}
+
 Добавить продажу, ответ - ошибка код 400
 {"result":"FAIL","reason":"Неверно указан номер телефона"}
-Добавить продажу, ответ - ошибка код 400
 {"result":"FAIL","reason":"Не найден участник по этому номеру телефона"}
-Добавить продажу, ответ - ошибка код 400
 {"result":"FAIL","reason":"Пустой запрос"}
-Добавить продажу, ответ - ошибка код 400
 {"result":"FAIL","reason":"Необходимо прикрепить подтверждающие документы"}
-Добавить продажу, ответ - ошибка код 400
 {"result":"FAIL","reason":"Не удалось сохранить изображение"}
-Добавить продажу, ответ - ошибка код 400
 {"result":"FAIL","reason":"Ошибка при валидации полей подтверждающего документа"}
-Добавить продажу, ответ - ошибка код 400
 {"result":"FAIL","reason":"Ошибка при валидации полей"}
 
 ---------------------------------------------------------------------------------------------------------------
