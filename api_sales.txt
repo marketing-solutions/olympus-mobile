@@ -11,7 +11,7 @@
 Список всех продаж участника, запрос: http://olympus.msforyou.ru/sales/api/sales/sales
 {"phone": "79045196779"}
 Список всех продаж участника, ответ 200 успешно:
-{"result":"OK","sales":[{"sale_id":178,"recipient_id":151,"status":"adminReview","bonuses":6000,"review_comment":null,"sold_on":"04.07.2017","approved_by_admin_at":"04.07.2017","bonuses_paid_at":"04.07.2017","created_at":"04.07.2017","updated_at":"04.07.2017","positions":[{"id":224,"quantity":1,"bonuses":6000,"validation_method":"serial","custom_serial":"77777","product":{"id":1291,"name":"E-M1 Mark II Kit 12-40mm","bonuses_formula":"6000*q","dealer_name":"SHX","category":{"id":1,"name":"Фототехника"},"unit":{"id":1,"name":"Штуки","short_name":"шт.","quantity_divider":1}},"serial":[]}],"document":[{"id":246,"original_name":"bg_shake.jpg","name":"246.jpg","file_size":29828,"image":"base64encode_image"}]}]}
+{"result":"OK","sales":[{"sale_id":178,"recipient_id":151,"status":"adminReview","bonuses":6000,"review_comment":null,"sold_on":"04.07.2017","approved_by_admin_at":"04.07.2017","bonuses_paid_at":"04.07.2017","created_at":"04.07.2017","positions":[{"id":224,"quantity":1,"bonuses":6000,"validation_method":"serial","custom_serial":"77777","product":{"id":1291,"name":"E-M1 Mark II Kit 12-40mm","bonuses_formula":"6000*q","dealer_name":"SHX","category":{"id":1,"name":"Фототехника"},"unit":{"id":1,"name":"Штуки","short_name":"шт.","quantity_divider":1}},"serial":[]}],"document":[{"id":246,"original_name":"bg_shake.jpg","name":"246.jpg","file_size":29828,"image_url": "http://olimpus.ru/assets/b18d1cca3a0b3a9fca62bcf05366581a/294.jpg"}]}]}
 Список всех продаж участника, ответ - ошибка код 400
 {"result":"FAIL","reason":"Неверно указан номер телефона"}
 Список всех продаж участника, ответ - ошибка код 400
@@ -40,14 +40,49 @@
     }]
 }
 
-Добавить продажу, ответ 200 успешно:
-{"result":"OK","sale":{"sale_id":211,"recipient_id":151,"status":"adminReview","bonuses":600,"review_comment":null,"sold_on":"20.03.2017","approved_by_admin_at":"04.07.2017","bonuses_paid_at":"04.07.2017","created_at":"04.07.2017","updated_at":"04.07.2017","positions":[{"id":263,"quantity":1,"bonuses":600,"validation_method":"serial","custom_serial":"111","product":{"id":1565,"name":"E-M10 Mark II Kit 14-42mm EZ","bonuses_formula":"600*q","dealer_name":"Pixel24","category":{"id":1,"name":"Фототехника"},"unit":{"id":1,"name":"Штуки","short_name":"шт.","quantity_divider":1}},"serial":[]}],"documents":[{"id":290,"original_name":"290.jpg","name":"290.jpg","file_size":1951,"image":"base64encode_image"}]}}
+Ответ 200 успешно:
+{"result":"OK","sale":{"sale_id":211,"recipient_id":151,"status":"adminReview","bonuses":600,"review_comment":null,"sold_on":"20.03.2017","approved_by_admin_at":"04.07.2017","bonuses_paid_at":"04.07.2017","created_at":"04.07.2017","positions":[{"id":263,"quantity":1,"bonuses":600,"validation_method":"serial","custom_serial":"111","product":{"id":1565,"name":"E-M10 Mark II Kit 14-42mm EZ","bonuses_formula":"600*q","dealer_name":"Pixel24","category":{"id":1,"name":"Фототехника"},"unit":{"id":1,"name":"Штуки","short_name":"шт.","quantity_divider":1}},"serial":[]}],"documents":[{"id":290,"original_name":"290.jpg","name":"290.jpg","file_size":1951,"image_url": "http://olimpus.ru/assets/b18d1cca3a0b3a9fca62bcf05366581a/294.jpg"}]}}
 
-Добавить продажу, ответ - ошибка код 400
+Ответ 400 ошибка:
 {"result":"FAIL","reason":"Неверно указан номер телефона"}
 {"result":"FAIL","reason":"Не найден участник по этому номеру телефона"}
 {"result":"FAIL","reason":"Пустой запрос"}
 {"result":"FAIL","reason":"Необходимо прикрепить подтверждающие документы"}
+{"result":"FAIL","reason":"Не удалось сохранить изображение"}
+{"result":"FAIL","reason":"Ошибка при валидации полей подтверждающего документа"}
+{"result":"FAIL","reason":"Ошибка при валидации полей"}
+
+---------------------------------------------------------------------------------------------------------------
+
+Изменить продажу, запрос: http://olympus.msforyou.ru/sales/api/sales/update
+
+Не задавать поле documents, если не требуется обновить подтверждающий документ
+
+{
+	"sale_id": "219",
+    "sale": {
+    	"status": "adminReview",
+        "sold_on_local": "21.05.2017",
+        "positions": [{
+            "category_id": 1,
+            "product_id": "1565",
+            "quantityLocal": 1,
+            "serialNumberValue": "44444",
+          	"validation_method": "serial"
+        }]
+    },
+    "documents": [{
+      	"type": "jpg",
+      	"image": "base64encode_image"
+    }]
+}
+
+Ответ 200 успешно:
+{"result":"OK","sale":{"sale_id":211,"recipient_id":151,"status":"adminReview","bonuses":600,"review_comment":null,"sold_on":"20.03.2017","approved_by_admin_at":"04.07.2017","bonuses_paid_at":"04.07.2017","created_at":"04.07.2017","positions":[{"id":263,"quantity":1,"bonuses":600,"validation_method":"serial","custom_serial":"111","product":{"id":1565,"name":"E-M10 Mark II Kit 14-42mm EZ","bonuses_formula":"600*q","dealer_name":"Pixel24","category":{"id":1,"name":"Фототехника"},"unit":{"id":1,"name":"Штуки","short_name":"шт.","quantity_divider":1}},"serial":[]}],"documents":[{"id":290,"original_name":"290.jpg","name":"290.jpg","file_size":1951,"image_url": "http://olimpus.ru/assets/b18d1cca3a0b3a9fca62bcf05366581a/294.jpg"}]}}
+
+Ответ 400 ошибка:
+{"result":"FAIL","reason":"Пустой запрос"}
+{"result":"FAIL","reason":"Не найдена продажа с таким ID"}
 {"result":"FAIL","reason":"Не удалось сохранить изображение"}
 {"result":"FAIL","reason":"Ошибка при валидации полей подтверждающего документа"}
 {"result":"FAIL","reason":"Ошибка при валидации полей"}
