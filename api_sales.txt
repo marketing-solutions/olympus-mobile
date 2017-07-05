@@ -31,8 +31,7 @@
             "product_id": "1565",
             "quantityLocal": 1,
             "serialNumberValue": "111",
-          	"validation_method": "serial",
-            "bonuses": 600
+          	"validation_method": "serial"
         }]
     },
     "documents": [{

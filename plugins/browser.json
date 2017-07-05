@@ -33,6 +33,9 @@
         },
         "cordova-plugin-device": {
             "PACKAGE_NAME": "com.phonegap.helloworld"
+        },
+        "cordova-open": {
+            "PACKAGE_NAME": "com.phonegap.helloworld"
         }
     },
     "dependent_plugins": {

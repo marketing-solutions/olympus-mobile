@@ -3,7 +3,7 @@ Olymp.angJS.filter('Status', function() {
     var message = "";
     switch (x){
       case 'draft': message = "Черновик"; break;
-      case 'admin_review': message = "Требует подтверждения"; break;
+      case 'adminReview': message = "Требует подтверждения"; break;
       case 'approved': message = "Подтверждено автоматически"; break;
       case 'approved2': message = "Подтверждено"; break;
       case 'declined': message = "Отклонено"; break;
@@ -88,6 +88,7 @@ this.phone = "";
 this.user = {};
 this.sell =[];
 this.sales_array = [];
+this.image = "";
 
 /*--------------DROPDOWNS-----------------*/
 
@@ -201,7 +202,16 @@ this.calendarDefault = Olymp.fw7.app.calendar({
 
 /*-----------Photo preview------------*/
 
+var ph = [];
+for (var i = 0; i < 13; i++) {
+ ph.push('docs/rules/'+i+'.jpg');
+};
 
+this.rulesPhoto = Olymp.fw7.app.photoBrowser({
+  photos : ph,
+  theme: 'dark',
+  type: 'popup'
+});
 
 this.setPhoto = function (photo) {
   Ctrl.billView = Olymp.fw7.app.photoBrowser({
@@ -299,13 +309,14 @@ this.TakePhoto = function(){
   navigator.camera.getPicture(
   function success(imageData) {
      var image = document.getElementById('billImage');
-     image.src =  imageData;
+     image.src =  'data:image/jpg;base64,'+imageData;
+     Ctrl.image = imageData;
   }, 
 
   function error(error) {
     Olymp.fw7.app.alert("Не получилось открыть камеру.");
   },
-  {});
+  {destinationType: Camera.DestinationType.DATA_URL});
 }
 
 this.ForgotPass = function(){
@@ -328,6 +339,12 @@ this.SetupProfile = function(profile,pass){
 
 this.AddProduct = function(){
     var prod = Olymp.fw7.app.formToJSON('#product-form');
+    for (var i = 0; i < this.products.length; i++) {
+      if (this.products[i].name == prod.name) {
+        prod.id = this.products[i].id;
+        prod.category_id = this.products[i].category_id;
+      }
+    }
     this.sell.push(prod);
     document.getElementById('products-dropdown').value = "";
     document.getElementById('prod-num').value = "";
@@ -350,84 +367,11 @@ this.EditSale = function(){
   document.getElementById('products-dropdown').value = "";
   document.getElementById('prod-num').value = "";
   var image = document.getElementById('billImage');
-  image.src = 'data:image/jpeg;base64,' + this.sales_array[this.selected_sale].documents[0].image;
+  image.src = this.sales_array[this.selected_sale].documents[0].image_url;
   this.setPhoto(this.sales_array[this.selected_sale].documents[0].image_url);
   Olymp.fw7.app.views[0].router.loadPage("#sale");
 }
 
-this.OpenAbout = function () {
-  Olymp.fw7.app.alert(cordova.file.applicationDirectory);
-  var fullURL = cordova.file.applicationDirectory + 'www/docs/rules.pdf';
-  // var baseUrl = location.href.replace("/index.html", "/");
-  // var aboutUrl = baseUrl + 'docs/rules.pdf'
-  // cordova.plugins.SitewaertsDocumentViewer.viewDocument( fullURL, 'application/pdf', {}, function onShow(){}, function onClose(){}, function onMissing(){}, function onError(){});
-
-
-cordova.plugins.fileOpener2.open (
-    fullURL, 
-    'application/pdf', 
-    { 
-        error : function(e) { 
-            Olymp.fw7.app.alert('Error status: ' + e.status + ' - Error message: ' + e.message);
-        },
-        success : function () {
-            Olymp.fw7.app.alert('file opened successfully');        
-        }
-    }
-);
-
-/*var fileTransfer = new FileTransfer();
-
-if (device.uuid.toLowerCase() == "android") {
-    window.resolveLocalFileSystemURL(cordova.file.externalRootDirectory, onFileSystemSuccess, onError);
-} else {
-    // for iOS
-    window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, onFileSystemSuccess, onError);
-}
-
-function onError(e) {
-    navigator.notification.alert("Error : Downloading Failed");
-      Olymp.fw7.app.alert("Download failed");
-};
-
-function onFileSystemSuccess(fileSystem) {
-    var entry = "";
-    if (sessionStorage.platform.toLowerCase() == "android") {
-        entry = fileSystem;
-    } else {
-        entry = fileSystem.root;
-    }
-    entry.getDirectory("Cordova", {
-        create: true,
-        exclusive: false
-    }, onGetDirectorySuccess, onGetDirectoryFail);
-};
-
-function onGetDirectorySuccess(dir) {
-  Olymp.fw7.app.alert("Directory success!");
-    cdr = dir;
-    dir.getFile(filename, {
-        create: true,
-        exclusive: false
-    }, gotFileEntry, errorHandler);
-};
-
-function gotFileEntry(fileEntry) {
-    // URL in which the pdf is available
-    var documentUrl = "cdvfile://localhost/persistent/docs/bonus.pdf";
-    var uri = encodeURI(documentUrl);
-    fileTransfer.download(uri, cdr.nativeURL + "docs/bonus.pdf",
-        function(entry) {
-              Olymp.fw7.app.alert("Ready to show!");
-        },
-        function(error) {
-            navigator.notification.alert(ajaxErrorMsg);
-        },
-        false
-    );
-};*/
-
-}
 
 /*---------------REST API-----------------*/
 
@@ -712,5 +656,51 @@ this.GetSales = function(){
   console.log(response);
     });
 }
+
+this.SendSale = function (status) {
+  Olymp.fw7.app.showPreloader(["Подождите..."]);
+  var form_info = Olymp.fw7.app.formToJSON('#new-sale');
+  var products = [];
+  for (var i = 0; i < this.sell.length; i++) {
+
+    products.push({"category_id": this.sell[i].category_id,
+            "product_id": this.sell[i].id,
+            "quantityLocal": 1,
+            "serialNumberValue": this.sell[i].serial_number,
+            "validation_method": "serial"});
+  };
+  var info = {"phone": localStorage["OlympPhone"],
+    "sale": {
+      "status": status,
+        "sold_on_local": form_info.date,
+        "positions": products
+    },
+    "documents": [{
+        "type": "jpg",
+        "image": Ctrl.image
+    }]}
+    console.log(info);
+  var req = {
+   method: 'POST',
+   url: this.REST_URL+'sales/api/sales/create',
+   headers: {
+       'Content-Type': 'application/json',
+       'X-Token' : Ctrl.Token
+     },
+     data: info
+    };
+  $http(req).then(
+    function successCallback(response){
+      Olymp.fw7.app.hidePreloader();
+      Olymp.fw7.app.views[0].router.loadPage("#old_sales");
+      console.log(response.data.sales);
+    }, 
+    function errorCallback(response){
+  Olymp.fw7.app.hidePreloader();
+  Olymp.fw7.app.alert(response.data.reason);
+  console.log(response);
+    });
+}
+
 
 }]);

@@ -265,6 +265,14 @@ module.exports = [
         "id": "cordova-plugin-device.DeviceProxy",
         "pluginId": "cordova-plugin-device",
         "runs": true
+    },
+    {
+        "file": "plugins/cordova-open/www/disusered.open.js",
+        "id": "cordova-open.Open",
+        "pluginId": "cordova-open",
+        "merges": [
+            "cordova.plugins.disusered"
+        ]
     }
 ];
 module.exports.metadata = 
@@ -279,7 +287,8 @@ module.exports.metadata =
     "cordova-plugin-file": "4.0.0",
     "cordova-plugin-document-viewer": "0.9.3",
     "cordova-plugin-file-opener2": "2.0.19",
-    "cordova-plugin-device": "1.1.6"
+    "cordova-plugin-device": "1.1.6",
+    "cordova-open": "1.0.12"
 }
 // BOTTOM OF METADATA
 });

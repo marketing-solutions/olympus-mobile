@@ -50,7 +50,7 @@
             <div ng-click="mainCtrl.GotoContact()" class="leftPanelButton contactPanel">Помощь</div>
           </div>
         </div>
-        <a href="#" ng-click="mainCtrl.OpenAbout()" class="back-button item-link button button-normal color-white bg-black">о проекте</a>
+        <a href="#" ng-click="mainCtrl.rulesPhoto.open()" class="back-button item-link button button-normal color-white bg-black">о проекте</a>
       </div>
     </div>
 
@@ -246,7 +246,7 @@
                     <a href="#view_sale" ng-click="mainCtrl.selected_sale = $index" class="item-content item-link">
                       <div class="item-inner">
                         <div class="item-title">{{element.created_at}}</div>
-                        <div class="item-after">ID: {{element.sale_id}}</div>
+                        <div class="item-after">{{element.status | Status}}</div>
                       </div>
                     </a>
                   </li>
@@ -301,7 +301,7 @@
                   </li>
                 </ul>
               </div>
-              <div>
+              <div ng-show="mainCtrl.sales_array[mainCtrl.selected_sale].status=='draft'">
                 <a href="#" ng-click="mainCtrl.EditSale()" class="item-link button button-normal color-white bg-black">Редактировать</a>
               </div>
 
@@ -318,6 +318,7 @@
               </div>
             </div>
             <div class="page-content">
+            <form id="new-sale">
             <a href="#" class="back-button back item-link button button-normal color-white bg-black">Назад</a>
               <div class="list-block white-border-block">
                 <ul>
@@ -325,7 +326,7 @@
                     <div class="item-inner">
                       <div class="item-title label">Дата</div>
                       <div class="item-input">
-                        <input id="calendar-sell" type="text" name="phone" readonly placeholder="сегодня">
+                        <input id="calendar-sell" type="text" name="date" readonly placeholder="сегодня">
                       </div>
                     </div>
                   </li>
@@ -349,6 +350,11 @@
               <div class="content-block">
                 <div class="cropImage" ng-click="mainCtrl.billView.open()"><img id="billImage" class="billImage pb-popup-dark" src="">&nbsp;</div>
                 <a href="#" ng-click="mainCtrl.TakePhoto()" class="item-link button button-normal color-white bg-black">Фото чека</a>
+              </div>
+              </form>
+              <div class="content-block">
+                <a href="#" ng-click="mainCtrl.SendSale('adminReview')" class="item-link button button-big color-white bg-black">Отправить на проверку</a>
+                <a href="#" ng-click="mainCtrl.SendSale('draft')" class="item-link button button-big color-white bg-black border-white">Сохр. как черновик</a>
               </div>
             </div>
             
