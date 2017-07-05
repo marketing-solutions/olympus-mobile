@@ -70,29 +70,55 @@
               </div>
               <!-- Scrollable page content -->
               <div class="page-content">
-                <div class="content-block">
-                   <div class="content-block-title">Информация</div>
-                    <div class="card">
-                      <div class="card-content">
-                        <div class="card-content-inner">
-                        Имя - {{mainCtrl.user.first_name}}<br>
-                        Фамилия - {{mainCtrl.user.last_name}}<br>
-                        Почта - {{mainCtrl.user.email}}<br>
-                        Телефон - {{mainCtrl.user.phone_mobile}}<br>
-                        Баланс - {{mainCtrl.user.balance}}<br>
-                        ID - {{mainCtrl.user.profile_id}}<br>
-                        Дилер - {{mainCtrl.user.dealer.name}}<br></div>
+                <div class="content-block-title">Информация</div>
+                <div class="list-block">
+                  <ul>
+                    <li class="item-content">
+                      <div class="item-inner">
+                        <div class="item-title">Имя</div>
+                        <div class="item-after">{{mainCtrl.user.first_name}}</div>
                       </div>
-                    </div>
-                    <div class="card" ng-hide="mainCtrl.user.blocking_reason==null">
-                      <div class="card-content">
-                        <div class="card-content-inner">
+                    </li>
+                    <li class="item-content">
+                      <div class="item-inner">
+                        <div class="item-title">Фамилия</div>
+                        <div class="item-after">{{mainCtrl.user.last_name}}</div>
+                      </div>
+                    </li>
+                    <li class="item-content">
+                      <div class="item-inner">
+                        <div class="item-title">Почта</div>
+                        <div class="item-after">{{mainCtrl.user.email}}</div>
+                      </div>
+                    </li>
+                    <li class="item-content">
+                      <div class="item-inner">
+                        <div class="item-title">Телефон</div>
+                        <div class="item-after">{{mainCtrl.user.phone_mobile}}</div>
+                      </div>
+                    </li>
+                    <li class="item-content">
+                      <div class="item-inner">
+                        <div class="item-title">Дилер</div>
+                        <div class="item-after">{{mainCtrl.user.dealer.name}}</div>
+                      </div>
+                    </li>
+                    <li class="item-content">
+                      <div class="item-inner">
+                        <div class="item-title">ID</div>
+                        <div class="item-after">{{mainCtrl.user.profile_id}}</div>
+                      </div>
+                    </li>
+                  </ul>
+                  <div class="card" ng-hide="mainCtrl.user.blocking_reason==null">
+                    <div class="card-content">
+                      <div class="card-content-inner">
                         Пользователь временно заблокирован.<br>Причина:<br>
-                          {{mainCtrl.user.blocking_reason}}
+                        {{mainCtrl.user.blocking_reason}}
                       </div>
                     </div>
+                  </div>
                 </div>
-              </div>
                 <a href="#setup-profile" class="item-link button button-normal color-white bg-black">Настроить профиль</a>
             </div>
           </div>
@@ -245,7 +271,7 @@
                   <li ng-repeat="element in mainCtrl.sales_array track by $index">
                     <a href="#view_sale" ng-click="mainCtrl.selected_sale = $index" class="item-content item-link">
                       <div class="item-inner">
-                        <div class="item-title">{{element.created_at}}</div>
+                        <div class="item-title">{{element.sold_on}}</div>
                         <div class="item-after">{{element.status | Status}}</div>
                       </div>
                     </a>
@@ -299,6 +325,12 @@
                       <div class="item-after">{{mainCtrl.sales_array[mainCtrl.selected_sale].created_at}}</div>
                     </div>
                   </li>
+                  <li ng-repeat="element in mainCtrl.sales_array[mainCtrl.selected_sale].positions track by $index" class="item-content">
+                    <div class="item-inner">
+                      <div class="item-title label">Товар №{{$index+1}}</div>
+                      <div class="item-text">{{element.product.name}}</div>
+                    </div>
+                  </li>
                 </ul>
               </div>
               <div ng-show="mainCtrl.sales_array[mainCtrl.selected_sale].status=='draft'">
@@ -346,15 +378,13 @@
                   </li>
                 </ul>
                 <a href="#" data-popup=".popup-new-sale" class="open-popup item-link button button-normal color-white bg-black">+ добавить позицию</a>
-              </div>
-              <div class="content-block">
                 <div class="cropImage" ng-click="mainCtrl.billView.open()"><img id="billImage" class="billImage pb-popup-dark" src="">&nbsp;</div>
                 <a href="#" ng-click="mainCtrl.TakePhoto()" class="item-link button button-normal color-white bg-black">Фото чека</a>
               </div>
               </form>
-              <div class="content-block">
-                <a href="#" ng-click="mainCtrl.SendSale('adminReview')" class="item-link button button-big color-white bg-black">Отправить на проверку</a>
-                <a href="#" ng-click="mainCtrl.SendSale('draft')" class="item-link button button-big color-white bg-black border-white">Сохр. как черновик</a>
+              <div class="content-block" ng-show="mainCtrl.sell[0]">
+                <a href="#" ng-click="mainCtrl.CheckSale('adminReview')" class="item-link button button-big color-white bg-black">Отправить на проверку</a>
+                <a href="#" ng-click="mainCtrl.CheckSale('draft')" class="item-link button button-big color-white bg-black white-button">Сохр. как черновик</a>
               </div>
             </div>
             
@@ -649,7 +679,7 @@
                 <div class="item-inner">
                   <div class="item-title label">Товар</div>
                   <div class="item-input">
-                    <input type="text" name="name" ng-click="mainCtrl.DropProducts.open()" readonly id="products-dropdown" placeholder="">
+                    <input type="text" name="name" ng-click="mainCtrl.DropProducts.open()" readonly id="products-dropdown" placeholder="...">
                   </div>
                 </div>
               </li>
@@ -663,7 +693,7 @@
               </li>
             </ul>
           </form>
-          <a href="#" ng-click="mainCtrl.AddProduct()" class="close-popup item-link button button-normal color-white bg-black">+ добавить позицию</a>
+          <a href="#" ng-show="mainCtrl.IfShowAddProductButton()" ng-click="mainCtrl.AddProduct()" class="close-popup item-link button button-normal color-white bg-black">+ добавить позицию</a>
           </div>
         </div>
       </div>

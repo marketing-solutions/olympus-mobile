@@ -44,25 +44,7 @@ $http({method: 'GET', url: 'q.env'}).then(
         Olymp.fw7.app.loginScreen();
        }
        else {
-       // var loginfo = {"phone":localStorage["OlympPhone"], "password":localStorage["OlympPass"]};
-        var loginfo = {"phone":localStorage["OlympPhone"]};
-        var req = {
-         method: 'POST',
-         url: Ctrl.REST_URL+'profiles/api/auth/profile-info',
-         headers: {
-             'Content-Type': 'application/json',
-             'X-Token' : Ctrl.Token
-           },
-           data: loginfo
-          };
-        $http(req).then(
-          function successCallback(response){
-            Ctrl.SetupProfile(response.data.profile,loginfo.password);
-          }, 
-          function errorCallback(response){
-            Olymp.fw7.app.alert(response.data.reason);
-            console.log(response);
-          });
+          Ctrl.GetProfile();
        };
 
   },
@@ -88,6 +70,7 @@ this.phone = "";
 this.user = {};
 this.sell =[];
 this.sales_array = [];
+this.selected_sale = "";
 this.image = "";
 
 /*--------------DROPDOWNS-----------------*/
@@ -183,6 +166,9 @@ this.DropProducts = Olymp.fw7.app.autocomplete({
           results.push(Ctrl.products[i].name);
         }
         render(results);
+      },
+      onClose: function(autocomplete){
+        Ctrl.refresh();
       }
   });
 
@@ -210,7 +196,8 @@ for (var i = 0; i < 13; i++) {
 this.rulesPhoto = Olymp.fw7.app.photoBrowser({
   photos : ph,
   theme: 'dark',
-  type: 'popup'
+  type: 'popup',
+  ofText: 'из'
 });
 
 this.setPhoto = function (photo) {
@@ -218,7 +205,8 @@ this.setPhoto = function (photo) {
     photos : [photo],
     theme: 'dark',
     type: 'popup',
-    toolbar: false
+    toolbar: false,
+      ofText: 'из'
 });
 }
 
@@ -314,7 +302,7 @@ this.TakePhoto = function(){
   }, 
 
   function error(error) {
-    Olymp.fw7.app.alert("Не получилось открыть камеру.");
+    Olymp.fw7.app.alert("Не получилось сделать фотографию.");
   },
   {destinationType: Camera.DestinationType.DATA_URL});
 }
@@ -333,8 +321,13 @@ this.SetupProfile = function(profile,pass){
       localStorage["OlympPass"] = pass;
   this.user = profile;
   console.log(profile);
-  this.GetProducts(profile.dealer.name);
   this.GetSales();
+  this.GetProducts(profile.dealer.name);
+}
+
+this.IfShowAddProductButton = function(){
+ if (document.getElementById('products-dropdown').value == ""){
+  return false} else {return true}
 }
 
 this.AddProduct = function(){
@@ -358,7 +351,11 @@ this.EditSale = function(){
   this.sell = [];
   var products_array = this.sales_array[this.selected_sale].positions;
   for (var i = 0; i < products_array.length; i++) {
-    this.sell.push({'name': products_array[i].product.name,'serial_number': products_array[i].custom_serial});
+    this.sell.push({'name': products_array[i].product.name,
+      'serial_number': products_array[i].custom_serial,
+      'id': products_array[i].product.id,
+      'category_id': products_array[i].product.category.id
+    });
   }
   var re = /([0-9]+).([0-9]+).([0-9]+)/;
   var swapMonthDay = this.sales_array[this.selected_sale].sold_on.replace(re, '$2.$1.$3');
@@ -374,6 +371,28 @@ this.EditSale = function(){
 
 
 /*---------------REST API-----------------*/
+
+this.GetProfile = function () {
+  // var loginfo = {"phone":localStorage["OlympPhone"], "password":localStorage["OlympPass"]};
+  var loginfo = {"phone":localStorage["OlympPhone"]};
+  var req = {
+   method: 'POST',
+   url: Ctrl.REST_URL+'profiles/api/auth/profile-info',
+   headers: {
+       'Content-Type': 'application/json',
+       'X-Token' : Ctrl.Token
+     },
+     data: loginfo
+    };
+  $http(req).then(
+    function successCallback(response){
+      Ctrl.SetupProfile(response.data.profile,loginfo.password);
+    }, 
+    function errorCallback(response){
+      Olymp.fw7.app.alert(response.data.reason);
+      console.log(response);
+  });
+}
 
 this.GetDealers = function(){
   var req = {
@@ -657,6 +676,14 @@ this.GetSales = function(){
     });
 }
 
+this.CheckSale = function(status){
+  if (Ctrl.selected_sale=="") {
+    this.SendSale(status)
+  } else {
+    this.UpdateSale(status)
+  }
+}
+
 this.SendSale = function (status) {
   Olymp.fw7.app.showPreloader(["Подождите..."]);
   var form_info = Olymp.fw7.app.formToJSON('#new-sale');
@@ -692,6 +719,7 @@ this.SendSale = function (status) {
   $http(req).then(
     function successCallback(response){
       Olymp.fw7.app.hidePreloader();
+      Ctrl.GetSales();
       Olymp.fw7.app.views[0].router.loadPage("#old_sales");
       console.log(response.data.sales);
     }, 
@@ -702,5 +730,53 @@ this.SendSale = function (status) {
     });
 }
 
+this.UpdateSale = function(status){
+
+  Olymp.fw7.app.showPreloader(["Подождите..."]);
+  var form_info = Olymp.fw7.app.formToJSON('#new-sale');
+  var products = [];
+  for (var i = 0; i < this.sell.length; i++) {
+
+    products.push({"category_id": this.sell[i].category_id,
+            "product_id": this.sell[i].id,
+            "quantityLocal": 1,
+            "serialNumberValue": this.sell[i].serial_number,
+            "validation_method": "serial"});
+  };
+  var info = {
+    "sale_id": Ctrl.sales_array[Ctrl.selected_sale].sale_id,
+    "sale": {
+      "status": status,
+        "sold_on_local": form_info.date,
+        "positions": products
+    }};
+    if (Ctrl.image) {
+      info.documents = [{
+        "type": "jpg",
+        "image": Ctrl.image}]
+    }
+    console.log(info);
+  var req = {
+   method: 'POST',
+   url: this.REST_URL+'sales/api/sales/update',
+   headers: {
+       'Content-Type': 'application/json',
+       'X-Token' : Ctrl.Token
+     },
+     data: info
+    };
+  $http(req).then(
+    function successCallback(response){
+      Olymp.fw7.app.hidePreloader();
+      Ctrl.GetSales();
+      Olymp.fw7.app.views[0].router.loadPage("#old_sales");
+      console.log(response.data.sales);
+    }, 
+    function errorCallback(response){
+  Olymp.fw7.app.hidePreloader();
+  Olymp.fw7.app.alert(response.data.reason);
+  console.log(response);
+    });
+}
 
 }]);

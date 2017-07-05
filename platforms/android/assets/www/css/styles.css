@@ -233,3 +233,8 @@
 .list-block .input-item .item-inner:after, .list-block.inputs-list .item-inner:after {
      display: block; 
 }
+
+.white-button{
+    margin-top: 20px;
+    border-color: #ffffff !important;
+}
