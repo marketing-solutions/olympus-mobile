@@ -154,8 +154,8 @@
 .transPanel{
 	background-image: url('../img/Money.png');
 }
-.catPanel{
-	background-image: url('../img/Catalog.png');
+.bonusPanel{
+	background-image: url('../img/Bonus.png');
 }
 .sertPanel{
 	background-image: url('../img/Sert.png');
@@ -174,8 +174,8 @@
 	color: #000000 !important;
 }
 .cropImage{
-	 width: 100vw;
     margin: 10px auto;
+    text-align: center;
 }
 .billImage{
 	max-width: 200px;
@@ -201,5 +201,35 @@
 .back-button{
     display: block;
     width: 100px !important;
-    margin: 20px  auto -10px 10px !important;
+    margin: 20px  auto 10px 10px !important;
+}
+
+.content-block-title{
+    padding-top: 0px !important;
+}
+
+.layout-dark .item-inner:not(.focus-state):not(.not-empty-state) .item-input-field:after, .layout-dark .item-inner:not(.focus-state):not(.not-empty-state) .input-field:after {
+    background-color: rgba(255, 255, 255, 1) !important;
+}
+
+.item-media{
+    text-align: center;
+    height: 40px;
+    white-space: nowrap;
+}
+.delete_helper{
+    vertical-align: middle;
+    height: 100%;
+    display: inline-block;
+}
+.delete_cross{
+    width: 20px;
+    vertical-align: middle;
+    padding: auto;
+}
+.item-inner:after{
+    height: 5px !important;
+}
+.list-block .input-item .item-inner:after, .list-block.inputs-list .item-inner:after {
+     display: block; 
 }

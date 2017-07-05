@@ -1,0 +1,109 @@
+{
+  "_args": [
+    [
+      {
+        "raw": "cordova-plugin-document-viewer@0.9.3",
+        "scope": null,
+        "escapedName": "cordova-plugin-document-viewer",
+        "name": "cordova-plugin-document-viewer",
+        "rawSpec": "0.9.3",
+        "spec": "0.9.3",
+        "type": "version"
+      },
+      "C:\\Users\\bushmin\\Desktop\\Projects\\Olympus\\node_modules"
+    ]
+  ],
+  "_from": "cordova-plugin-document-viewer@0.9.3",
+  "_id": "cordova-plugin-document-viewer@0.9.3",
+  "_inCache": true,
+  "_location": "/cordova-plugin-document-viewer",
+  "_nodeVersion": "6.10.3",
+  "_npmOperationalInternal": {
+    "host": "s3://npm-registry-packages",
+    "tmp": "tmp/cordova-plugin-document-viewer-0.9.3.tgz_1496734828036_0.9724696315824986"
+  },
+  "_npmUser": {
+    "name": "regnete",
+    "email": "schauerte@sitewaerts.de"
+  },
+  "_npmVersion": "3.10.10",
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "cordova-plugin-document-viewer@0.9.3",
+    "scope": null,
+    "escapedName": "cordova-plugin-document-viewer",
+    "name": "cordova-plugin-document-viewer",
+    "rawSpec": "0.9.3",
+    "spec": "0.9.3",
+    "type": "version"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/cordova-plugin-document-viewer/-/cordova-plugin-document-viewer-0.9.3.tgz",
+  "_shasum": "964f07ffb0705c1587f84c762a8bd31cfb86f1f4",
+  "_shrinkwrap": null,
+  "_spec": "cordova-plugin-document-viewer@0.9.3",
+  "_where": "C:\\Users\\bushmin\\Desktop\\Projects\\Olympus\\node_modules",
+  "author": {
+    "name": "Felix Schauerte"
+  },
+  "bugs": {
+    "url": "https://github.com/sitewaerts/cordova-plugin-document-viewer/issues"
+  },
+  "cordova": {
+    "id": "cordova-plugin-document-viewer",
+    "platforms": [
+      "android",
+      "ios",
+      "windows"
+    ]
+  },
+  "dependencies": {},
+  "description": "PDF Document viewer cordova plugin for iOS, Android and Windows 8.1 + 10.",
+  "devDependencies": {},
+  "directories": {},
+  "dist": {
+    "shasum": "964f07ffb0705c1587f84c762a8bd31cfb86f1f4",
+    "tarball": "https://registry.npmjs.org/cordova-plugin-document-viewer/-/cordova-plugin-document-viewer-0.9.3.tgz"
+  },
+  "engines": {
+    "cordovaDependencies": {
+      "0.9.3": {
+        "cordova": ">=3.7.0",
+        "cordova-windows": ">=4.4.0"
+      }
+    }
+  },
+  "gitHead": "4ff4ae86744b3285e76955c68aeab32090bf5386",
+  "homepage": "https://github.com/sitewaerts/cordova-plugin-document-viewer#readme",
+  "keywords": [
+    "ecosystem:cordova",
+    "cordova",
+    "cordova-android",
+    "cordova-ios",
+    "cordova-windows",
+    "pdf"
+  ],
+  "license": "MIT",
+  "maintainers": [
+    {
+      "name": "regnete",
+      "email": "schauerte@sitewaerts.de"
+    },
+    {
+      "name": "esch",
+      "email": "kontakt@sitewaerts.de"
+    }
+  ],
+  "name": "cordova-plugin-document-viewer",
+  "optionalDependencies": {},
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sitewaerts/cordova-plugin-document-viewer.git"
+  },
+  "scripts": {},
+  "version": "0.9.3"
+}

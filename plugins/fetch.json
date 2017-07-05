@@ -50,9 +50,41 @@
     "cordova-plugin-file": {
         "source": {
             "type": "registry",
-            "id": "cordova-plugin-file@^4.0.0"
+            "id": "cordova-plugin-file"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-document-viewer": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-document-viewer@0.9.3"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-android-support-v4-jar": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-android-support-v4-jar"
         },
         "is_top_level": false,
+        "variables": {}
+    },
+    "cordova-plugin-file-opener2": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-file-opener2"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-device": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-device"
+        },
+        "is_top_level": true,
         "variables": {}
     }
 }

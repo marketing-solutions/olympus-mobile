@@ -1,0 +1,102 @@
+{
+  "_args": [
+    [
+      {
+        "raw": "cordova-plugin-android-support-v4-jar",
+        "scope": null,
+        "escapedName": "cordova-plugin-android-support-v4-jar",
+        "name": "cordova-plugin-android-support-v4-jar",
+        "rawSpec": "",
+        "spec": "latest",
+        "type": "tag"
+      },
+      "C:\\Users\\bushmin\\Desktop\\Projects\\Olympus\\node_modules"
+    ]
+  ],
+  "_from": "cordova-plugin-android-support-v4-jar@latest",
+  "_id": "cordova-plugin-android-support-v4-jar@23.2.1",
+  "_inCache": true,
+  "_location": "/cordova-plugin-android-support-v4-jar",
+  "_nodeVersion": "5.5.0",
+  "_npmOperationalInternal": {
+    "host": "packages-13-west.internal.npmjs.com",
+    "tmp": "tmp/cordova-plugin-android-support-v4-jar-23.2.1.tgz_1458126543558_0.3452830193564296"
+  },
+  "_npmUser": {
+    "name": "pbakondy",
+    "email": "pbakondy@gmail.com"
+  },
+  "_npmVersion": "3.7.2",
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "cordova-plugin-android-support-v4-jar",
+    "scope": null,
+    "escapedName": "cordova-plugin-android-support-v4-jar",
+    "name": "cordova-plugin-android-support-v4-jar",
+    "rawSpec": "",
+    "spec": "latest",
+    "type": "tag"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/cordova-plugin-android-support-v4-jar/-/cordova-plugin-android-support-v4-jar-23.2.1.tgz",
+  "_shasum": "57fffada2c37b19d3feb686c203fdd9b1ce8061a",
+  "_shrinkwrap": null,
+  "_spec": "cordova-plugin-android-support-v4-jar",
+  "_where": "C:\\Users\\bushmin\\Desktop\\Projects\\Olympus\\node_modules",
+  "author": {
+    "name": "Peter Bakondy"
+  },
+  "bugs": {
+    "url": "https://github.com/pbakondy/cordova-plugin-android-support-v4-jar/issues"
+  },
+  "cordova": {
+    "id": "cordova-plugin-android-support-v4-jar",
+    "platforms": [
+      "android"
+    ]
+  },
+  "dependencies": {},
+  "description": "Android Support v4",
+  "devDependencies": {},
+  "directories": {},
+  "dist": {
+    "shasum": "57fffada2c37b19d3feb686c203fdd9b1ce8061a",
+    "tarball": "https://registry.npmjs.org/cordova-plugin-android-support-v4-jar/-/cordova-plugin-android-support-v4-jar-23.2.1.tgz"
+  },
+  "engines": [
+    {
+      "name": "cordova",
+      "version": ">=3.0.0"
+    }
+  ],
+  "gitHead": "e6754ea1763b74e3c903fcb752784ffa05276124",
+  "homepage": "https://github.com/pbakondy/cordova-plugin-android-support-v4-jar#readme",
+  "keywords": [
+    "cordova",
+    "android",
+    "support",
+    "v4",
+    "jar",
+    "ecosystem:cordova",
+    "cordova-android"
+  ],
+  "license": "MIT",
+  "maintainers": [
+    {
+      "name": "pbakondy",
+      "email": "pbakondy@gmail.com"
+    }
+  ],
+  "name": "cordova-plugin-android-support-v4-jar",
+  "optionalDependencies": {},
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pbakondy/cordova-plugin-android-support-v4-jar.git"
+  },
+  "scripts": {},
+  "version": "23.2.1"
+}

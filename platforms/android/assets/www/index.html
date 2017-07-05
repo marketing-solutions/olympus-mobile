@@ -43,13 +43,14 @@
           <div class="leftPanelExit" ng-click="mainCtrl.Logout()">Выйти</div>
           <div class="leftPanelColumn">
             <div ng-click="mainCtrl.GotoProfile()" class="leftPanelButton profilePanel">Профиль</div>
+            <div ng-click="mainCtrl.GotoBonus()" class="leftPanelButton bonusPanel">Бонусы</div>
             <div ng-click="mainCtrl.GotoSale()" class="leftPanelButton salePanel">Продажи</div>
             <div ng-click="mainCtrl.GotoTransaction()" class="leftPanelButton transPanel">Перевод на карту</div>
-            <div ng-click="mainCtrl.GotoCatalog()" class="leftPanelButton catPanel">Каталог</div>
             <div ng-click="mainCtrl.GotoSertificate()" class="leftPanelButton sertPanel">Сертификаты</div>
             <div ng-click="mainCtrl.GotoContact()" class="leftPanelButton contactPanel">Помощь</div>
           </div>
         </div>
+        <a href="#" ng-click="mainCtrl.OpenAbout()" class="back-button item-link button button-normal color-white bg-black">о проекте</a>
       </div>
     </div>
 
@@ -106,6 +107,7 @@
               </div>
             </div>
             <div class="page-content">
+            <a href="#" class="back-button back item-link button button-normal color-white bg-black">Назад</a>
               <div class="content-block-title">Персональные данные</div>
               <div class="list-block white-border-block">
                 <form id="update-profile-form">
@@ -151,6 +153,41 @@
               </div>
             </div>
           </div>
+
+          <div data-page="bonus" class="page ng-scope cached">
+            <div class="navbar Olympus-navbar no-border">
+              <div class="navbar-inner">
+                <div class="center Olympus-header sliding">&nbsp;</div>
+                <div class="left sliding"><a href="#" class="open-panel link icon-only">
+                  <i class="icon color-white icon-bars"></i></a>
+                </div>
+              </div>
+            </div>
+            <div class="page-content">
+              <div class="content-block"></div>
+              <div class="list-block white-border-block">
+                <ul>
+                <li>
+                  <div class="item-content">
+                      <div class="item-inner">
+                        <div class="item-title">Товар</div>
+                        <div class="item-after">Бонусы</div>
+                      </div>
+                    </div>
+                </li>
+                  <li ng-repeat="element in mainCtrl.products track by $index">
+                    <div class="item-content">
+                      <div class="item-inner">
+                        <div class="item-title product-title">{{element.name}}</div>
+                        <div class="item-after">{{element.bonuses_formula | Bonus}}</div>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
           <div data-page="transaction" class="page ng-scope cached">
             <div class="navbar Olympus-navbar no-border">
               <div class="navbar-inner">
@@ -201,9 +238,9 @@
             </div>
             <div class="page-content">
             <div class="content-block"></div>
-              <a href="#sale" class="item-link button button-normal color-white bg-black">Новая продажа</a>
+              <a href="#" ng-click="mainCtrl.OpenNewSale()" class="item-link button button-normal color-white bg-black">Новая продажа</a>
               <div class="content-block-title">История продаж</div>
-              <div class="list-block">
+              <div class="list-block white-border-block">
                 <ul>
                   <li ng-repeat="element in mainCtrl.sales_array track by $index">
                     <a href="#view_sale" ng-click="mainCtrl.selected_sale = $index" class="item-content item-link">
@@ -241,7 +278,7 @@
                   <li class="item-content">
                     <div class="item-inner">
                       <div class="item-title label">Статус</div>
-                      <div class="item-after">{{mainCtrl.sales_array[mainCtrl.selected_sale].status}}</div>
+                      <div class="item-after">{{mainCtrl.sales_array[mainCtrl.selected_sale].status | Status}}</div>
                     </div>
                   </li>
                   <li class="item-content">
@@ -264,6 +301,9 @@
                   </li>
                 </ul>
               </div>
+              <div>
+                <a href="#" ng-click="mainCtrl.EditSale()" class="item-link button button-normal color-white bg-black">Редактировать</a>
+              </div>
 
             </div>
           </div>
@@ -278,7 +318,7 @@
               </div>
             </div>
             <div class="page-content">
-              <div class="content-block-title">Новая продажа</div>
+            <a href="#" class="back-button back item-link button button-normal color-white bg-black">Назад</a>
               <div class="list-block white-border-block">
                 <ul>
                   <li class="item-content">
@@ -293,7 +333,8 @@
                 <ul>
                   <li ng-repeat="element in mainCtrl.sell track by $index">
                     <div class="item-content">
-                      <div class="item-media" ng-click="mainCtrl.DeleteProduct($index)"><img src="img/Delete.png" width="20"></div>
+                      <a href="" class="item-media item-link" ng-click="mainCtrl.DeleteProduct($index)"><span class="delete_helper"></span>
+                      <img src="img/Delete.png" class="delete_cross"></a>
                       <div class="item-inner">
                         <div class="item-title-row">
                           <div class="item-title product-title">{{element.name}}</div>
@@ -303,41 +344,14 @@
                     </div>
                   </li>
                 </ul>
+                <a href="#" data-popup=".popup-new-sale" class="open-popup item-link button button-normal color-white bg-black">+ добавить позицию</a>
               </div>
-              <div class="list-block white-border-block">
-                <form id="product-form">
-                  <ul>
-                    <li class="item-content">
-                      <div class="item-inner">
-                        <div class="item-title label">Товар</div>
-                        <div class="item-input">
-                          <input type="text" name="name" ng-click="mainCtrl.DropProducts.open()" readonly id="products-dropdown" placeholder="">
-                        </div>
-                      </div>
-                    </li>
-                    <li class="item-content">
-                      <div class="item-inner">
-                        <div class="item-title label">Серийный номер</div>
-                        <div class="item-input">
-                          <input type="text" id="prod-num" name="serial_number" placeholder="">
-                        </div>
-                      </div>
-                    </li>
-                  </ul>
-                </form>
-                <a href="#" ng-click="mainCtrl.AddProduct()" class="item-link button button-normal color-white bg-black">+ добавить позицию</a>
-              </div>
-              <div class="list-block">
-                <ul>
-                  <li>
-                    <div class="cropImage"><img id="billImage" class="billImage" src="">&nbsp;</div>
-                  </li>
-                  <li>
-                    <a href="#" ng-click="mainCtrl.TakePhoto()" class="item-link button button-normal color-white bg-black">Фото чека</a>
-                  </li>
-                </ul>
+              <div class="content-block">
+                <div class="cropImage" ng-click="mainCtrl.billView.open()"><img id="billImage" class="billImage pb-popup-dark" src="">&nbsp;</div>
+                <a href="#" ng-click="mainCtrl.TakePhoto()" class="item-link button button-normal color-white bg-black">Фото чека</a>
               </div>
             </div>
+            
           </div>
 
           <div data-page="contact" class="page ng-scope cached">
@@ -615,12 +629,48 @@
     </div>
   </div>
 
+<!-- New sale popup -->
+  <div class="popup popup-new-sale">
+    <div class="view">
+      <div class="page">
+        <div style="padding-top: 0px !important" class="page-content">
+        <img src="img/olympus.png" class="logimg">
+        <a href="#" class="close-popup back-button item-link button button-normal color-white bg-black">Назад</a>
+          <div class="list-block white-border-block">
+          <form id="product-form">
+            <ul>
+              <li class="item-content">
+                <div class="item-inner">
+                  <div class="item-title label">Товар</div>
+                  <div class="item-input">
+                    <input type="text" name="name" ng-click="mainCtrl.DropProducts.open()" readonly id="products-dropdown" placeholder="">
+                  </div>
+                </div>
+              </li>
+              <li class="item-content">
+                <div class="item-inner">
+                  <div class="item-title label">Серийный номер</div>
+                  <div class="item-input">
+                    <input type="text" id="prod-num" name="serial_number" placeholder="">
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </form>
+          <a href="#" ng-click="mainCtrl.AddProduct()" class="close-popup item-link button button-normal color-white bg-black">+ добавить позицию</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script src="cordova.js"></script> 
   <script src="./lib/framework7/js/framework7.js"></script>
   <script src="./lib/framework7/js/framework7.keypad.min.js"></script>
   <script src="./js/jquery-3.2.1.min.js"></script>
   <script src="./js/jquery.mask.min.js"></script>
   <script src="./js/angular.min.js"></script>
+  <script src="./js/moment.js"></script>
   <script src="./js/my-app.js"></script>
   <script src="./js/InitService.js"></script>
   <script src="./js/mainController.js"></script>

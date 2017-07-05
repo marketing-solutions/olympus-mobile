@@ -24,7 +24,7 @@
         <allow-intent href="itms-apps:*" />
         <preference name="BackupWebStorage" value="none" />
     </platform>
-        <platform name="android">
+    <platform name="android">
         <icon density="ldpi" src="www/res/icon/android/mipmap-ldpi/ic_launcher.png" />
         <icon density="mdpi" src="www/res/icon/android/mipmap-mdpi/ic_launcher.png" />
         <icon density="hdpi" src="www/res/icon/android/mipmap-hdpi/ic_launcher.png" />
@@ -73,4 +73,7 @@
     <plugin name="cordova-plugin-statusbar" spec="~1.0.1" />
     <plugin name="cordova-plugin-camera" spec="~2.4.1" />
     <plugin name="cordova-plugin-file-transfer" spec="~1.6.3" />
+    <plugin name="cordova-plugin-file-opener2" spec="~2.0.19" />
+    <plugin name="cordova-plugin-file" spec="~4.0.0" />
+    <plugin name="cordova-plugin-device" spec="~1.1.6" />
 </widget>
