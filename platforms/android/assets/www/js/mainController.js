@@ -70,7 +70,7 @@ this.phone = "";
 this.user = {};
 this.sell =[];
 this.sales_array = [];
-this.selected_sale = "";
+this.selected_sale = -1;
 this.image = "";
 
 /*--------------DROPDOWNS-----------------*/
@@ -196,19 +196,51 @@ for (var i = 0; i < 13; i++) {
 this.rulesPhoto = Olymp.fw7.app.photoBrowser({
   photos : ph,
   theme: 'dark',
-  type: 'popup',
-  ofText: 'из'
+  type: 'standalone',
+  ofText: 'из',
+  navbarTemplate: '<div class="navbar">'+
+    '<div class="navbar-inner">'+
+        '<div class="left sliding">'+
+            '<a href="#" class="link photo-browser-close-link {{#unless backLinkText}}icon-only{{/unless}} {{js "this.type === \'page\' ? \'back\' : \'\'"}}">' +
+                '<i class="icon icon-back {{iconsColorClass}}"></i>'+
+                '{{#if backLinkText}}<span>{{backLinkText}}</span>{{/if}}'+
+            '</a>'+
+        '</div>'+
+        '<div class="center sliding">'+
+            '<span class="photo-browser-current"></span>' +
+            '<span class="photo-browser-of">{{ofText}}</span>' +
+            '<span class="photo-browser-total"></span>'+
+        '</div>'+
+        '<div class="right"></div>'+
+    '</div>'+
+'</div>'
 });
 
-this.setPhoto = function (photo) {
-  Ctrl.billView = Olymp.fw7.app.photoBrowser({
-    photos : [photo],
-    theme: 'dark',
-    type: 'popup',
-    toolbar: false,
-      ofText: 'из'
+this.persPhoto = Olymp.fw7.app.photoBrowser({
+  photos : ['docs/rules/0.jpg','docs/rules/1.jpg'],
+  theme: 'dark',
+  type: 'standalone',
+  ofText: 'из',
+  navbarTemplate: '<div class="navbar">'+
+    '<div class="navbar-inner">'+
+        '<div class="left sliding">'+
+            '<a href="#" class="link photo-browser-close-link {{#unless backLinkText}}icon-only{{/unless}} {{js "this.type === \'page\' ? \'back\' : \'\'"}}">' +
+                '<i class="icon icon-back {{iconsColorClass}}"></i>'+
+                '{{#if backLinkText}}<span>{{backLinkText}}</span>{{/if}}'+
+            '</a>'+
+        '</div>'+
+        '<div class="center sliding">'+
+            '<span class="photo-browser-current"></span>' +
+            '<span class="photo-browser-of">{{ofText}}</span>' +
+            '<span class="photo-browser-total"></span>'+
+        '</div>'+
+        '<div class="right"></div>'+
+    '</div>'+
+'</div>'
 });
-}
+
+
+
 
 /*-----------Fancy Keypads------------*/
 
@@ -231,11 +263,18 @@ this.PhoneKeypad = Olymp.fw7.app.keypad({
     dotButton: false,
     toolbarCloseText: 'Готово'
 });
+this.PhoneKeypad2 = Olymp.fw7.app.keypad({
+    input: '.mask_phone2',
+    valueMaxLength: 13,
+    dotButton: false,
+    toolbarCloseText: 'Готово'
+});
 
 $scope.$watch('PhoneInput', function() {
   if ((!$scope.PhoneInput)||(!$scope.PhoneInput[3])){
     $scope.PhoneInput = "+7 ";
     Ctrl.PhoneKeypad.value = "+7 ";
+    Ctrl.PhoneKeypad2.value = "+7 ";
   }
   });
 
@@ -247,8 +286,8 @@ this.GotoProfile = function () {
 };
 this.GotoSale = function () {
   Olymp.fw7.app.views[0].router.loadPage("#old_sales");
-  Olymp.fw7.app.closePanel()
-  ;
+  Olymp.fw7.app.closePanel();
+  this.GetSales();
 };
 this.GotoTransaction = function () {
   Olymp.fw7.app.views[0].router.loadPage("#transaction");
@@ -268,14 +307,16 @@ this.GotoContact = function () {
 };
 
 this.OpenNewSale = function() {
-  this.selected_sale = "";
+  this.selected_sale = -1;
   this.sell = [];
   document.getElementById('products-dropdown').value = "";
   document.getElementById('prod-num').value = "";
-  Olymp.fw7.app.views[0].router.loadPage("#sale");
   document.getElementById('billImage').src = "";
   this.calendarDefault.value = [new Date()];
   document.getElementById('calendar-sell').value = moment().format("DD.MM.YYYY");
+  Ctrl.billView = {};
+
+  Olymp.fw7.app.views[0].router.loadPage("#sale");
 }
 
 this.Logout = function () {
@@ -287,7 +328,7 @@ this.Logout = function () {
 /*-----------Regular functions------------*/
 
 this.refresh = function() {
-//helps to update inputs when choosing dealer
+//helps to update changing inputs
 $timeout(function () {
     $scope.$apply();
     },50)
@@ -299,6 +340,7 @@ this.TakePhoto = function(){
      var image = document.getElementById('billImage');
      image.src =  'data:image/jpg;base64,'+imageData;
      Ctrl.image = imageData;
+     Ctrl.SetPhoto('data:image/jpg;base64,'+imageData);
   }, 
 
   function error(error) {
@@ -306,6 +348,17 @@ this.TakePhoto = function(){
   },
   {destinationType: Camera.DestinationType.DATA_URL});
 }
+
+this.SetPhoto = function (photo) {
+  Ctrl.billView = Olymp.fw7.app.photoBrowser({
+    photos : [photo],
+    theme: 'dark',
+    type: 'popup',
+    toolbar: false,
+      ofText: 'из'
+});
+}
+
 
 this.ForgotPass = function(){
   Olymp.fw7.app.prompt('Введите свой номер телефона', function (value) {
@@ -347,6 +400,7 @@ this.DeleteProduct = function(i){
   this.sell.splice(i,1);
 }
 
+
 this.EditSale = function(){
   this.sell = [];
   var products_array = this.sales_array[this.selected_sale].positions;
@@ -365,7 +419,7 @@ this.EditSale = function(){
   document.getElementById('prod-num').value = "";
   var image = document.getElementById('billImage');
   image.src = this.sales_array[this.selected_sale].documents[0].image_url;
-  this.setPhoto(this.sales_array[this.selected_sale].documents[0].image_url);
+  this.SetPhoto(this.sales_array[this.selected_sale].documents[0].image_url);
   Olymp.fw7.app.views[0].router.loadPage("#sale");
 }
 
@@ -627,6 +681,7 @@ this.UpdateProfile = function(){
 Olymp.fw7.app.showPreloader(["Подождите..."]);
   var info = Olymp.fw7.app.formToJSON('#update-profile-form');
   info.phone = localStorage["OlympPhone"];
+  console.log("new profile info");
   console.log(info);
   var req = {
    method: 'POST',
@@ -640,10 +695,11 @@ Olymp.fw7.app.showPreloader(["Подождите..."]);
   $http(req).then(
     function successCallback(response){
       Olymp.fw7.app.hidePreloader();
-      Ctrl.SetupProfile(response.data.profile,localStorage["OlympPass"]);
-      myApp.alert('Данные успешно обновлены!', function () {
-        Olymp.fw7.app.views[0].router.loadPage("#index");
+      Olymp.fw7.app.alert('Данные успешно обновлены!', function () {
+        Ctrl.SetupProfile(response.data.profile,localStorage["OlympPass"]);
+        Olymp.fw7.app.views[0].router.back();
     });
+     
     }, 
     function errorCallback(response){
   Olymp.fw7.app.hidePreloader();
@@ -677,7 +733,7 @@ this.GetSales = function(){
 }
 
 this.CheckSale = function(status){
-  if (Ctrl.selected_sale=="") {
+  if (Ctrl.selected_sale==-1) {
     this.SendSale(status)
   } else {
     this.UpdateSale(status)
@@ -685,6 +741,10 @@ this.CheckSale = function(status){
 }
 
 this.SendSale = function (status) {
+if (!Ctrl.image) {
+  Olymp.fw7.app.alert('Сделайте фотографию чека!')
+}else {
+
   Olymp.fw7.app.showPreloader(["Подождите..."]);
   var form_info = Olymp.fw7.app.formToJSON('#new-sale');
   var products = [];
@@ -728,6 +788,7 @@ this.SendSale = function (status) {
   Olymp.fw7.app.alert(response.data.reason);
   console.log(response);
     });
+  }
 }
 
 this.UpdateSale = function(status){

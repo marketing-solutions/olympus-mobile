@@ -173,12 +173,19 @@
 .picker-calendar-day-selected span{
 	color: #000000 !important;
 }
+.takeImage{
+    display: inline-block !important;
+    width: 150px !important;
+}
 .cropImage{
-    margin: 10px auto;
-    text-align: center;
+    display: inline-block;
+    margin: 5px;
+    overflow: hidden;
+    width: 50px;
+    height: 50px;
 }
 .billImage{
-	max-width: 200px;
+	max-width: 50px;
 }
 
 .white-border-block{
@@ -211,11 +218,15 @@
 .layout-dark .item-inner:not(.focus-state):not(.not-empty-state) .item-input-field:after, .layout-dark .item-inner:not(.focus-state):not(.not-empty-state) .input-field:after {
     background-color: rgba(255, 255, 255, 1) !important;
 }
-
+.item-title{
+    text-overflow: clip !important;
+    white-space: normal !important;
+}
 .item-media{
     text-align: center;
     height: 40px;
     white-space: nowrap;
+    border-radius: 100%;
 }
 .delete_helper{
     vertical-align: middle;
@@ -223,9 +234,10 @@
     display: inline-block;
 }
 .delete_cross{
-    width: 20px;
+    width: 25px;
     vertical-align: middle;
     padding: auto;
+    padding-right: 5px;
 }
 .item-inner:after{
     height: 5px !important;
@@ -237,4 +249,29 @@
 .white-button{
     margin-top: 20px;
     border-color: #ffffff !important;
+}
+.button-left{
+    margin: 10px;
+}
+.button{
+    text-overflow: clip !important;
+    background-color: #1a1a1a !important;
+}
+
+.no-items-message{
+    text-align: center;
+    width: 100vw;
+    margin-top: 30px;
+}
+
+.list-block ul:before,.list-block ul:after{
+    display: none !important;
+}
+
+.label-switch .checkbox{
+    background: rgba(255, 255, 255, 0.1) !important;
+}
+
+.theme-white .label-switch input[type="checkbox"]:checked + .checkbox, .label-switch.theme-white input[type="checkbox"]:checked + .checkbox {
+    background-color: rgba(255, 255, 255, 0.9) !important;
 }

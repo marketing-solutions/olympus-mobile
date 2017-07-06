@@ -45,10 +45,10 @@
             <div ng-click="mainCtrl.GotoProfile()" class="leftPanelButton profilePanel">Профиль</div>
             <div ng-click="mainCtrl.GotoBonus()" class="leftPanelButton bonusPanel">Бонусы</div>
             <div ng-click="mainCtrl.GotoSale()" class="leftPanelButton salePanel">Продажи</div>
-            <div ng-click="mainCtrl.GotoTransaction()" class="leftPanelButton transPanel">Перевод на карту</div>
-            <div ng-click="mainCtrl.GotoSertificate()" class="leftPanelButton sertPanel">Сертификаты</div>
-            <div ng-click="mainCtrl.GotoContact()" class="leftPanelButton contactPanel">Помощь</div>
-          </div>
+            <!-- <div ng-click="mainCtrl.GotoTransaction()" class="leftPanelButton transPanel">Перевод на карту</div>
+            <div ng-click="mainCtrl.GotoSertificate()" class="leftPanelButton sertPanel">Сертификаты</div> 
+            <div ng-click="mainCtrl.GotoContact()" class="leftPanelButton contactPanel">Помощь</div> -->
+          </div> 
         </div>
         <a href="#" ng-click="mainCtrl.rulesPhoto.open()" class="back-button item-link button button-normal color-white bg-black">о проекте</a>
       </div>
@@ -71,7 +71,7 @@
               <!-- Scrollable page content -->
               <div class="page-content">
                 <div class="content-block-title">Информация</div>
-                <div class="list-block">
+                <div class="list-block white-border-block">
                   <ul>
                     <li class="item-content">
                       <div class="item-inner">
@@ -226,7 +226,7 @@
             <div class="page-content">
               <div class="content-block-title">Реквизиты</div>
               <div class="list-block white-border-block">
-                <form id="update-profile-form">
+                <form id="payment-form">
                   <ul>
                     <li class="item-content">
                       <div class="item-inner">
@@ -265,18 +265,23 @@
             <div class="page-content">
             <div class="content-block"></div>
               <a href="#" ng-click="mainCtrl.OpenNewSale()" class="item-link button button-normal color-white bg-black">Новая продажа</a>
-              <div class="content-block-title">История продаж</div>
-              <div class="list-block white-border-block">
-                <ul>
-                  <li ng-repeat="element in mainCtrl.sales_array track by $index">
-                    <a href="#view_sale" ng-click="mainCtrl.selected_sale = $index" class="item-content item-link">
-                      <div class="item-inner">
-                        <div class="item-title">{{element.sold_on}}</div>
-                        <div class="item-after">{{element.status | Status}}</div>
-                      </div>
-                    </a>
-                  </li>
-                </ul>
+              <div ng-if="mainCtrl.sales_array[0]">
+                <div class="content-block-title">История продаж</div>
+                <div class="list-block white-border-block">
+                  <ul>
+                    <li ng-repeat="element in mainCtrl.sales_array track by $index">
+                      <a href="#view_sale" ng-click="mainCtrl.selected_sale = $index" class="item-content item-link">
+                        <div class="item-inner">
+                          <div class="item-title">{{element.sold_on}}</div>
+                          <div class="item-after">{{element.status | Status}}</div>
+                        </div>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div class="no-items-message" ng-hide="mainCtrl.sales_array[0]">
+                Продажи отсутствуют!
               </div>
             </div>
           </div>
@@ -377,9 +382,9 @@
                     </div>
                   </li>
                 </ul>
-                <a href="#" data-popup=".popup-new-sale" class="open-popup item-link button button-normal color-white bg-black">+ добавить позицию</a>
-                <div class="cropImage" ng-click="mainCtrl.billView.open()"><img id="billImage" class="billImage pb-popup-dark" src="">&nbsp;</div>
-                <a href="#" ng-click="mainCtrl.TakePhoto()" class="item-link button button-normal color-white bg-black">Фото чека</a>
+                <a href="#" data-popup=".popup-new-sale" class="open-popup item-link button button-normal color-white bg-black button-left">+ добавить позицию</a>
+                <a href="#" ng-click="mainCtrl.TakePhoto()" class="takeImage item-link button button-normal color-white bg-black button-left">Фото чека</a>
+                <div class="cropImage" ng-click="mainCtrl.billView.open()"><img id="billImage" class="billImage pb-popup-dark" src=""></div>
               </div>
               </form>
               <div class="content-block" ng-show="mainCtrl.sell[0]">
@@ -444,11 +449,13 @@
               </div>
             </div>
           </div>
-
         </div>
       </div>
+    </div>
 
-<!-- ===========Login Screen============ -->
+
+<!-- ===========Login and other Popups============ -->
+
     <div class="login-screen theme-white popup log tablet-fullscreen">
       <div class="view">
         <div class="page">
@@ -480,7 +487,7 @@
               <div class="list-block">
                 <ul>
                   <li>
-                    <a href="#" ng-click="mainCtrl.CheatLogin()" class="item-link button button-big color-white bg-black">Войти</a>
+                    <a href="#" ng-click="mainCtrl.PullLoginForm()" class="item-link button button-big color-white bg-black">Войти</a>
                   </li>
                 </ul>
                 <div class="list-block-label">
@@ -513,7 +520,7 @@
                     <div class="item-inner">
                       <div class="item-title label">Телефон</div>
                       <div class="item-input">
-                        <input type="text" ng-model='PhoneInput' class="mask_phone" name="phone">
+                        <input type="text" ng-model='PhoneInput' class="mask_phone2" name="phone">
                       </div>
                     </div>
                   </li>
@@ -623,7 +630,7 @@
                   <li>
                   <div class="item-content">
                     <div class="item-inner">
-                      <a href="http://olympus.msforyou.ru/media/uploads/rules.pdf" download class="item-title label">Даю согласие с правилами программы</a>
+                      <a href="#" ng-click="mainCtrl.rulesPhoto.open()" class="item-title label">Даю согласие с правилами программы</a>
                       <div class="item-input">
                         <label class="label-switch">
                           <input name="agreeWithTerms" type="checkbox" checked>
@@ -636,7 +643,7 @@
                 <li>
                   <div class="item-content">
                     <div class="item-inner">
-                      <div class="item-title label">Даю согласие на обработку данных</div>
+                      <div ng-click="mainCtrl.persPhoto.open()" class="item-title label">Даю согласие на обработку данных</div>
                       <div class="item-input">
                         <label class="label-switch">
                           <input name="allowPersonalDataProcessing" type="checkbox" checked>
