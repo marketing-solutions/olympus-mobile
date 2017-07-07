@@ -353,7 +353,7 @@ this.SetPhoto = function (photo) {
   Ctrl.billView = Olymp.fw7.app.photoBrowser({
     photos : [photo],
     theme: 'dark',
-    type: 'popup',
+    type: 'standalone',
     toolbar: false,
       ofText: 'из'
 });
@@ -441,6 +441,28 @@ this.GetProfile = function () {
   $http(req).then(
     function successCallback(response){
       Ctrl.SetupProfile(response.data.profile,loginfo.password);
+      Ctrl.GetTransactions();
+    }, 
+    function errorCallback(response){
+      Olymp.fw7.app.alert(response.data.reason);
+      console.log(response);
+  });
+}
+
+this.GetTransactions = function(){
+  var req = {
+   method: 'POST',
+   url: Ctrl.REST_URL+'sales/api/sales/transaction-history',
+   headers: {
+       'Content-Type': 'application/json',
+       'X-Token' : Ctrl.Token
+     },
+     data: {'phone': localStorage["OlympPhone"]}
+    };
+  $http(req).then(
+    function successCallback(response){
+      console.log("transaction history:");
+      console.log(response.data);
     }, 
     function errorCallback(response){
       Olymp.fw7.app.alert(response.data.reason);
@@ -650,9 +672,13 @@ this.SendSMS = function () {
 
 this.Register = function(){
 Olymp.fw7.app.showPreloader(["Подождите..."]);
-  var reginfo = Olymp.fw7.app.formToJSON('#reg-form');
-  if (reginfo.agreeWithTerms[0]) reginfo.agreeWithTerms=1;
-  if (reginfo.allowPersonalDataProcessing[0]) reginfo.allowPersonalDataProcessing=1;
+var reginfo = Olymp.fw7.app.formToJSON('#reg-form');
+if ((Ctrl.DropSelected.id)&&(reginfo.first_name)&&(reginfo.last_name)&&(reginfo.email)){
+
+  if (reginfo.agreeWithTerms[0]) {reginfo.agreeWithTerms=1} 
+    else {reginfo.agreeWithTerms=0};
+  if (reginfo.allowPersonalDataProcessing[0]) {reginfo.allowPersonalDataProcessing=1} 
+    else {reginfo.allowPersonalDataProcessing=0};
   reginfo.phone_mobile_local = this.phone;
   reginfo.dealer_id = Ctrl.DropSelected.id;
   console.log(reginfo);
@@ -675,6 +701,10 @@ Olymp.fw7.app.showPreloader(["Подождите..."]);
   Olymp.fw7.app.alert(response.data.reason);
   console.log(response);
     });
+
+  } else {
+    Olymp.fw7.app.hidePreloader();
+    Olymp.fw7.app.alert('Заполните все обязательные поля!')};
 }
 
 this.UpdateProfile = function(){
