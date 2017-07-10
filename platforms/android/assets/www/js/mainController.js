@@ -53,7 +53,7 @@ $http({method: 'GET', url: 'q.env'}).then(
   }
 );
 
-/*-----------initialize some fields------------*/
+/*---initialize some fields, not important stuff---*/
 
 this.allDealers = [];
 this.products = [];
@@ -70,6 +70,7 @@ this.phone = "";
 this.user = {};
 this.sell =[];
 this.sales_array = [];
+this.transactions = [];
 this.selected_sale = -1;
 this.image = "";
 
@@ -463,6 +464,7 @@ this.GetTransactions = function(){
     function successCallback(response){
       console.log("transaction history:");
       console.log(response.data);
+      Ctrl.transactions = response.data.transactions;
     }, 
     function errorCallback(response){
       Olymp.fw7.app.alert(response.data.reason);

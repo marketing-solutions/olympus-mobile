@@ -22,9 +22,9 @@
 
     <title>Olympus</title>
 
-      <link rel="stylesheet" href="./lib/framework7/css/framework7.material.css">
-    <link rel="stylesheet" href="./lib/framework7/css/framework7.material.colors.css">
-    <link rel="stylesheet" href="./lib/framework7/css/framework7.keypad.min.css">
+      <link rel="stylesheet" href="./f7/css/framework7.material.css">
+    <link rel="stylesheet" href="./f7/css/framework7.material.colors.css">
+    <link rel="stylesheet" href="./f7/css/framework7.keypad.min.css">
     <link rel="stylesheet" href="./css/styles.css">
 
     
@@ -43,8 +43,8 @@
           <div class="leftPanelExit" ng-click="mainCtrl.Logout()">Выйти</div>
           <div class="leftPanelColumn">
             <div ng-click="mainCtrl.GotoProfile()" class="leftPanelButton profilePanel">Профиль</div>
-            <div ng-click="mainCtrl.GotoBonus()" class="leftPanelButton bonusPanel">Бонусы</div>
             <div ng-click="mainCtrl.GotoSale()" class="leftPanelButton salePanel">Продажи</div>
+            <div ng-click="mainCtrl.GotoBonus()" class="leftPanelButton bonusPanel">Бонусы</div>
             <!-- <div ng-click="mainCtrl.GotoTransaction()" class="leftPanelButton transPanel">Перевод на карту</div>
             <div ng-click="mainCtrl.GotoSertificate()" class="leftPanelButton sertPanel">Сертификаты</div> 
             <div ng-click="mainCtrl.GotoContact()" class="leftPanelButton contactPanel">Помощь</div> -->
@@ -62,7 +62,7 @@
             <div data-page="index" class="page ng-scope">
               <div class="navbar Olympus-navbar no-border">
                 <div class="navbar-inner">
-                  <div class="center Olympus-header sliding">&nbsp;</div>
+                  <div class="center open-panel Olympus-header sliding">&nbsp;</div>
                   <div class="left sliding"><a href="#" class="open-panel link icon-only">
                     <i class="icon color-white icon-bars"></i></a>
                   </div>
@@ -126,7 +126,7 @@
           <div data-page="setup-profile" class="page ng-scope cached">
             <div class="navbar Olympus-navbar no-border">
               <div class="navbar-inner">
-                <div class="center Olympus-header sliding">&nbsp;</div>
+                <div class="center open-panel Olympus-header sliding">&nbsp;</div>
                 <div class="left sliding"><a href="#" class="open-panel link icon-only">
                   <i class="icon color-white icon-bars"></i></a>
                 </div>
@@ -180,36 +180,66 @@
             </div>
           </div>
 
-          <div data-page="bonus" class="page ng-scope cached">
+          <div data-page="bonus" class="page ng-scope cached with-subnavbar">
             <div class="navbar Olympus-navbar no-border">
               <div class="navbar-inner">
-                <div class="center Olympus-header sliding">&nbsp;</div>
+                <div class="center open-panel Olympus-header sliding">&nbsp;</div>
                 <div class="left sliding"><a href="#" class="open-panel link icon-only">
                   <i class="icon color-white icon-bars"></i></a>
                 </div>
               </div>
             </div>
+            <div class="toolbar tabbar">
+              <div class="toolbar-inner">
+                  <a href="#tab1" class="button active tab-link">История</a>
+                  <a href="#tab2" class="button tab-link">Таблица</a>
+              </div>
+            </div>
             <div class="page-content">
-              <div class="content-block"></div>
-              <div class="list-block white-border-block">
-                <ul>
-                <li>
-                  <div class="item-content">
-                      <div class="item-inner">
-                        <div class="item-title">Товар</div>
-                        <div class="item-after">Бонусы</div>
+              
+              <div class="tabs">
+                <div id="tab1" class="page-content tab active">
+                  <div class="content-block">
+                    <div class="no-items-message" ng-hide="mainCtrl.transactions[0]">История пуста!</div>
+                    <div class="timeline">
+                      <div ng-repeat="element in mainCtrl.transactions track by $index" class="timeline-item">
+                        <div class="timeline-item-date">{{element.balance_after}}<small> руб</small></div>
+                        <div class="timeline-item-divider"></div>
+                        <div class="timeline-item-content">
+                          <div class="timeline-item-time">{{element.created_at}}</div>
+                          <div class="timeline-item-title">{{element.title}}</div>
+                           <div class="timeline-item-subtitle">{{element.comment}}</div>
+                        </div>
                       </div>
+
                     </div>
-                </li>
-                  <li ng-repeat="element in mainCtrl.products track by $index">
-                    <div class="item-content">
-                      <div class="item-inner">
-                        <div class="item-title product-title">{{element.name}}</div>
-                        <div class="item-after">{{element.bonuses_formula | Bonus}}</div>
-                      </div>
-                    </div>
-                  </li>
-                </ul>
+                  </div>
+                </div>
+
+                <div id="tab2" class="page-content tab">
+                  <div class="content-block"></div>
+                  <div class="list-block white-border-block">
+                    <ul>
+                      <li>
+                        <div class="item-content">
+                          <div class="item-inner">
+                            <div class="item-title">Товар</div>
+                            <div class="item-after">Бонусы</div>
+                          </div>
+                        </div>
+                      </li>
+                      <li ng-repeat="element in mainCtrl.products track by $index">
+                        <div class="item-content">
+                          <div class="item-inner">
+                            <div class="item-title product-title">{{element.name}}</div>
+                            <div class="item-after">{{element.bonuses_formula | Bonus}}</div>
+                          </div>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+
               </div>
             </div>
           </div>
@@ -217,7 +247,7 @@
           <div data-page="transaction" class="page ng-scope cached">
             <div class="navbar Olympus-navbar no-border">
               <div class="navbar-inner">
-                <div class="center Olympus-header sliding">&nbsp;</div>
+                <div class="center open-panel Olympus-header sliding">&nbsp;</div>
                 <div class="left sliding"><a href="#" class="open-panel link icon-only">
                   <i class="icon color-white icon-bars"></i></a>
                 </div>
@@ -256,7 +286,7 @@
           <div data-page="old_sales" class="page ng-scope cached">
             <div class="navbar Olympus-navbar no-border">
               <div class="navbar-inner">
-                <div class="center Olympus-header sliding">&nbsp;</div>
+                <div class="center open-panel Olympus-header sliding">&nbsp;</div>
                 <div class="left sliding"><a href="#" class="open-panel link icon-only">
                   <i class="icon color-white icon-bars"></i></a>
                 </div>
@@ -289,7 +319,7 @@
           <div data-page="view_sale" class="page ng-scope cached">
             <div class="navbar Olympus-navbar no-border">
               <div class="navbar-inner">
-                <div class="center Olympus-header sliding">&nbsp;</div>
+                <div class="center open-panel Olympus-header sliding">&nbsp;</div>
                 <div class="left sliding"><a href="#" class="open-panel link icon-only">
                   <i class="icon color-white icon-bars"></i></a>
                 </div>
@@ -348,7 +378,7 @@
           <div data-page="sale" class="page ng-scope cached">
             <div class="navbar Olympus-navbar no-border">
               <div class="navbar-inner">
-                <div class="center Olympus-header sliding">&nbsp;</div>
+                <div class="center open-panel Olympus-header sliding">&nbsp;</div>
                 <div class="left sliding"><a href="#" class="open-panel link icon-only">
                   <i class="icon color-white icon-bars"></i></a>
                 </div>
@@ -398,7 +428,7 @@
           <div data-page="contact" class="page ng-scope cached">
             <div class="navbar Olympus-navbar no-border">
               <div class="navbar-inner">
-                <div class="center Olympus-header sliding">&nbsp;</div>
+                <div class="center open-panel Olympus-header sliding">&nbsp;</div>
                 <div class="left sliding"><a href="#" class="open-panel link icon-only">
                   <i class="icon color-white icon-bars"></i></a>
                 </div>
@@ -708,8 +738,8 @@
   </div>
 
   <script src="cordova.js"></script> 
-  <script src="./lib/framework7/js/framework7.js"></script>
-  <script src="./lib/framework7/js/framework7.keypad.min.js"></script>
+  <script src="./f7/js/framework7.js"></script>
+  <script src="./f7/js/framework7.keypad.min.js"></script>
   <script src="./js/jquery-3.2.1.min.js"></script>
   <script src="./js/jquery.mask.min.js"></script>
   <script src="./js/angular.min.js"></script>

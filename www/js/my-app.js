@@ -34,7 +34,7 @@ Olymp.fw7 = {
     panelLeftBreakpoint: 700,
     scrollTopOnNavbarClick: true,
     swipePanelThreshold: 50,
-    swipePanelActiveArea:50,
+    swipePanelActiveArea:150,
     modalUsernamePlaceholder: 'пароль',
     modalPasswordPlaceholder: 'повторите пароль'
   }),
