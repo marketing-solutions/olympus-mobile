@@ -1,4 +1,4 @@
-﻿ВСЕ запросы отправляются методом POST с заголовком "Content-Type: application/json" и с заголовком "X-Token"
+ВСЕ запросы отправляются методом POST с заголовком "Content-Type: application/json" и с заголовком "X-Token"
 ---------------------------------------------------------------------------------------------------------------
 
 Список продуктов по дистрибьюьтору, запрос: http://olympus.msforyou.ru/sales/api/sales/products
@@ -88,3 +88,31 @@
 {"result":"FAIL","reason":"Ошибка при валидации полей"}
 
 ---------------------------------------------------------------------------------------------------------------
+
+    public function actionTransactionHistory()
+    {
+        $user_phone = \Yii::$app->request->post('phone', null);
+
+        if ($profile = ApiProfile::findOne(['phone_mobile' => $user_phone])) {
+            if ($purse = Purse::findById($profile->id)){
+                $purse_history = $purse->purseTransactions;
+                $return = ['result' => 'OK', 'transactions' => $purse_history];
+                Log::setComment("Получение истории транзакций участника {$profile->full_name}");
+                Log::setResponse($return);
+            } else{
+                $return = ['result' => 'FAIL', 'reason' => 'Отсутствие кошелька участника'];
+                Yii::$app->response->statusCode = 400;
+                Log::setComment("Получение истории транзакций участника: отсутствие кошелька участника", 400);
+                Log::setResponse($return);
+            }
+
+        } else {
+            $return = ['result' => 'FAIL', 'reason' => 'Участник не найден'];
+            Yii::$app->response->statusCode = 400;
+            Log::setComment("Получение истории транзакций участника: участник не найден", 400);
+            Log::setResponse($return);
+        }
+
+
+        return $return;
+    }

@@ -35,19 +35,19 @@
 
     <!-- Left panel-->
     <div class="panel-overlay"></div>
-    <div class="panel panel-left panel-reveal">
+    <div id="lpan" class="panel panel-left panel-reveal">
       <div class="page-content">
         <div class="content-block left-block">
           <div class="leftPanelName">Привет, {{mainCtrl.user.first_name}}!</div>
-          <div class="leftPanelPoints">Бонусный баланс: {{mainCtrl.user.balance}} баллов</div>
+          <div ng-click="mainCtrl.GotoBonus()" class="leftPanelPoints">Бонусный баланс: {{mainCtrl.user.balance}} баллов</div>
           <div class="leftPanelExit" ng-click="mainCtrl.Logout()">Выйти</div>
           <div class="leftPanelColumn">
             <div ng-click="mainCtrl.GotoProfile()" class="leftPanelButton profilePanel">Профиль</div>
             <div ng-click="mainCtrl.GotoSale()" class="leftPanelButton salePanel">Продажи</div>
             <div ng-click="mainCtrl.GotoBonus()" class="leftPanelButton bonusPanel">Бонусы</div>
-            <!-- <div ng-click="mainCtrl.GotoTransaction()" class="leftPanelButton transPanel">Перевод на карту</div>
+            <!-- <div ng-click="mainCtrl.GotoTransaction()" class="leftPanelButton transPanel">Перевод на карту</div> -->
             <div ng-click="mainCtrl.GotoSertificate()" class="leftPanelButton sertPanel">Сертификаты</div> 
-            <div ng-click="mainCtrl.GotoContact()" class="leftPanelButton contactPanel">Помощь</div> -->
+            <div ng-click="mainCtrl.GotoContact()" class="leftPanelButton contactPanel">Помощь</div> 
           </div> 
         </div>
         <a href="#" ng-click="mainCtrl.rulesPhoto.open()" class="back-button item-link button button-normal color-white bg-black">о проекте</a>
@@ -58,7 +58,7 @@
     <div class="views">
         <!-- main view -->
         <div class="view view-main">
-          <div class="pages navbar-fixed toolbar-fixed">
+          <div class="pages theme-white navbar-fixed toolbar-fixed">
             <div data-page="index" class="page ng-scope">
               <div class="navbar Olympus-navbar no-border">
                 <div class="navbar-inner">
@@ -283,6 +283,28 @@
             </div>
           </div>
 
+          <div data-page="sertificate" class="page ng-scope cached">
+            <div class="navbar Olympus-navbar no-border">
+              <div class="navbar-inner">
+                <div class="center open-panel Olympus-header sliding">&nbsp;</div>
+                <div class="left sliding"><a href="#" class="open-panel link icon-only">
+                  <i class="icon color-white icon-bars"></i></a>
+                </div>
+              </div>
+            </div>
+            <div class="page-content">
+              <div class="content-block-title">Бонусные карты</div>
+              <div class="card card-header-pic" ng-repeat="element in mainCtrl.sertificates track by $index">
+                <div ng-style="{'background-image':'url({{element.imgUrl}})'}" valign="bottom" class="card-header color-white no-border"></div>
+                <div class="card-content">
+                  <div class="card-content-inner">
+                    
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div data-page="old_sales" class="page ng-scope cached">
             <div class="navbar Olympus-navbar no-border">
               <div class="navbar-inner">
@@ -332,37 +354,37 @@
                 <ul>
                   <li class="item-content">
                     <div class="item-inner">
-                      <div class="item-title label">ID</div>
-                      <div class="item-after">{{mainCtrl.sales_array[mainCtrl.selected_sale].sale_id}}</div>
-                    </div>
-                  </li>
-                  <li class="item-content">
-                    <div class="item-inner">
-                      <div class="item-title label">Статус</div>
+                      <div class="item-title">Статус</div>
                       <div class="item-after">{{mainCtrl.sales_array[mainCtrl.selected_sale].status | Status}}</div>
                     </div>
                   </li>
                   <li class="item-content">
                     <div class="item-inner">
-                      <div class="item-title label">Бонусы</div>
+                      <div class="item-title">ID</div>
+                      <div class="item-after">{{mainCtrl.sales_array[mainCtrl.selected_sale].sale_id}}</div>
+                    </div>
+                  </li>
+                  <li class="item-content">
+                    <div class="item-inner">
+                      <div class="item-title">Бонусы</div>
                       <div class="item-after">{{mainCtrl.sales_array[mainCtrl.selected_sale].bonuses}}</div>
                     </div>
                   </li>
                   <li class="item-content">
                     <div class="item-inner">
-                      <div class="item-title label">Дата продажи</div>
+                      <div class="item-title">Дата продажи</div>
                       <div class="item-after">{{mainCtrl.sales_array[mainCtrl.selected_sale].sold_on}}</div>
                     </div>
                   </li>
                   <li class="item-content">
                     <div class="item-inner">
-                      <div class="item-title label">Дата создания</div>
+                      <div class="item-title">Дата создания</div>
                       <div class="item-after">{{mainCtrl.sales_array[mainCtrl.selected_sale].created_at}}</div>
                     </div>
                   </li>
                   <li ng-repeat="element in mainCtrl.sales_array[mainCtrl.selected_sale].positions track by $index" class="item-content">
                     <div class="item-inner">
-                      <div class="item-title label">Товар №{{$index+1}}</div>
+                      <div class="item-title">Товар №{{$index+1}}</div>
                       <div class="item-text">{{element.product.name}}</div>
                     </div>
                   </li>
@@ -443,7 +465,7 @@
                       <div class="item-inner">
                         <div class="item-title label">Имя</div>
                         <div class="item-input">
-                          <input type="text" name="name">
+                          <input type="text" id="help-name" name="name">
                         </div>
                       </div>
                     </li>
@@ -451,28 +473,28 @@
                       <div class="item-inner">
                         <div class="item-title label">E-mail</div>
                         <div class="item-input">
-                          <input type="email" name="email">
+                          <input type="email" id="help-email" name="email">
                         </div>
                       </div>
                     </li>
-                    <li class="item-content">
+                     <li class="item-content">
                       <div class="item-inner">
                         <div class="item-title label">Телефон</div>
                         <div class="item-input">
-                          <input type="text" name="phone">
+                          <input type="text" id="help-phone" name="phone_mobile_local">
                         </div>
                       </div>
-                    </li>
+                    </li> 
                     <li class="item-content">
                       <div class="item-inner">
                         <div class="item-title label">Сообщение</div>
                         <div class="item-input">
-                          <textarea class="resizable" name="text"></textarea>
+                          <textarea class="resizable" name="content"></textarea>
                         </div>
                       </div>
                     </li>
                     <li>
-                      <a href="#" ng-click="" class="item-link button button-big color-white bg-black">Задать вопрос</a>
+                      <a href="#" ng-click="mainCtrl.Feedback()" class="item-link button button-big color-white bg-black">Задать вопрос</a>
                     </li>
                   </ul>
                 </form>

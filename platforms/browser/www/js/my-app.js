@@ -31,7 +31,6 @@ Olymp.fw7 = {
         swipePanel:"left",
     sortable: false,
     swipeout: false,
-    panelLeftBreakpoint: 700,
     scrollTopOnNavbarClick: true,
     swipePanelThreshold: 50,
     swipePanelActiveArea:150,

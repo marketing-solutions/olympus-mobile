@@ -71,6 +71,7 @@ this.user = {};
 this.sell =[];
 this.sales_array = [];
 this.transactions = [];
+this.sertificates = [];
 this.selected_sale = -1;
 this.image = "";
 
@@ -304,6 +305,9 @@ this.GotoSertificate = function () {
 };
 this.GotoContact = function () {
   Olymp.fw7.app.views[0].router.loadPage("#contact");
+  document.getElementById('help-name').value = this.user.full_name;
+  document.getElementById('help-email').value = this.user.email;
+  document.getElementById('help-phone').value = this.user.phone_mobile;
   Olymp.fw7.app.closePanel();
 };
 
@@ -326,6 +330,13 @@ this.Logout = function () {
   localStorage["OlympPass"] = "";
   Olymp.fw7.app.loginScreen();
 }
+
+/*-----------functions for ng-if------------*/
+
+/*this.IsWide = function () {
+  return $("#lpan").hasClass("panel-visible-by-breakpoint")
+}*/
+
 /*-----------Regular functions------------*/
 
 this.refresh = function() {
@@ -377,6 +388,8 @@ this.SetupProfile = function(profile,pass){
   console.log(profile);
   this.GetSales();
   this.GetProducts(profile.dealer.name);
+  this.GetTransactions();
+  this.GetSertificates();
 }
 
 this.IfShowAddProductButton = function(){
@@ -442,7 +455,6 @@ this.GetProfile = function () {
   $http(req).then(
     function successCallback(response){
       Ctrl.SetupProfile(response.data.profile,loginfo.password);
-      Ctrl.GetTransactions();
     }, 
     function errorCallback(response){
       Olymp.fw7.app.alert(response.data.reason);
@@ -465,6 +477,27 @@ this.GetTransactions = function(){
       console.log("transaction history:");
       console.log(response.data);
       Ctrl.transactions = response.data.transactions;
+    }, 
+    function errorCallback(response){
+      Olymp.fw7.app.alert(response.data.reason);
+      console.log(response);
+  });
+}
+
+this.GetSertificates = function(){
+  var req = {
+   method: 'POST',
+   url: Ctrl.REST_URL+'sales/api/sales/cards',
+   headers: {
+       'Content-Type': 'application/json',
+       'X-Token' : Ctrl.Token
+     }
+    };
+  $http(req).then(
+    function successCallback(response){
+      console.log("cards:");
+      console.log(response.data);
+      Ctrl.sertificates = response.data.cards;
     }, 
     function errorCallback(response){
       Olymp.fw7.app.alert(response.data.reason);
@@ -870,6 +903,36 @@ this.UpdateSale = function(status){
   Olymp.fw7.app.alert(response.data.reason);
   console.log(response);
     });
+}
+
+this.Feedback = function(){
+  Olymp.fw7.app.showPreloader(["Подождите..."]);
+  var info = Olymp.fw7.app.formToJSON('#help-form');
+  info.phone_mobile = localStorage["OlympPhone"];
+  var req = {
+   method: 'POST',
+   url: this.REST_URL+'sales/api/sales/feedback',
+   headers: {
+       'Content-Type': 'application/json',
+       'X-Token' : Ctrl.Token
+     },
+     data: info
+    };
+  $http(req).then(
+    function successCallback(response){
+      Olymp.fw7.app.hidePreloader();
+      console.log(response.data);
+      Olymp.fw7.app.alert(response.data.message, function(){
+        document.getElementById("help-form").reset()
+      });
+    }, 
+    function errorCallback(response){
+  Olymp.fw7.app.hidePreloader();
+  Olymp.fw7.app.alert(response.data.reason);
+  console.log(response);
+    });
+
+
 }
 
 }]);
