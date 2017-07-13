@@ -1,4 +1,4 @@
-'use strict';
+
 
 var Olymp = {};
 var $$ = Dom7;
@@ -14,7 +14,7 @@ function onBackKeyDown() {
 
 Olymp.config={};
 
-Olymp.angJS = new angular.module('Olymp', []);
+Olymp.angJS = new angular.module('Olymp', ['ngSanitize']);
  
 
 $$(document).on('DOMContentLoaded', function() {
@@ -31,7 +31,6 @@ Olymp.fw7 = {
         swipePanel:"left",
     sortable: false,
     swipeout: false,
-    scrollTopOnNavbarClick: true,
     swipePanelThreshold: 50,
     swipePanelActiveArea:150,
     modalUsernamePlaceholder: 'пароль',

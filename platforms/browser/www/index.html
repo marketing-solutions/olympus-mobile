@@ -42,7 +42,7 @@
           <div ng-click="mainCtrl.GotoBonus()" class="leftPanelPoints">Бонусный баланс: {{mainCtrl.user.balance}} баллов</div>
           <div class="leftPanelExit" ng-click="mainCtrl.Logout()">Выйти</div>
           <div class="leftPanelColumn">
-            <div ng-click="mainCtrl.GotoProfile()" class="leftPanelButton profilePanel">Профиль</div>
+            <div ng-click="mainCtrl.GotoProfile()" class="leftPanelButton profilePanel">Главная</div>
             <div ng-click="mainCtrl.GotoSale()" class="leftPanelButton salePanel">Продажи</div>
             <div ng-click="mainCtrl.GotoBonus()" class="leftPanelButton bonusPanel">Бонусы</div>
             <!-- <div ng-click="mainCtrl.GotoTransaction()" class="leftPanelButton transPanel">Перевод на карту</div> -->
@@ -70,7 +70,36 @@
               </div>
               <!-- Scrollable page content -->
               <div class="page-content">
-                <div class="content-block-title">Информация</div>
+
+              <div class="content-block-title">Конкурс</div>
+              <div class="list-block white-border-block">
+                <ul>
+                  <li class="accordion-item"><a href="#" class="item-content item-link">
+                      <div class="item-inner">
+                        <div class="item-title white-border-block">Описание конкурса</div>
+                      </div></a>
+                    <div class="accordion-item-content">
+                      <div ng-bind-html="mainCtrl.contest.desc" class="content-block">
+                       
+                      </div>
+                    </div>
+                  </li>
+                  <li class="item-content">
+                    <div class="item-inner">
+                      <div class="item-title">Имя</div>
+                      <div class="item-after">Кол-во продаж</div>
+                    </div>
+                  </li>
+                  <li ng-repeat="user in mainCtrl.contest.users track by $index" class="item-content">
+                    <div class="item-inner">
+                      <div class="item-title">{{user.full_name}}</div>
+                      <div class="item-after">{{user.sum_quantity}}</div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+
+                <div class="content-block-title">Профиль</div>
                 <div class="list-block white-border-block">
                   <ul>
                     <li class="item-content">
@@ -191,14 +220,14 @@
             </div>
             <div class="toolbar tabbar">
               <div class="toolbar-inner">
-                  <a href="#tab1" class="button active tab-link">История</a>
-                  <a href="#tab2" class="button tab-link">Таблица</a>
+                  <a href="#tab3" class="button active tab-link">История</a>
+                  <a href="#tab4" class="button tab-link">Таблица</a>
               </div>
             </div>
             <div class="page-content">
-              
+            <div class="tabs-animated-wrap">
               <div class="tabs">
-                <div id="tab1" class="page-content tab active">
+                <div id="tab3" class="page-content tab active">
                   <div class="content-block">
                     <div class="no-items-message" ng-hide="mainCtrl.transactions[0]">История пуста!</div>
                     <div class="timeline">
@@ -216,7 +245,7 @@
                   </div>
                 </div>
 
-                <div id="tab2" class="page-content tab">
+                <div id="tab4" class="page-content tab">
                   <div class="content-block"></div>
                   <div class="list-block white-border-block">
                     <ul>
@@ -241,6 +270,7 @@
                 </div>
 
               </div>
+            </div>
             </div>
           </div>
 
@@ -292,18 +322,127 @@
                 </div>
               </div>
             </div>
+            <div class="toolbar tabbar">
+              <div class="toolbar-inner">
+                  <a href="#tab1" class="button active tab-link">История</a>
+                  <a href="#tab2" class="button tab-link">Заказать</a>
+              </div>
+            </div>
             <div class="page-content">
-              <div class="content-block-title">Бонусные карты</div>
-              <div class="card card-header-pic" ng-repeat="element in mainCtrl.sertificates track by $index">
-                <div ng-style="{'background-image':'url({{element.imgUrl}})'}" valign="bottom" class="card-header color-white no-border"></div>
-                <div class="card-content">
-                  <div class="card-content-inner">
-                    
+              <div class="tabs-animated-wrap">
+                <div class="tabs">
+
+                  <div id="tab1" class="page-content tab active">
+                    <div class="content-block">
+                      <div class="no-items-message" ng-hide="mainCtrl.cards_history[0]">История пуста!</div>
+                      <div class="timeline">
+                        <div ng-repeat="element in mainCtrl.cards_history track by $index" class="timeline-item">
+                          <div class="timeline-item-date">- {{element.amount}}<small> руб</small></div>
+                          <div class="timeline-item-divider"></div>
+                          <div class="timeline-item-content">
+                            <div class="timeline-item-time">{{element.created_at}}</div>
+                            <div class="card-history" ng-repeat="card in element.cards track by $index">
+                              <div class="timeline-item-title">{{card.type}}</div>
+                              <div class="timeline-item-text">Количество:{{card.quantity}}<br>Номинал:{{card.nominal}} руб.</div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                   </div>
+                  </div>
+
+                  <div id="tab2" class="page-content tab">
+                    <div class="content-block-title">Бонусные карты</div>
+                    <div ng-click="mainCtrl.OpenSertificate($index)" class="card white-border-block card-header-pic" ng-repeat="element in mainCtrl.sertificates track by $index">
+                      <div ng-style="{'background-image':'url({{element.imgUrl}})'}" valign="bottom" class="card-header color-white no-border">
+                        <div class="card-layer">{{element.title}}</div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
+
+          <div data-page="buy-sertificate" class="page ng-scope cached">
+            <div class="navbar Olympus-navbar no-border">
+              <div class="navbar-inner">
+                <div class="center open-panel Olympus-header sliding">&nbsp;</div>
+                <div class="left sliding"><a href="#" class="open-panel link icon-only">
+                  <i class="icon color-white icon-bars"></i></a>
+                </div>
+              </div>
+            </div>
+            <div class="page-content">
+              <a href="#" class="back-button back item-link button button-normal color-white bg-black">Назад</a>
+              <div class="white-border-block">
+                <div class="card-title">{{mainCtrl.sertificates[mainCtrl.selected_card].title}}</div>
+                <img class="card-image" ng-src="{{mainCtrl.sertificates[mainCtrl.selected_card].imgUrl}}">
+              </div>
+
+              <form id="sertificate-form">
+              <div class="list-block">
+                <ul>
+                  <li>
+                    <div class="item-content">
+                      <div class="item-inner">
+                        <div class="item-title label">Количество карт</div>
+                        <div class="item-input">
+                          <input type="text" placeholder="1" name="quantity" value="1" readonly id="picker-amount">
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+                <ul>
+                  <li ng-repeat="element in mainCtrl.nominals track by $index">
+                    <label class="label-radio item-content no-fastclick">
+                      <input type="radio" name="nominal" id="radio-nominal" ng-model="mainCtrl.selected_nominal" ng-value={{($index)}}>
+                      <div class="item-media">
+                        <i class="icon icon-form-radio"></i>
+                      </div>
+                      <div class="item-inner">
+                        <div class="item-title">{{element}} руб.</div>
+                      </div>
+                    </label>
+                  </li>
+                  <!-- if other nominals are supported -->
+                  <li>
+                    <label class="label-radio item-content no-fastclick">
+                      <input type="radio" ng-model="mainCtrl.selected_nominal" name="nominal" ng-value="-1">
+                      <div ng-click="mainCtrl.WarnCard()" class="item-media">
+                        <i class="icon icon-form-radio"></i>
+                      </div>
+                      <div ng-click="mainCtrl.WarnCard()" class="item-inner">
+                        <div class="item-title">Другой номинал</div>
+                      </div>
+                    </label>
+                  </li>
+                </ul>
+                <ul ng-show="mainCtrl.selected_nominal==-1">
+                  <li>
+                    <div class="item-content">
+                      <div class="item-inner">
+                        <div class="item-input">
+                          <input type="text" placeholder="Выбор номинала" name="special_nominal" readonly id="picker-nominal">
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+                <ul>
+                  <li>
+                    <a href="#" ng-click="mainCtrl.BuySertificate()" class="item-link button button-big color-white bg-black">Купить</a>
+                  </li>
+                </ul>
+              </div>   
+
+
+              </form> 
+
+            </div>
+          </div>
+
 
           <div data-page="old_sales" class="page ng-scope cached">
             <div class="navbar Olympus-navbar no-border">
@@ -765,6 +904,7 @@
   <script src="./js/jquery-3.2.1.min.js"></script>
   <script src="./js/jquery.mask.min.js"></script>
   <script src="./js/angular.min.js"></script>
+  <script src="./js/angular-sanitize.min.js"></script>
   <script src="./js/moment.js"></script>
   <script src="./js/my-app.js"></script>
   <script src="./js/InitService.js"></script>

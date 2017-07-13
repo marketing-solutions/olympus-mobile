@@ -71,7 +71,11 @@ this.user = {};
 this.sell =[];
 this.sales_array = [];
 this.transactions = [];
+this.contest = {desc:'', users:[],plaintext:''};
+this.cards_history = [];
 this.sertificates = [];
+this.selected_card = -1;
+this.selected_nominal = 0;
 this.selected_sale = -1;
 this.image = "";
 
@@ -242,7 +246,18 @@ this.persPhoto = Olymp.fw7.app.photoBrowser({
 });
 
 
+/*------Sertificate amount picker------*/
 
+  this.pickerAmount = Olymp.fw7.app.picker({
+    input: '#picker-amount',
+    toolbarCloseText: 'Готово',
+    cols: [
+        {
+            textAlign: 'center',
+            values: [1,2,3,4,5,6,7,8,9,10]
+        }
+    ]
+});
 
 /*-----------Fancy Keypads------------*/
 
@@ -323,6 +338,58 @@ this.OpenNewSale = function() {
 
   Olymp.fw7.app.views[0].router.loadPage("#sale");
 }
+this.OpenSertificate = function(num){
+  this.selected_card = num;
+  document.getElementById("picker-nominal").value = "";
+  document.getElementById("picker-amount").value = "1";
+
+  var str=this.sertificates[this.selected_card].standard_nominals_raw.replace(/ /g, "").replace(/;/g, ",");
+  this.nominals = str.split(",");
+
+  if (this.sertificates[this.selected_card].nominals_raw.search(/-/)!=-1){
+    var min_index = this.sertificates[this.selected_card].nominals_raw.search(/-/);
+    var max_index = this.sertificates[this.selected_card].nominals_raw.search(/:/);
+    var min_sum = parseInt(this.sertificates[this.selected_card].nominals_raw.slice(0,min_index));
+    var max_sum = parseInt(this.sertificates[this.selected_card].nominals_raw.slice(min_index+1,max_index));
+    var step = parseInt(this.sertificates[this.selected_card].nominals_raw.slice(max_index+1));
+    this.all_nominals = [];
+    for (var i = 0; i <= (max_sum-min_sum)/step; i++) {
+      var s = min_sum+i*step;
+      this.all_nominals.push(s);
+    }
+
+  } else {
+    this.all_nominals = [];
+    var str=this.sertificates[this.selected_card].nominals_raw.replace(/ /g, "").replace(/;/g, ",");
+    this.all_nominals = str.split(",");
+  }
+
+  //console.log(this.all_nominals);
+  this.pickerSum = Olymp.fw7.app.picker({
+    input: '#picker-nominal',
+    toolbarCloseText: 'Готово',
+    cols: [
+        {
+            textAlign: 'center',
+            values: this.all_nominals
+        }
+    ]
+});
+
+  this.autocompleteDropdownAll = Olymp.fw7.app.autocomplete({
+    input: '#autocomplete-nominal',
+    openIn: 'dropdown',
+    source: function (autocomplete, query, render) {
+        var results = [];
+        for (var i = 0; i < Ctrl.nominals.length; i++) {
+            if (Ctrl.nominals[i].indexOf(query.toLowerCase()) >= 0) results.push(Ctrl.nominals[i]);
+        }
+        render(results);
+    }
+});
+  this.refresh();
+  Olymp.fw7.app.views[0].router.loadPage("#buy-sertificate");
+}
 
 this.Logout = function () {
   Olymp.fw7.app.closePanel();
@@ -338,6 +405,7 @@ this.Logout = function () {
 }*/
 
 /*-----------Regular functions------------*/
+
 
 this.refresh = function() {
 //helps to update changing inputs
@@ -374,8 +442,8 @@ this.SetPhoto = function (photo) {
 
 this.ForgotPass = function(){
   Olymp.fw7.app.prompt('Введите свой номер телефона', function (value) {
-    this.phone = value;
-    this.TokenPass(value);
+    Ctrl.phone = value;
+    Ctrl.TokenPass(value);
   });
 
 }
@@ -390,6 +458,7 @@ this.SetupProfile = function(profile,pass){
   this.GetProducts(profile.dealer.name);
   this.GetTransactions();
   this.GetSertificates();
+  this.GetContest();
 }
 
 this.IfShowAddProductButton = function(){
@@ -437,6 +506,18 @@ this.EditSale = function(){
   Olymp.fw7.app.views[0].router.loadPage("#sale");
 }
 
+this.WarnCard = function(){
+  Olymp.fw7.app.alert('Обратите внимание, что обработка заказов на нестандартные номиналы может занять больше времени.')
+}
+
+this.ShowError = function(err) {
+  var error = '';
+  for (var key in err){
+      error = error + err[key] + '\n'
+  }
+  Olymp.fw7.app.alert(error, 'Ошибка!');
+}
+
 
 /*---------------REST API-----------------*/
 
@@ -477,6 +558,7 @@ this.GetTransactions = function(){
       console.log("transaction history:");
       console.log(response.data);
       Ctrl.transactions = response.data.transactions;
+      Ctrl.cards_history = response.data.sertificates;
     }, 
     function errorCallback(response){
       Olymp.fw7.app.alert(response.data.reason);
@@ -498,6 +580,29 @@ this.GetSertificates = function(){
       console.log("cards:");
       console.log(response.data);
       Ctrl.sertificates = response.data.cards;
+    }, 
+    function errorCallback(response){
+      Olymp.fw7.app.alert(response.data.reason);
+      console.log(response);
+  });
+}
+
+this.GetContest = function(){
+  var req = {
+   method: 'POST',
+   url: Ctrl.REST_URL+'sales/api/sales/top',
+   headers: {
+       'Content-Type': 'application/json',
+       'X-Token' : Ctrl.Token
+     }
+    };
+  $http(req).then(
+    function successCallback(response){
+      console.log("contest");
+      console.log(response.data);
+      Ctrl.contest.desc = response.data.desc;
+      Ctrl.contest.users = response.data.top;
+      Ctrl.contest.plaintext = response.data.desc.replace(/(<([^>]+)>)/ig,"");
     }, 
     function errorCallback(response){
       Olymp.fw7.app.alert(response.data.reason);
@@ -931,7 +1036,44 @@ this.Feedback = function(){
   Olymp.fw7.app.alert(response.data.reason);
   console.log(response);
     });
+}
 
+this.BuySertificate = function(){
+    Olymp.fw7.app.showPreloader(["Подождите..."]);
+ var info = Olymp.fw7.app.formToJSON('#sertificate-form');
+ if (info.nominal!=-1){
+  info.nominal = this.nominals[info.nominal];
+ } else {
+  info.nominal = info.special_nominal;
+ };
+  info.type = this.sertificates[this.selected_card].type;
+  var json = {
+    cards: [info],
+    phone: localStorage["OlympPhone"],
+    is_allow_cancel: 1,
+    action: 'create'
+  };
+  console.log(json);
+
+  var req = {
+   method: 'POST',
+   url: this.REST_URL+'sales/api/sales/buy-sertificate',
+   headers: {
+       'Content-Type': 'application/json',
+       'X-Token' : Ctrl.Token
+     },
+     data: json
+    };
+  $http(req).then(
+    function successCallback(response){
+      Olymp.fw7.app.hidePreloader();
+      console.log(response.data);
+    }, 
+    function errorCallback(response){
+      Olymp.fw7.app.hidePreloader();
+      console.log(response);
+      Ctrl.ShowError(response.data.errors);
+    });
 
 }
 
