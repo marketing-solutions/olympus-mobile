@@ -71,6 +71,9 @@ this.user = {};
 this.sell =[];
 this.sales_array = [];
 this.transactions = [];
+this.payments = [];
+this.ndfl_countries = [];
+this.ndfl_doctypes = [];
 this.contest = {desc:'', users:[],plaintext:''};
 this.cards_history = [];
 this.sertificates = [];
@@ -179,6 +182,39 @@ this.DropProducts = Olymp.fw7.app.autocomplete({
   });
 
 
+this.DropCountries = Olymp.fw7.app.autocomplete({
+      input: '#countries-dropdown',
+      openIn: 'dropdown',
+      source: function (autocomplete, query, render) {
+        var results = [];
+        for (var i = 0; i < Ctrl.ndfl_countries.length; i++) {
+          if (Ctrl.ndfl_countries[i].name.toLowerCase().indexOf(query.toLowerCase()) >= 0) 
+            {results.push(Ctrl.ndfl_countries[i].name)}
+          
+        }
+        render(results);
+      },
+      onClose: function(autocomplete){
+        Ctrl.refresh();
+      }
+  });
+this.DropDocs = Olymp.fw7.app.autocomplete({
+      input: '#docs-dropdown',
+      openIn: 'dropdown',
+      source: function (autocomplete, query, render) {
+        var results = [];
+        for (var i = 0; i < Ctrl.ndfl_doctypes.length; i++) {
+          if (Ctrl.ndfl_doctypes[i].name.toLowerCase().indexOf(query.toLowerCase()) >= 0) 
+            {results.push(Ctrl.ndfl_doctypes[i].name)}
+          
+        }
+        render(results);
+      },
+      onClose: function(autocomplete){
+        Ctrl.refresh();
+      }
+  });
+
 /*-----------Calendar instance------------*/
 this.calendarDefault = Olymp.fw7.app.calendar({
     input: '#calendar-sell',
@@ -259,6 +295,55 @@ this.persPhoto = Olymp.fw7.app.photoBrowser({
     ]
 });
 
+/*------Date picker------*/
+var today = new Date();
+ 
+this.pickerInline = Olymp.fw7.app.picker({
+    input: '#date-picker',
+    toolbarCloseText: 'Готово',
+    rotateEffect: true,
+ 
+    value: [1, '01', today.getFullYear()],
+ 
+    onChange: function (picker, values, displayValues) {
+        var daysInMonth = new Date(picker.value[2], picker.value[1]*1, 0).getDate();
+        if (values[0] > daysInMonth) {
+            picker.cols[0].setValue(daysInMonth);
+        }
+    },
+ 
+    formatValue: function (p, values, displayValues) {
+        return displayValues[0] + '.' + values[1] + '.' + values[2];
+    },
+ 
+    cols: [
+    // Days
+        {
+          values: (function () {
+                var arr = [];
+                for (var i = 1; i <= 31; i++) { arr.push(i); }
+                return arr;
+            })(),
+            displayValues: ('01,02,03,04,05,06,07,08,09,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31').split(',')
+        },
+        // Months
+        {
+            displayValues: ('Января Февраля Марта Апреля Мая Июня Июля Августа Сентября Октября Ноября Декабря').split(' '),
+            values: ('01 02 03 04 05 06 07 08 09 10 11 12').split(' '),
+            textAlign: 'center'
+        },
+        
+        // Years
+        {
+            values: (function () {
+                var arr = [];
+                for (var i = 1940; i <= 2018; i++) { arr.push(i); }
+                return arr;
+            })(),
+        }
+    ]
+});     
+
 /*-----------Fancy Keypads------------*/
 
 this.CardKeypad = Olymp.fw7.app.keypad({
@@ -297,27 +382,11 @@ $scope.$watch('PhoneInput', function() {
 
 /*----------Navigation functions-----------*/
 
-this.GotoProfile = function () {
-  Olymp.fw7.app.views[0].router.loadPage("#index");
+this.Goto = function(id){
+  Olymp.fw7.app.views[0].router.loadPage(id);
   Olymp.fw7.app.closePanel();
-};
-this.GotoSale = function () {
-  Olymp.fw7.app.views[0].router.loadPage("#old_sales");
-  Olymp.fw7.app.closePanel();
-  this.GetSales();
-};
-this.GotoTransaction = function () {
-  Olymp.fw7.app.views[0].router.loadPage("#transaction");
-  Olymp.fw7.app.closePanel();
-};
-this.GotoBonus = function () {
-  Olymp.fw7.app.views[0].router.loadPage("#bonus");
-  Olymp.fw7.app.closePanel();
-};
-this.GotoSertificate = function () {
-  Olymp.fw7.app.views[0].router.loadPage("#sertificate");
-  Olymp.fw7.app.closePanel();
-};
+}
+
 this.GotoContact = function () {
   Olymp.fw7.app.views[0].router.loadPage("#contact");
   document.getElementById('help-name').value = this.user.full_name;
@@ -457,6 +526,8 @@ this.SetupProfile = function(profile,pass){
   this.GetSales();
   this.GetProducts(profile.dealer.name);
   this.GetTransactions();
+  this.GetNDFL();
+  this.GetPayments();
   this.GetSertificates();
   this.GetContest();
 }
@@ -536,6 +607,27 @@ this.GetProfile = function () {
   $http(req).then(
     function successCallback(response){
       Ctrl.SetupProfile(response.data.profile,loginfo.password);
+    }, 
+    function errorCallback(response){
+      Olymp.fw7.app.alert(response.data.reason);
+      console.log(response);
+  });
+}
+
+this.GetNDFL = function(){
+  var req = {
+   method: 'POST',
+   url: Ctrl.REST_URL+'sales/api/sales/ndfl-info',
+   headers: {
+       'Content-Type': 'application/json',
+       'X-Token' : Ctrl.Token
+     }
+    };
+  $http(req).then(
+    function successCallback(response){
+      console.log(response.data);
+      Ctrl.ndfl_countries = response.data.countries;
+      Ctrl.ndfl_doctypes = response.data.doc_types;
     }, 
     function errorCallback(response){
       Olymp.fw7.app.alert(response.data.reason);
@@ -630,6 +722,26 @@ this.GetDealers = function(){
     });
 }
 
+this.GetPayments = function(){
+  var req = {
+   method: 'POST',
+   url: this.REST_URL+'/payments/api-v3/payments/by-profile',
+   headers: {
+       'Content-Type': 'application/json',
+       'X-Token' : Ctrl.Token
+     },
+     data: {"profile_id": this.user.profile_id}
+    };
+  $http(req).then(
+    function successCallback(response){
+      Ctrl.payments = response.data.payments;
+      console.log(response);
+    }, 
+    function errorCallback(response){
+      console.log(response);
+    });
+}
+
 this.GetProducts = function(name){
   var info = {"dealer_name": name}
   var req = {
@@ -648,7 +760,7 @@ this.GetProducts = function(name){
     console.log(response);
   }, 
   function errorCallback(response){
-    Olymp.fw7.app.alert("Проверьте соединение с интернетом!");
+    console.log(response);
   });
 
 }
@@ -1068,6 +1180,8 @@ this.BuySertificate = function(){
     function successCallback(response){
       Olymp.fw7.app.hidePreloader();
       console.log(response.data);
+      Olymp.fw7.app.alert("Покупка сертификата прошла успешно!");
+      Ctrl.GetProfile();
     }, 
     function errorCallback(response){
       Olymp.fw7.app.hidePreloader();
@@ -1075,6 +1189,81 @@ this.BuySertificate = function(){
       Ctrl.ShowError(response.data.errors);
     });
 
+}
+
+this.Payment = function(){
+  Olymp.fw7.app.showPreloader(["Подождите..."]);
+ var info = Olymp.fw7.app.formToJSON('#payment-form');
+   var json = {"profile_id":this.user.profile_id,
+   "type":"card",
+   "amount":info.money,
+   "parameters":{"phone_mobile": info.card}}
+
+  var req = {
+   method: 'POST',
+   url: this.REST_URL+'/payments/api-v3/payments/create',
+   headers: {
+       'Content-Type': 'application/json',
+       'X-Token' : Ctrl.Token
+     },
+     data: json
+    };
+  $http(req).then(
+    function successCallback(response){
+      Olymp.fw7.app.hidePreloader();
+      console.log(response.data);
+      Olymp.fw7.app.alert("Перевод денег прошёл успешно!");
+      Ctrl.GetProfile();
+    }, 
+    function errorCallback(response){
+      Olymp.fw7.app.hidePreloader();
+      console.log(response);
+      Ctrl.ShowError(response.data.errors);
+    });
+}
+
+this.SendNdflForm = function(){
+  Olymp.fw7.app.showPreloader(["Подождите..."]);
+  var info = Olymp.fw7.app.formToJSON('#ndfl-form');
+  info.phone_mobile = localStorage["OlympPhone"];
+
+  var countryCheck = $.grep(Ctrl.ndfl_countries, function(e){return (info.country==e.name)});
+  if (countryCheck[0]) {
+    info.citizenship_id = countryCheck[0].id
+  } else {
+    Olymp.fw7.app.hidePreloader();
+    Olymp.fw7.app.alert("Выберите страну из списка!");
+    return;
+  }
+  var docCheck = $.grep(Ctrl.ndfl_doctypes, function(e){return (info.document_type==e.name)});
+  if (docCheck[0]) {
+    info.document_type_id = docCheck[0].id
+  } else {
+    Olymp.fw7.app.hidePreloader();
+    Olymp.fw7.app.alert("Выберите из списка документ, удостоверяющий личность!");
+    return;
+  }
+
+  var req = {
+   method: 'POST',
+   url: this.REST_URL+'sales/api/sales/ndfl-form',
+   headers: {
+       'Content-Type': 'application/json',
+       'X-Token' : Ctrl.Token
+     },
+     data: info
+    };
+  $http(req).then(
+    function successCallback(response){
+      Olymp.fw7.app.hidePreloader();
+      console.log(response.data);
+      Olymp.fw7.app.alert("Анкета успешно отправлена!");
+    }, 
+    function errorCallback(response){
+      Olymp.fw7.app.hidePreloader();
+      console.log(response);
+      Ctrl.ShowError(response.data.errors);
+    });
 }
 
 }]);

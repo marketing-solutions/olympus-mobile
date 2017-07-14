@@ -42,11 +42,12 @@
           <div ng-click="mainCtrl.GotoBonus()" class="leftPanelPoints">Бонусный баланс: {{mainCtrl.user.balance}} баллов</div>
           <div class="leftPanelExit" ng-click="mainCtrl.Logout()">Выйти</div>
           <div class="leftPanelColumn">
-            <div ng-click="mainCtrl.GotoProfile()" class="leftPanelButton profilePanel">Главная</div>
-            <div ng-click="mainCtrl.GotoSale()" class="leftPanelButton salePanel">Продажи</div>
-            <div ng-click="mainCtrl.GotoBonus()" class="leftPanelButton bonusPanel">Бонусы</div>
-            <!-- <div ng-click="mainCtrl.GotoTransaction()" class="leftPanelButton transPanel">Перевод на карту</div> -->
-            <div ng-click="mainCtrl.GotoSertificate()" class="leftPanelButton sertPanel">Сертификаты</div> 
+            <div ng-click="mainCtrl.Goto('#index')" class="leftPanelButton profilePanel">Главная</div>
+            <div ng-click="mainCtrl.Goto('#ndfl')" class="leftPanelButton salePanel">Анкета</div>
+            <div ng-click="mainCtrl.Goto('#sale')" class="leftPanelButton salePanel">Продажи</div>
+            <div ng-click="mainCtrl.Goto('#bonus')" class="leftPanelButton bonusPanel">Бонусы</div>
+            <div ng-click="mainCtrl.Goto('#transaction')" class="leftPanelButton transPanel">Перевод на карту</div>
+            <div ng-click="mainCtrl.Goto('#sertificate')" class="leftPanelButton sertPanel">Сертификаты</div> 
             <div ng-click="mainCtrl.GotoContact()" class="leftPanelButton contactPanel">Помощь</div> 
           </div> 
         </div>
@@ -149,6 +150,7 @@
                   </div>
                 </div>
                 <a href="#setup-profile" class="item-link button button-normal color-white bg-black">Настроить профиль</a>
+                <div class="empty-space"></div>
             </div>
           </div>
 
@@ -206,6 +208,116 @@
 
                 </form>
               </div>
+              <div class="empty-space"></div>
+            </div>
+          </div>
+
+          <div data-page="ndfl" class="page ng-scope cached with-subnavbar">
+            <div class="navbar Olympus-navbar no-border">
+              <div class="navbar-inner">
+                <div class="center open-panel Olympus-header sliding">&nbsp;</div>
+                <div class="left sliding"><a href="#" class="open-panel link icon-only">
+                  <i class="icon color-white icon-bars"></i></a>
+                </div>
+              </div>
+            </div>
+            <div class="page-content">
+            <form id="ndfl-form">
+            <div class="content-block-title">Личная информация</div>
+              <div class="list-block white-border-block">
+                <ul>
+                  <li class="item-content">
+                    <div class="item-inner">
+                      <div class="item-title label">Гражданство</div>
+                      <div class="item-input">
+                        <input type="text" id="countries-dropdown" name="country" placeholder="...">
+                      </div>
+                    </div>
+                  </li>
+                  <li class="item-content">
+                    <div class="item-inner">
+                      <div class="item-title label">Имя</div>
+                      <div class="item-input">
+                        <input type="text" ng-model="mainCtrl.user.first_name" name="first_name" placeholder="...">
+                      </div>
+                    </div>
+                  </li>
+                  <li class="item-content">
+                    <div class="item-inner">
+                      <div class="item-title label">Фамилия</div>
+                      <div class="item-input">
+                        <input type="text" ng-model="mainCtrl.user.last_name" name="last_name" placeholder="...">
+                      </div>
+                    </div>
+                  </li>
+                  <li class="item-content">
+                    <div class="item-inner">
+                      <div class="item-title label">Отчество</div>
+                      <div class="item-input">
+                        <input type="text" ng-model="mainCtrl.user.middle_name" name="middle_name" placeholder="...">
+                      </div>
+                    </div>
+                  </li>
+                  <li class="item-content">
+                    <div class="item-inner">
+                      <div class="item-title label">Дата рождения</div>
+                      <div class="item-input">
+                        <input type="text" id="date-picker" name="birthday_on" placeholder="...">
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+              <div class="content-block-title">Документ, удостоверяющий личность</div>
+              <div class="list-block white-border-block">
+                <ul>
+                  <li class="item-content">
+                    <div class="item-inner">
+                      <div class="item-title label">Тип документа</div>
+                      <div class="item-input">
+                        <input type="text" id="docs-dropdown" name="document_type" placeholder="...">
+                      </div>
+                    </div>
+                  </li>
+                  <li class="item-content">
+                    <div class="item-inner">
+                      <div class="item-title label">Серия и номер документа</div>
+                      <div class="item-input">
+                        <input type="number" name="document_series_and_number" placeholder="...">
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+              <div class="content-block-title">Идентификационный номер налогоплательщика</div>
+              <div class="list-block white-border-block">
+                <ul>
+                  <li class="item-content">
+                    <div class="item-inner">
+                      <div class="item-title label">ИНН</div>
+                      <div class="item-input">
+                        <input type="number" name="inn" placeholder="...">
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+              <div class="content-block-title">Адрес места жительства в РФ</div>
+              <div class="list-block white-border-block">
+                <ul>
+                  <li class="item-content">
+                    <div class="item-inner">
+                      <div class="item-title label">Укажите адрес</div>
+                      <div class="item-input">
+                        <textarea  name="address" placeholder="..." class="resizable"></textarea>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+              <a href="#" ng-click="mainCtrl.SendNdflForm()" class="item-link button button-big color-white bg-black">Отправить анкету</a>
+              </form>
+              <div class="empty-space"></div>
             </div>
           </div>
 
@@ -240,7 +352,6 @@
                            <div class="timeline-item-subtitle">{{element.comment}}</div>
                         </div>
                       </div>
-
                     </div>
                   </div>
                 </div>
@@ -283,32 +394,59 @@
                 </div>
               </div>
             </div>
+            <div class="toolbar tabbar">
+              <div class="toolbar-inner">
+                  <a href="#tab5" class="button active tab-link">Перевод</a>
+                  <a href="#tab6" class="button tab-link">История</a>
+              </div>
+            </div>
             <div class="page-content">
-              <div class="content-block-title">Реквизиты</div>
-              <div class="list-block white-border-block">
-                <form id="payment-form">
-                  <ul>
-                    <li class="item-content">
-                      <div class="item-inner">
-                        <div class="item-title label">Номер карты</div>
-                        <div class="item-input">
-                          <input type="text" name="number" class="mask_card" placeholder="____ ____ ____ ____">
+              <div class="tabs-animated-wrap">
+                <div class="tabs">
+                  <div id="tab5" class="page-content tab active">
+                    <div class="content-block-title">Реквизиты</div>
+                    <div class="list-block white-border-block">
+                      <form id="payment-form">
+                        <ul>
+                          <li class="item-content">
+                            <div class="item-inner">
+                              <div class="item-title label">Номер карты</div>
+                              <div class="item-input">
+                                <input type="text" name="card" class="mask_card" placeholder="____ ____ ____ ____">
+                              </div>
+                            </div>
+                          </li>
+                          <li class="item-content">
+                            <div class="item-inner">
+                              <div class="item-title label">Сумма, руб</div>
+                              <div class="item-input">
+                                <input type="text" class="mask_money" name="money" placeholder="...">
+                              </div>
+                            </div>
+                          </li>
+                          <li>
+                            <a href="#" ng-click="mainCtrl.Payment()" class="item-link button button-big color-white bg-black">&#8381; &nbsp;&nbsp;&nbsp;оплатить</a>
+                          </li>
+                        </ul>
+                      </form>
+                    </div>
+                  </div>
+                  <div id="tab6" class="page-content tab">
+                    <div class="content-block">
+                      <div class="no-items-message" ng-hide="mainCtrl.payments[0]">История пуста!</div>
+                      <div class="timeline">
+                        <div ng-repeat="element in mainCtrl.payments track by $index" class="timeline-item">
+                          <div class="timeline-item-date">-{{element.amount}}<small> руб</small></div>
+                          <div class="timeline-item-divider"></div>
+                          <div class="timeline-item-content">
+                            <div class="timeline-item-time">{{element.created_at}}</div>
+                            <div class="timeline-item-title">Перевод денег #{{element.ms_payment_id}}</div>
+                          </div>
                         </div>
                       </div>
-                    </li>
-                    <li class="item-content">
-                      <div class="item-inner">
-                        <div class="item-title label">Сумма, руб</div>
-                        <div class="item-input">
-                          <input type="text" class="mask_money" name="sum" placeholder="...">
-                        </div>
-                      </div>
-                    </li>
-                    <li>
-                      <a href="#" ng-click="" class="item-link button button-big color-white bg-black">&#8381; &nbsp;&nbsp;&nbsp;оплатить</a>
-                    </li>
-                  </ul>
-                </form>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

@@ -316,11 +316,11 @@
 .picker-item {
     color: #ffffff !important;
 }
-.picker-center-highlight{
+/*.picker-center-highlight{
     right: auto !important;
     left: auto !important;
     width: 100px !important;
-}
+}*/
 .picker-center-highlight:after,.picker-center-highlight:before {
     background-color: #ffffff !important;
 }
@@ -342,4 +342,14 @@
 .collapse-text{
     text-overflow: ellipsis !important;
     max-height: 100px;
+}
+
+/*.item-input-field{
+        text-overflow: clip !important;
+    white-space: normal !important;
+}*/
+
+.empty-space{
+    height: 200px;
+    width: 100%;
 }
