@@ -26,6 +26,7 @@
     <link rel="stylesheet" href="./f7/css/framework7.material.colors.css">
     <link rel="stylesheet" href="./f7/css/framework7.keypad.min.css">
     <link rel="stylesheet" href="./css/styles.css">
+    <link rel="stylesheet" href="./css/framework7-icons.css">
 
     
 </head>
@@ -40,11 +41,12 @@
         <div class="content-block left-block">
           <div class="leftPanelName">Привет, {{mainCtrl.user.first_name}}!</div>
           <div ng-click="mainCtrl.GotoBonus()" class="leftPanelPoints">Бонусный баланс: {{mainCtrl.user.balance}} баллов</div>
+          <div class="leftPanelPoints">{{mainCtrl.user.balance | BonusCheer}}</div>
           <div class="leftPanelExit" ng-click="mainCtrl.Logout()">Выйти</div>
           <div class="leftPanelColumn">
             <div ng-click="mainCtrl.Goto('#index')" class="leftPanelButton profilePanel">Главная</div>
             <div ng-click="mainCtrl.Goto('#ndfl')" class="leftPanelButton salePanel">Анкета</div>
-            <div ng-click="mainCtrl.Goto('#sale')" class="leftPanelButton salePanel">Продажи</div>
+            <div ng-click="mainCtrl.Goto('#old_sales')" class="leftPanelButton salePanel">Продажи</div>
             <div ng-click="mainCtrl.Goto('#bonus')" class="leftPanelButton bonusPanel">Бонусы</div>
             <div ng-click="mainCtrl.Goto('#transaction')" class="leftPanelButton transPanel">Перевод на карту</div>
             <div ng-click="mainCtrl.Goto('#sertificate')" class="leftPanelButton sertPanel">Сертификаты</div> 
@@ -59,7 +61,8 @@
     <div class="views">
         <!-- main view -->
         <div class="view view-main">
-          <div class="pages theme-white navbar-fixed toolbar-fixed">
+          <div class="pages navbar-fixed toolbar-fixed">
+
             <div data-page="index" class="page ng-scope">
               <div class="navbar Olympus-navbar no-border">
                 <div class="navbar-inner">
@@ -67,92 +70,108 @@
                   <div class="left sliding"><a href="#" class="open-panel link icon-only">
                     <i class="icon color-white icon-bars"></i></a>
                   </div>
+                  <div class="right sliding"><a href="#index" class="link icon-only"><i class="f7-icons">home</i></a></div>
                 </div>
               </div>
-              <!-- Scrollable page content -->
-              <div class="page-content">
-
-              <div class="content-block-title">Конкурс</div>
-              <div class="list-block white-border-block">
-                <ul>
-                  <li class="accordion-item"><a href="#" class="item-content item-link">
-                      <div class="item-inner">
-                        <div class="item-title white-border-block">Описание конкурса</div>
-                      </div></a>
-                    <div class="accordion-item-content">
-                      <div ng-bind-html="mainCtrl.contest.desc" class="content-block">
-                       
-                      </div>
-                    </div>
-                  </li>
-                  <li class="item-content">
-                    <div class="item-inner">
-                      <div class="item-title">Имя</div>
-                      <div class="item-after">Кол-во продаж</div>
-                    </div>
-                  </li>
-                  <li ng-repeat="user in mainCtrl.contest.users track by $index" class="item-content">
-                    <div class="item-inner">
-                      <div class="item-title">{{user.full_name}}</div>
-                      <div class="item-after">{{user.sum_quantity}}</div>
-                    </div>
-                  </li>
-                </ul>
+              <div class="toolbar tabbar">
+              <div class="toolbar-inner">
+                  <a href="#tab7" class="button active tab-link">Главная</a>
+                  <a href="#tab8" class="button tab-link">Профиль</a>
               </div>
-
-                <div class="content-block-title">Профиль</div>
-                <div class="list-block white-border-block">
-                  <ul>
-                    <li class="item-content">
-                      <div class="item-inner">
-                        <div class="item-title">Имя</div>
-                        <div class="item-after">{{mainCtrl.user.first_name}}</div>
-                      </div>
-                    </li>
-                    <li class="item-content">
-                      <div class="item-inner">
-                        <div class="item-title">Фамилия</div>
-                        <div class="item-after">{{mainCtrl.user.last_name}}</div>
-                      </div>
-                    </li>
-                    <li class="item-content">
-                      <div class="item-inner">
-                        <div class="item-title">Почта</div>
-                        <div class="item-after">{{mainCtrl.user.email}}</div>
-                      </div>
-                    </li>
-                    <li class="item-content">
-                      <div class="item-inner">
-                        <div class="item-title">Телефон</div>
-                        <div class="item-after">{{mainCtrl.user.phone_mobile}}</div>
-                      </div>
-                    </li>
-                    <li class="item-content">
-                      <div class="item-inner">
-                        <div class="item-title">Дилер</div>
-                        <div class="item-after">{{mainCtrl.user.dealer.name}}</div>
-                      </div>
-                    </li>
-                    <li class="item-content">
-                      <div class="item-inner">
-                        <div class="item-title">ID</div>
-                        <div class="item-after">{{mainCtrl.user.profile_id}}</div>
-                      </div>
-                    </li>
-                  </ul>
-                  <div class="card" ng-hide="mainCtrl.user.blocking_reason==null">
-                    <div class="card-content">
-                      <div class="card-content-inner">
-                        Пользователь временно заблокирован.<br>Причина:<br>
-                        {{mainCtrl.user.blocking_reason}}
-                      </div>
+            </div>
+              
+            <div class="page-content">
+              <div class="tabs-animated-wrap">
+                <div class="tabs">
+                  <div id="tab7" class="page-content tab active">
+                    <div class="banner_container">
+                      <img class="banner_image" src="/img/banner.png">
+                    </div>
+                    <div class="content-block">
+                    <a href="#" ng-click="mainCtrl.OpenNewSale()" class="item-link button button-big color-white bg-black">Новая продажа</a>
+                    </div>
+                    <div class="content-block-title">Конкурс</div>
+                    <div class="list-block white-border-block">
+                      <ul>
+                        <li class="accordion-item"><a href="#" class="align-center item-link">
+                            <div class="">
+                              <div class="white-border-block">Описание конкурса</div>
+                            </div></a>
+                          <div class="accordion-item-content">
+                            <div ng-bind-html="mainCtrl.contest.desc" class="content-block">
+                             
+                            </div>
+                          </div>
+                        </li>
+                        <li class="item-content">
+                          <div class="item-inner">
+                            <div class="item-title">Лидеры</div>
+                            <div class="item-after">Кол-во продаж</div>
+                          </div>
+                        </li>
+                        <li ng-repeat="user in mainCtrl.contest.users track by $index" class="item-content">
+                          <div class="item-inner">
+                            <div class="item-title">{{user.full_name}}</div>
+                            <div class="item-after">{{user.sum_quantity}}</div>
+                          </div>
+                        </li>
+                      </ul>
                     </div>
                   </div>
+
+                  <div id="tab8" class="page-content tab">
+                  <div class="content-block"></div>
+                    <div class="list-block white-border-block">
+                      <ul>
+                        <li class="item-content">
+                          <div class="item-inner">
+                            <div class="item-title">Имя</div>
+                            <div class="item-after">{{mainCtrl.user.first_name}}</div>
+                          </div>
+                        </li>
+                        <li class="item-content">
+                          <div class="item-inner">
+                            <div class="item-title">Фамилия</div>
+                            <div class="item-after">{{mainCtrl.user.last_name}}</div>
+                          </div>
+                        </li>
+                        <li class="item-content">
+                          <div class="item-inner">
+                            <div class="item-title">Почта</div>
+                            <div class="item-after">{{mainCtrl.user.email}}</div>
+                          </div>
+                        </li>
+                        <li class="item-content">
+                          <div class="item-inner">
+                            <div class="item-title">Телефон</div>
+                            <div class="item-after">{{mainCtrl.user.phone_mobile}}</div>
+                          </div>
+                        </li>
+                        <li class="item-content">
+                          <div class="item-inner">
+                            <div class="item-title">Дилер</div>
+                            <div class="item-after">{{mainCtrl.user.dealer.name}}</div>
+                          </div>
+                        </li>
+                      </ul>
+                      <div class="card" ng-hide="mainCtrl.user.blocking_reason==null">
+                        <div class="card-content">
+                          <div class="card-content-inner">
+                            Пользователь временно заблокирован.<br>Причина:<br>
+                            {{mainCtrl.user.blocking_reason}}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <a href="#setup-profile" class="item-link button button-normal color-white bg-black">Настроить профиль</a>
+                    <div class="empty-space"></div>
+                  </div>
                 </div>
-                <a href="#setup-profile" class="item-link button button-normal color-white bg-black">Настроить профиль</a>
-                <div class="empty-space"></div>
+              </div>
             </div>
+
           </div>
+
 
           <div data-page="setup-profile" class="page ng-scope cached">
             <div class="navbar Olympus-navbar no-border">
@@ -161,6 +180,7 @@
                 <div class="left sliding"><a href="#" class="open-panel link icon-only">
                   <i class="icon color-white icon-bars"></i></a>
                 </div>
+                <div class="right sliding"><a href="#index" class="link icon-only"><i class="f7-icons">home</i></a></div>
               </div>
             </div>
             <div class="page-content">
@@ -219,6 +239,7 @@
                 <div class="left sliding"><a href="#" class="open-panel link icon-only">
                   <i class="icon color-white icon-bars"></i></a>
                 </div>
+                <div class="right sliding"><a href="#index" class="link icon-only"><i class="f7-icons">home</i></a></div>
               </div>
             </div>
             <div class="page-content">
@@ -328,6 +349,7 @@
                 <div class="left sliding"><a href="#" class="open-panel link icon-only">
                   <i class="icon color-white icon-bars"></i></a>
                 </div>
+                <div class="right sliding"><a href="#index" class="link icon-only"><i class="f7-icons">home</i></a></div>
               </div>
             </div>
             <div class="toolbar tabbar">
@@ -350,6 +372,7 @@
                           <div class="timeline-item-time">{{element.created_at}}</div>
                           <div class="timeline-item-title">{{element.title}}</div>
                            <div class="timeline-item-subtitle">{{element.comment}}</div>
+                           <div class="timeline-item-text">[ {{element.balance_after-element.balance_before}} руб. ]</div>
                         </div>
                       </div>
                     </div>
@@ -357,14 +380,14 @@
                 </div>
 
                 <div id="tab4" class="page-content tab">
-                  <div class="content-block"></div>
+                <div style="" class="content-block-title">Таблица бонусов</div>
                   <div class="list-block white-border-block">
                     <ul>
                       <li>
                         <div class="item-content">
                           <div class="item-inner">
-                            <div class="item-title">Товар</div>
-                            <div class="item-after">Бонусы</div>
+                            <div class="item-title orangeText">Товар</div>
+                            <div class="item-after orangeText">Бонус за продажу</div>
                           </div>
                         </div>
                       </li>
@@ -392,6 +415,7 @@
                 <div class="left sliding"><a href="#" class="open-panel link icon-only">
                   <i class="icon color-white icon-bars"></i></a>
                 </div>
+                <div class="right sliding"><a href="#index" class="link icon-only"><i class="f7-icons">home</i></a></div>
               </div>
             </div>
             <div class="toolbar tabbar">
@@ -458,6 +482,7 @@
                 <div class="left sliding"><a href="#" class="open-panel link icon-only">
                   <i class="icon color-white icon-bars"></i></a>
                 </div>
+                <div class="right sliding"><a href="#index" class="link icon-only"><i class="f7-icons">home</i></a></div>
               </div>
             </div>
             <div class="toolbar tabbar">
@@ -509,6 +534,7 @@
                 <div class="left sliding"><a href="#" class="open-panel link icon-only">
                   <i class="icon color-white icon-bars"></i></a>
                 </div>
+                <div class="right sliding"><a href="#index" class="link icon-only"><i class="f7-icons">home</i></a></div>
               </div>
             </div>
             <div class="page-content">
@@ -589,6 +615,7 @@
                 <div class="left sliding"><a href="#" class="open-panel link icon-only">
                   <i class="icon color-white icon-bars"></i></a>
                 </div>
+                <div class="right sliding"><a href="#index" class="link icon-only"><i class="f7-icons">home</i></a></div>
               </div>
             </div>
             <div class="page-content">
@@ -622,6 +649,7 @@
                 <div class="left sliding"><a href="#" class="open-panel link icon-only">
                   <i class="icon color-white icon-bars"></i></a>
                 </div>
+                <div class="right sliding"><a href="#index" class="link icon-only"><i class="f7-icons">home</i></a></div>
               </div>
             </div>
             <div class="page-content">
@@ -681,6 +709,7 @@
                 <div class="left sliding"><a href="#" class="open-panel link icon-only">
                   <i class="icon color-white icon-bars"></i></a>
                 </div>
+                <div class="right sliding"><a href="#index" class="link icon-only"><i class="f7-icons">home</i></a></div>
               </div>
             </div>
             <div class="page-content">
@@ -690,7 +719,7 @@
                 <ul>
                   <li class="item-content">
                     <div class="item-inner">
-                      <div class="item-title label">Дата</div>
+                      <div class="item-title label">Дата продажи</div>
                       <div class="item-input">
                         <input id="calendar-sell" type="text" name="date" readonly placeholder="сегодня">
                       </div>
@@ -731,6 +760,7 @@
                 <div class="left sliding"><a href="#" class="open-panel link icon-only">
                   <i class="icon color-white icon-bars"></i></a>
                 </div>
+                <div class="right sliding"><a href="#index" class="link icon-only"><i class="f7-icons">home</i></a></div>
               </div>
             </div>
             <div class="page-content">
@@ -776,6 +806,7 @@
                   </ul>
                 </form>
               </div>
+              <div class="empty-space"></div>
             </div>
           </div>
         </div>
@@ -823,7 +854,7 @@
                     <p><a href="#" data-popup=".pre-reg" class="open-popup regText">Регистрация</a></p>
                 </div>
                  <div class="list-block-label">
-                    <p><a href="#" class="forgotText" ng-click="mainCtrl.ForgotPass()">Забыли пароль?</a></p>
+                    <p><a href="#" class="orangeText" ng-click="mainCtrl.ForgotPass()">Забыли пароль?</a></p>
                 </div> 
               </div>
             </form>
@@ -1023,7 +1054,7 @@
                 <div class="item-inner">
                   <div class="item-title label">Серийный номер</div>
                   <div class="item-input">
-                    <input type="text" id="prod-num" name="serial_number" placeholder="">
+                    <input type="text" ng-model="mainCtrl.serial" id="prod-num" name="serial_number" placeholder="">
                   </div>
                 </div>
               </li>

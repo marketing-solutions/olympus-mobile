@@ -23,7 +23,7 @@ Framework7 Layouts Themes
 .page.layout-dark,
 .layout-dark .panel,
 .panel.layout-dark {
-  background-color: #222;
+  background-color: #000;
   color: rgba(255, 255, 255, 0.87);
 }
 .layout-dark .content-block-title {

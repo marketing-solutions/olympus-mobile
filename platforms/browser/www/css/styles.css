@@ -10,17 +10,19 @@
    See https://github.com/apache/cordova-plugin-statusbar
 */
 
+
+
 .statusbar-overlay {
-    background: #0d0d0d;
+    background: #000;
 }
 .photo-browser.photo-browser-dark .photo-browser-swiper-container {
-    background: #1a1a1a !important;
+    background: #000 !important;
 }
 /*.photo-browser-next, .photo-browser-prev{
     background: #0d0d0d !important;
 }*/
 .Olympus-navbar{
-	background-color: #0d0d0d !important;
+	background-color: #000 !important;
 }
 .Olympus-header{
     position: absolute !important;
@@ -40,20 +42,20 @@
 	display: none;
 }
 .picker-keypad-button{
-	background-color: #1a1a1a !important;
+	background-color: #000 !important;
 	color: #ffffff;
 	border-color: #ffffff;
 }
 .picker-keypad-button-dark{
 	background-color: #ffffff !important;
-	color: #1a1a1a !important;
+	color: #000 !important;
 }
 /*-------------Login Screens------------*/
 
 .regText{
 	color: #ffffff !important;
 }
-.forgotText{
+.orangeText{
 	color: #ff9800 !important;
 }
 
@@ -108,9 +110,9 @@
 }
 .leftPanelPoints{
     text-align: right;
-    padding: 0 20px 0 0;
-    margin: 0px 0 20px 0;
-    font-size: 15px;
+    padding: 0 10px 0 0;
+    margin: 0px 0 10px 0;
+    font-size: 14px;
     color:#ff9800;
 }
 .leftPanelExit{
@@ -174,7 +176,7 @@
 
 .picker-calendar,.picker-header,.toolbar,.picker-footer,.picker-calendar-week-days{
 	color: #ffffff !important;
-	background-color: #1a1a1a !important;
+	background-color: #000 !important;
 }
 .picker-calendar-day-selected span{
 	color: #000000 !important;
@@ -210,6 +212,7 @@
 	white-space: normal !important;
 }
 
+/*-------------Not sorted------------*/
 
 .back-button{
     display: block;
@@ -245,11 +248,13 @@
     padding: auto;
     padding-right: 5px;
 }
-.item-inner:after{
-    height: 5px !important;
-}
+
 .list-block .input-item .item-inner:after, .list-block.inputs-list .item-inner:after {
-     display: block; 
+    display: block; 
+    height: 2px !important;
+    position: absolute;
+    bottom: 3px;
+    width: 80vw;
 }
 
 .white-button{
@@ -261,7 +266,7 @@
 }
 .button{
     text-overflow: clip !important;
-    background-color: #1a1a1a !important;
+    background-color: #000 !important;
 }
 
 .no-items-message{
@@ -335,7 +340,7 @@
 .card-history{
     padding: 5px;
     margin: 5px;
-    background-color: #1a1a1a;
+    background-color: #000;
     border-radius: 10px;
 }
 
@@ -352,4 +357,16 @@
 .empty-space{
     height: 200px;
     width: 100%;
+}
+
+.align-center{
+    text-align: center;
+}
+
+.banner_container{
+    text-align: center;
+    margin-top: 10px;
+}
+.banner_image{
+    width: 100vw;
 }

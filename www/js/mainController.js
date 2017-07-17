@@ -20,6 +20,16 @@ Olymp.angJS.filter('Bonus', function() {
   };
 });
 
+Olymp.angJS.filter('BonusCheer', function() {
+  return function(x) {
+    var message = ""
+      if (x==0) {message = "Cамое время продать OLYMPUS!"}
+      else if (x<=1000) {message = "Yеплохое начало!"}
+      else if (x>1000) {message = "Отличный результат!"}
+    return message;
+    }
+});
+
 Olymp.angJS.controller('mainController',[ '$http','$scope','$rootScope','$timeout','InitService',
 function($http,$scope,$rootScope,$timeout,InitService){
   'use strict';
@@ -66,6 +76,7 @@ this.DropSelected = {
 };
 
 this.phone = "";
+this.serial_number = "";
 
 this.user = {};
 this.sell =[];
@@ -533,7 +544,7 @@ this.SetupProfile = function(profile,pass){
 }
 
 this.IfShowAddProductButton = function(){
- if (document.getElementById('products-dropdown').value == ""){
+ if ((document.getElementById('products-dropdown').value == "")||(Ctrl.serial == "")){
   return false} else {return true}
 }
 
@@ -1212,8 +1223,7 @@ this.Payment = function(){
     function successCallback(response){
       Olymp.fw7.app.hidePreloader();
       console.log(response.data);
-      Olymp.fw7.app.alert("Перевод денег прошёл успешно!");
-      Ctrl.GetProfile();
+      Olymp.fw7.app.alert("Перевод денег прошёл успешно!", function(){Ctrl.GetProfile()});
     }, 
     function errorCallback(response){
       Olymp.fw7.app.hidePreloader();
