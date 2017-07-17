@@ -9,7 +9,10 @@ var $$ = Dom7;
 */
 
 function onBackKeyDown() {
-
+  if (localStorage["OlympPhone"]) {
+    Olymp.fw7.app.closeModal();
+    Olymp.fw7.app.views[0].router.back();
+    }
 }
 
 Olymp.config={};
@@ -23,6 +26,7 @@ Olymp.fw7 = {
     material: true,
     domCache: true,
     uniqueHistory:true,
+/*    animatePages: false,*/
     modalTitle: "Olympus",
     modalButtonOk: "ОК",
    // fastClicks: false,

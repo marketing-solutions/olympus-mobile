@@ -200,9 +200,7 @@ this.DropCountries = Olymp.fw7.app.autocomplete({
       source: function (autocomplete, query, render) {
         var results = [];
         for (var i = 0; i < Ctrl.ndfl_countries.length; i++) {
-          if (Ctrl.ndfl_countries[i].name.toLowerCase().indexOf(query.toLowerCase()) >= 0) 
-            {results.push(Ctrl.ndfl_countries[i].name)}
-          
+          results.push(Ctrl.ndfl_countries[i].name)
         }
         render(results);
       },
@@ -210,15 +208,14 @@ this.DropCountries = Olymp.fw7.app.autocomplete({
         Ctrl.refresh();
       }
   });
+
 this.DropDocs = Olymp.fw7.app.autocomplete({
       input: '#docs-dropdown',
       openIn: 'dropdown',
       source: function (autocomplete, query, render) {
         var results = [];
         for (var i = 0; i < Ctrl.ndfl_doctypes.length; i++) {
-          if (Ctrl.ndfl_doctypes[i].name.toLowerCase().indexOf(query.toLowerCase()) >= 0) 
-            {results.push(Ctrl.ndfl_doctypes[i].name)}
-          
+          results.push(Ctrl.ndfl_doctypes[i].name)  
         }
         render(results);
       },
@@ -394,8 +391,9 @@ $scope.$watch('PhoneInput', function() {
 
 /*----------Navigation functions-----------*/
 
-this.Goto = function(id){
+this.Goto = function(id,tab){
   Olymp.fw7.app.views[0].router.loadPage(id);
+  if (tab) {Olymp.fw7.app.showTab(tab)}
   Olymp.fw7.app.closePanel();
 }
 

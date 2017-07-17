@@ -55,5 +55,6 @@
     <splash density="port-xxxhdpi" src="www/res/screen/android/drawable-port-xxxhdpi-screen.png" />
     <preference name="loglevel" value="DEBUG" />
     <preference name="DisallowOverscroll" value="true" />
+    <preference name="orientation" value="portrait" />
     <preference name="android-minSdkVersion" value="14" />
 </widget>
