@@ -76,7 +76,7 @@ this.DropSelected = {
 };
 
 this.phone = "";
-this.serial_number = "";
+this.serial = "";
 
 this.user = {};
 this.sell =[];
@@ -545,7 +545,7 @@ this.SetupProfile = function(profile,pass){
 }
 
 this.IfShowAddProductButton = function(){
- if ((document.getElementById('products-dropdown').value == "")||(Ctrl.serial == "")){
+ if ((document.getElementById('products-dropdown').value == "")||(Ctrl.serial.length == 0)){
   return false} else {return true}
 }
 

@@ -97,7 +97,7 @@ Framework7 Layouts Themes
   background: none;
 }
 .layout-dark .autocomplete-dropdown {
-  background: #1c1c1c;
+  background: #000000;
 }
 .layout-dark .autocomplete-dropdown .list-block {
   color: rgba(255, 255, 255, 0.54);
