@@ -85,6 +85,7 @@ this.transactions = [];
 this.payments = [];
 this.ndfl_countries = [];
 this.ndfl_doctypes = [];
+this.ndfl_form = {};
 this.contest = {desc:'', users:[],plaintext:''};
 this.cards_history = [];
 this.sertificates = [];
@@ -548,6 +549,11 @@ this.IfShowAddProductButton = function(){
   return false} else {return true}
 }
 
+this.IfNdflFilled = function(){
+  if (this.ndfl_form.is_fulfilled){
+    return true} else {return false}
+}
+
 this.AddProduct = function(){
     var prod = Olymp.fw7.app.formToJSON('#product-form');
     for (var i = 0; i < this.products.length; i++) {
@@ -632,13 +638,15 @@ this.GetNDFL = function(){
    headers: {
        'Content-Type': 'application/json',
        'X-Token' : Ctrl.Token
-     }
+     },
+     data: {'phone_mobile': localStorage["OlympPhone"]}
     };
   $http(req).then(
     function successCallback(response){
       console.log(response.data);
       Ctrl.ndfl_countries = response.data.countries;
       Ctrl.ndfl_doctypes = response.data.doc_types;
+      Ctrl.ndfl_form = response.data.form;
     }, 
     function errorCallback(response){
       Olymp.fw7.app.alert(response.data.reason);

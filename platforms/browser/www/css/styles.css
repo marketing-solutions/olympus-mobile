@@ -111,7 +111,7 @@
 .leftPanelPoints{
     text-align: right;
     padding: 0 10px 0 0;
-    margin: 0px 0 10px 0;
+    margin: 0px 0 0px 0;
     font-size: 14px;
     color:#ff9800;
 }
@@ -137,9 +137,9 @@
     background-size: 35px;
     width: 220px;
     color:#FFFFFF;
-    height: 60px;
+    height: 50px;
     box-sizing: border-box;
-    line-height: 60px;
+    line-height: 50px;
     text-align: left;
     padding: 0 0 0 50px;
     font-size: 19px;
@@ -170,6 +170,9 @@
 }
 .contactPanel{
 	background-image: url('../img/Contact.png');
+}
+.formPanel{
+    background-image: url('../img/Form.png');
 }
 
 /*-------------Sell input------------*/

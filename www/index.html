@@ -45,12 +45,13 @@
           <div class="leftPanelExit" ng-click="mainCtrl.Logout()">Выйти</div>
           <div class="leftPanelColumn">
             <div ng-click="mainCtrl.Goto('#index')" class="leftPanelButton profilePanel">Главная</div>
-            <div ng-click="mainCtrl.Goto('#ndfl')" class="leftPanelButton salePanel">Анкета</div>
+            
             <div ng-click="mainCtrl.Goto('#old_sales')" class="leftPanelButton salePanel">Продажи</div>
             <div ng-click="mainCtrl.Goto('#bonus')" class="leftPanelButton bonusPanel">Бонусы</div>
             <div ng-click="mainCtrl.Goto('#transaction')" class="leftPanelButton transPanel">Перевод на карту</div>
             <div ng-click="mainCtrl.Goto('#sertificate')" class="leftPanelButton sertPanel">Сертификаты</div> 
-            <div ng-click="mainCtrl.GotoContact()" class="leftPanelButton contactPanel">Помощь</div> 
+            <div ng-click="mainCtrl.GotoContact()" class="leftPanelButton contactPanel">Помощь</div>
+            <div ng-click="mainCtrl.Goto('#ndfl')" class="leftPanelButton formPanel">Анкета</div>
           </div> 
         </div>
         <a href="#" ng-click="mainCtrl.rulesPhoto.open()" class="back-button item-link button button-normal color-white bg-black">о проекте</a>
@@ -84,9 +85,17 @@
               <div class="tabs-animated-wrap">
                 <div class="tabs">
                   <div id="tab7" class="page-content tab active">
+
                     <div class="banner_container">
                       <img class="banner_image" src="/img/banner.png">
                     </div>
+                    <div ng-click="mainCtrl.Goto('#ndfl')" class="card white-border-block" ng-hide="mainCtrl.IfNdflFilled()">
+                        <div class="card-content">
+                          <div class="card-content-inner">
+                            Заполните анкету НДФЛ!
+                          </div>
+                        </div>
+                      </div>
                     <div class="content-block">
                     <a href="#" ng-click="mainCtrl.OpenNewSale()" class="item-link button button-big color-white bg-black">Новая продажа</a>
                     </div>
@@ -159,6 +168,13 @@
                           <div class="card-content-inner">
                             Пользователь временно заблокирован.<br>Причина:<br>
                             {{mainCtrl.user.blocking_reason}}
+                          </div>
+                        </div>
+                      </div>
+                      <div ng-click="mainCtrl.Goto('#ndfl')" class="card white-border-block" ng-hide="mainCtrl.IfNdflFilled()">
+                        <div class="card-content">
+                          <div class="card-content-inner">
+                            Заполните анкету НДФЛ!
                           </div>
                         </div>
                       </div>
@@ -304,7 +320,7 @@
                     <div class="item-inner">
                       <div class="item-title label">Серия и номер документа</div>
                       <div class="item-input">
-                        <input type="number" name="document_series_and_number" placeholder="...">
+                        <input type="text" name="document_series_and_number" placeholder="...">
                       </div>
                     </div>
                   </li>
