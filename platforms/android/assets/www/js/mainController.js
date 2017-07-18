@@ -1,39 +1,6 @@
-Olymp.angJS.filter('Status', function() {
-  return function(x) {
-    var message = "";
-    switch (x){
-      case 'draft': message = "Черновик"; break;
-      case 'adminReview': message = "Требует подтверждения"; break;
-      case 'approved': message = "Подтверждено автоматически"; break;
-      case 'approved2': message = "Подтверждено"; break;
-      case 'declined': message = "Отклонено"; break;
-      case 'paid': message = "Баллы начислены"; break;
-      default: message = "";
-    }
-    return message;
-  };
-});
-
-Olymp.angJS.filter('Bonus', function() {
-  return function(x) {
-    return x.slice(0, -2);
-  };
-});
-
-Olymp.angJS.filter('BonusCheer', function() {
-  return function(x) {
-    var message = ""
-      if (x==0) {message = "Cамое время продать OLYMPUS!"}
-      else if (x<=1000) {message = "Yеплохое начало!"}
-      else if (x>1000) {message = "Отличный результат!"}
-    return message;
-    }
-});
-
-Olymp.angJS.controller('mainController',[ '$http','$scope','$rootScope','$timeout','InitService',
-function($http,$scope,$rootScope,$timeout,InitService){
+Olymp.angJS.controller('mainController',[ '$http','$scope','$rootScope','$timeout','InitService','DeclareService',
+function($http,$scope,$rootScope,$timeout,InitService,DeclareService){
   'use strict';
-  var Ctrl = this;
 
 /*-----------Wait for DOM------------*/
   InitService.addEventListener('ready', function () {
@@ -42,20 +9,20 @@ function($http,$scope,$rootScope,$timeout,InitService){
 
 /*-----------Some var-s for REST------------*/
 
-this.REST_URL = "http://test.olympus.msforyou.ru/";
+$rootScope.REST_URL = "http://test.olympus.msforyou.ru/";
 
 $http({method: 'GET', url: 'q.env'}).then(
   function(response) {
-    Ctrl.Token = response.data;
-    Ctrl.GetDealers();
+    $rootScope.Token = response.data;
+    $rootScope.GetDealers();
 
-        /*---Check if logged in---*/
-       if ((!localStorage["OlympPhone"]) ||(localStorage["OlympPhone"]=="")) {
-        Olymp.fw7.app.loginScreen();
-       }
-       else {
-          Ctrl.GetProfile();
-       };
+    /*---Check if logged in---*/
+     if ((!localStorage["OlympID"]) ||(localStorage["OlympID"]=="")) {
+      Olymp.fw7.app.loginScreen();
+     }
+     else {
+        $rootScope.GetProfile();
+     };
 
   },
   function(response) {
@@ -65,86 +32,88 @@ $http({method: 'GET', url: 'q.env'}).then(
 
 /*---initialize some fields, not important stuff---*/
 
-this.allDealers = [];
-this.products = [];
+$rootScope.allDealers = [];
+$rootScope.products = [];
 
-this.DropSelected = {
+$rootScope.DropSelected = {
   'id': "",
   'name': "",
   'city': "",
   'address': ""
 };
 
-this.phone = "";
-this.serial = "";
+$rootScope.phone = "";
+$rootScope.serial = "";
 
-this.user = {};
-this.sell =[];
-this.sales_array = [];
-this.transactions = [];
-this.payments = [];
-this.ndfl_countries = [];
-this.ndfl_doctypes = [];
-this.ndfl_form = {};
-this.contest = {desc:'', users:[],plaintext:''};
-this.cards_history = [];
-this.sertificates = [];
-this.selected_card = -1;
-this.selected_nominal = 0;
-this.selected_sale = -1;
-this.image = "";
+$rootScope.user = {};
+$rootScope.sell =[];
+$rootScope.sales_array = [];
+$rootScope.transactions = [];
+$rootScope.payments = [];
+$rootScope.ndfl_countries = [];
+$rootScope.ndfl_doctypes = [];
+$rootScope.ndfl_form = {};
+$rootScope.contest_users = {};
+$rootScope.contest_plaintext = '';
+$rootScope.feedback_categories = [];
+$rootScope.cards_history = [];
+$rootScope.sertificates = [];
+$rootScope.selected_card = -1;
+$rootScope.selected_nominal = 0;
+$rootScope.selected_sale = -1;
+$rootScope.image = "";
 
 /*--------------DROPDOWNS-----------------*/
 
-this.DropDealer = Olymp.fw7.app.autocomplete({
+$rootScope.DropDealer = Olymp.fw7.app.autocomplete({
     input: '#dropdown_dealer',
     openIn: 'dropdown',
     onChange: function(autocomplete, value){
-      Ctrl.DropSelected.name = value;
+      $rootScope.DropSelected.name = value;
       //erase next fields
-      Ctrl.DropSelected.city = null;
+      $rootScope.DropSelected.city = null;
       document.getElementById('dropdown_city').value = '';
-      Ctrl.DropSelected.address = null;
+      $rootScope.DropSelected.address = null;
       //check if city is unique
-      var uniqueCheck = $.grep(Ctrl.allDealers, function(e){return (value==e.dealer_name)});
+      var uniqueCheck = $.grep($rootScope.allDealers, function(e){return (value==e.dealer_name)});
       if (!uniqueCheck[1]) {
-        Ctrl.DropSelected.city = uniqueCheck[0].city;
+        $rootScope.DropSelected.city = uniqueCheck[0].city;
         document.getElementById('dropdown_city').className += " not-emply-state";
         //check if address is unique
-        var uniqueCheck2 = $.grep(Ctrl.allDealers, function(e){return ((Ctrl.DropSelected.name==e.dealer_name)&&(Ctrl.DropSelected.city==e.city))});
-        if (!uniqueCheck2[1]) {Ctrl.DropSelected.address = uniqueCheck2[0].address;};
+        var uniqueCheck2 = $.grep($rootScope.allDealers, function(e){return (($rootScope.DropSelected.name==e.dealer_name)&&($rootScope.DropSelected.city==e.city))});
+        if (!uniqueCheck2[1]) {$rootScope.DropSelected.address = uniqueCheck2[0].address;};
       };
-      Ctrl.refresh();
+      $rootScope.refresh();
     },
     source: function (autocomplete, query, render) {
         var results = [];
 
-        for (var i = 0; i < Ctrl.allDealers.length; i++) {
-          var match = $.grep(results, function(e){return (e==Ctrl.allDealers[i].dealer_name)});
-            if (!match[0]) {results.push(Ctrl.allDealers[i].dealer_name)};
+        for (var i = 0; i < $rootScope.allDealers.length; i++) {
+          var match = $.grep(results, function(e){return (e==$rootScope.allDealers[i].dealer_name)});
+            if (!match[0]) {results.push($rootScope.allDealers[i].dealer_name)};
         };
         render(results);
     }
 });
 
-this.DropCity = Olymp.fw7.app.autocomplete({
+$rootScope.DropCity = Olymp.fw7.app.autocomplete({
     input: '#dropdown_city',
     openIn: 'dropdown',
     onChange: function(autocomplete, value){
-      Ctrl.DropSelected.city = value;
-      Ctrl.DropSelected.address = null;
+      $rootScope.DropSelected.city = value;
+      $rootScope.DropSelected.address = null;
       //check if address is unique
-      var uniqueCheck = $.grep(Ctrl.allDealers, function(e){return ((Ctrl.DropSelected.name==e.dealer_name)&&(value==e.city))});
-      if (!uniqueCheck[1]) {Ctrl.DropSelected.address = uniqueCheck[0].address};
-      Ctrl.refresh();
+      var uniqueCheck = $.grep($rootScope.allDealers, function(e){return (($rootScope.DropSelected.name==e.dealer_name)&&(value==e.city))});
+      if (!uniqueCheck[1]) {$rootScope.DropSelected.address = uniqueCheck[0].address};
+      $rootScope.refresh();
     },
 
     source: function (autocomplete, query, render) {
         var results = [];
-        for (var i = 0; i < Ctrl.allDealers.length; i++) {
-            if (Ctrl.allDealers[i].dealer_name==Ctrl.DropSelected.name){
-              var match = $.grep(results, function(e){return (e==Ctrl.allDealers[i].city)});
-            if (!match[0]) {results.push(Ctrl.allDealers[i].city)};
+        for (var i = 0; i < $rootScope.allDealers.length; i++) {
+            if ($rootScope.allDealers[i].dealer_name==$rootScope.DropSelected.name){
+              var match = $.grep(results, function(e){return (e==$rootScope.allDealers[i].city)});
+            if (!match[0]) {results.push($rootScope.allDealers[i].city)};
             }
         };
 
@@ -152,14 +121,14 @@ this.DropCity = Olymp.fw7.app.autocomplete({
     }
 });
 
-this.DropAddress = Olymp.fw7.app.autocomplete({
+$rootScope.DropAddress = Olymp.fw7.app.autocomplete({
     input: '#dropdown_address',
     openIn: 'dropdown',
     onChange: function(autocomplete, value){
-      Ctrl.DropSelected.address = value;
-      for (var i = 0; i < Ctrl.allDealers.length; i++) {
-            if ((Ctrl.allDealers[i].dealer_name==Ctrl.DropSelected.name)&&(Ctrl.allDealers[i].address==value)){
-                Ctrl.DropSelected.id = Ctrl.allDealers[i].id;
+      $rootScope.DropSelected.address = value;
+      for (var i = 0; i < $rootScope.allDealers.length; i++) {
+            if (($rootScope.allDealers[i].dealer_name==$rootScope.DropSelected.name)&&($rootScope.allDealers[i].address==value)){
+                $rootScope.DropSelected.id = $rootScope.allDealers[i].id;
                 return;
             }
         };
@@ -167,9 +136,9 @@ this.DropAddress = Olymp.fw7.app.autocomplete({
     },
     source: function (autocomplete, query, render) {
         var results = [];
-        for (var i = 0; i < Ctrl.allDealers.length; i++) {
-            if ((Ctrl.allDealers[i].dealer_name==Ctrl.DropSelected.name)&&(Ctrl.allDealers[i].city==Ctrl.DropSelected.city)){
-                results.push(Ctrl.allDealers[i].address);
+        for (var i = 0; i < $rootScope.allDealers.length; i++) {
+            if (($rootScope.allDealers[i].dealer_name==$rootScope.DropSelected.name)&&($rootScope.allDealers[i].city==$rootScope.DropSelected.city)){
+                results.push($rootScope.allDealers[i].address);
             }
         };
 
@@ -178,54 +147,54 @@ this.DropAddress = Olymp.fw7.app.autocomplete({
 });
 
 
-this.DropProducts = Olymp.fw7.app.autocomplete({
+$rootScope.DropProducts = Olymp.fw7.app.autocomplete({
       input: '#products-dropdown',
       openIn: 'dropdown',
       source: function (autocomplete, query, render) {
         var results = [];
-        for (var i = 0; i < Ctrl.products.length; i++) {
-          results.push(Ctrl.products[i].name);
+        for (var i = 0; i < $rootScope.products.length; i++) {
+          results.push($rootScope.products[i].name);
         }
         render(results);
       },
       onClose: function(autocomplete){
-        Ctrl.refresh();
+        $rootScope.refresh();
       }
   });
 
 
-this.DropCountries = Olymp.fw7.app.autocomplete({
+$rootScope.DropCountries = Olymp.fw7.app.autocomplete({
       input: '#countries-dropdown',
       openIn: 'dropdown',
       source: function (autocomplete, query, render) {
         var results = [];
-        for (var i = 0; i < Ctrl.ndfl_countries.length; i++) {
-          results.push(Ctrl.ndfl_countries[i].name)
+        for (var i = 0; i < $rootScope.ndfl_countries.length; i++) {
+          results.push($rootScope.ndfl_countries[i].name)
         }
         render(results);
       },
       onClose: function(autocomplete){
-        Ctrl.refresh();
+        $rootScope.refresh();
       }
   });
 
-this.DropDocs = Olymp.fw7.app.autocomplete({
+$rootScope.DropDocs = Olymp.fw7.app.autocomplete({
       input: '#docs-dropdown',
       openIn: 'dropdown',
       source: function (autocomplete, query, render) {
         var results = [];
-        for (var i = 0; i < Ctrl.ndfl_doctypes.length; i++) {
-          results.push(Ctrl.ndfl_doctypes[i].name)  
+        for (var i = 0; i < $rootScope.ndfl_doctypes.length; i++) {
+          results.push($rootScope.ndfl_doctypes[i].name)  
         }
         render(results);
       },
       onClose: function(autocomplete){
-        Ctrl.refresh();
+        $rootScope.refresh();
       }
   });
 
 /*-----------Calendar instance------------*/
-this.calendarDefault = Olymp.fw7.app.calendar({
+$rootScope.calendarDefault = Olymp.fw7.app.calendar({
     input: '#calendar-sell',
         value: [new Date()],
     convertToPopover: false,
@@ -244,7 +213,7 @@ for (var i = 0; i < 13; i++) {
  ph.push('docs/rules/'+i+'.jpg');
 };
 
-this.rulesPhoto = Olymp.fw7.app.photoBrowser({
+$rootScope.rulesPhoto = Olymp.fw7.app.photoBrowser({
   photos : ph,
   theme: 'dark',
   type: 'standalone',
@@ -267,7 +236,7 @@ this.rulesPhoto = Olymp.fw7.app.photoBrowser({
 '</div>'
 });
 
-this.persPhoto = Olymp.fw7.app.photoBrowser({
+$rootScope.persPhoto = Olymp.fw7.app.photoBrowser({
   photos : ['docs/rules/0.jpg','docs/rules/1.jpg'],
   theme: 'dark',
   type: 'standalone',
@@ -293,7 +262,7 @@ this.persPhoto = Olymp.fw7.app.photoBrowser({
 
 /*------Sertificate amount picker------*/
 
-  this.pickerAmount = Olymp.fw7.app.picker({
+  $rootScope.pickerAmount = Olymp.fw7.app.picker({
     input: '#picker-amount',
     toolbarCloseText: 'Готово',
     cols: [
@@ -307,7 +276,7 @@ this.persPhoto = Olymp.fw7.app.photoBrowser({
 /*------Date picker------*/
 var today = new Date();
  
-this.pickerInline = Olymp.fw7.app.picker({
+$rootScope.pickerInline = Olymp.fw7.app.picker({
     input: '#date-picker',
     toolbarCloseText: 'Готово',
     rotateEffect: true,
@@ -355,26 +324,26 @@ this.pickerInline = Olymp.fw7.app.picker({
 
 /*-----------Fancy Keypads------------*/
 
-this.CardKeypad = Olymp.fw7.app.keypad({
+$rootScope.CardKeypad = Olymp.fw7.app.keypad({
     input: '.mask_card',
     valueMaxLength: 16,
     dotButton: false,
     toolbarCloseText: 'Готово'
 });
 
-this.MoneyKeypad = Olymp.fw7.app.keypad({
+$rootScope.MoneyKeypad = Olymp.fw7.app.keypad({
     input: '.mask_money',
     dotButton: true,
     toolbarCloseText: 'Готово'
 });
 
-this.PhoneKeypad = Olymp.fw7.app.keypad({
+$rootScope.PhoneKeypad = Olymp.fw7.app.keypad({
     input: '.mask_phone',
     valueMaxLength: 13,
     dotButton: false,
     toolbarCloseText: 'Готово'
 });
-this.PhoneKeypad2 = Olymp.fw7.app.keypad({
+$rootScope.PhoneKeypad2 = Olymp.fw7.app.keypad({
     input: '.mask_phone2',
     valueMaxLength: 13,
     dotButton: false,
@@ -384,122 +353,127 @@ this.PhoneKeypad2 = Olymp.fw7.app.keypad({
 $scope.$watch('PhoneInput', function() {
   if ((!$scope.PhoneInput)||(!$scope.PhoneInput[3])){
     $scope.PhoneInput = "+7 ";
-    Ctrl.PhoneKeypad.value = "+7 ";
-    Ctrl.PhoneKeypad2.value = "+7 ";
+    $rootScope.PhoneKeypad.value = "+7 ";
+    $rootScope.PhoneKeypad2.value = "+7 ";
   }
   });
 
+/*-----------Banner Slider------------*/
+var Banners = Olymp.fw7.app.swiper('.swiper-container', {
+    autoplay: 3000,
+    speed: 400,
+    spaceBetween: 100
+}); 
 /*----------Navigation functions-----------*/
 
-this.Goto = function(id,tab){
+$rootScope.Goto = function(id,tab){
   Olymp.fw7.app.views[0].router.loadPage(id);
   if (tab) {Olymp.fw7.app.showTab(tab)}
   Olymp.fw7.app.closePanel();
 }
 
-this.GotoContact = function () {
+$rootScope.GotoContact = function () {
   Olymp.fw7.app.views[0].router.loadPage("#contact");
-  document.getElementById('help-name').value = this.user.full_name;
-  document.getElementById('help-email').value = this.user.email;
-  document.getElementById('help-phone').value = this.user.phone_mobile;
+  document.getElementById('help-name').value = $rootScope.user.full_name;
+  document.getElementById('help-email').value = $rootScope.user.email;
+  document.getElementById('help-phone').value = $rootScope.user.phone_mobile;
   Olymp.fw7.app.closePanel();
 };
 
-this.OpenNewSale = function() {
-  this.selected_sale = -1;
-  this.sell = [];
+$rootScope.OpenNewSale = function() {
+  $rootScope.selected_sale = -1;
+  $rootScope.sell = [];
   document.getElementById('products-dropdown').value = "";
   document.getElementById('prod-num').value = "";
   document.getElementById('billImage').src = "";
-  this.calendarDefault.value = [new Date()];
+  $rootScope.calendarDefault.value = [new Date()];
   document.getElementById('calendar-sell').value = moment().format("DD.MM.YYYY");
-  Ctrl.billView = {};
+  $rootScope.billView = {};
 
   Olymp.fw7.app.views[0].router.loadPage("#sale");
 }
-this.OpenSertificate = function(num){
-  this.selected_card = num;
+$rootScope.OpenSertificate = function(num){
+  $rootScope.selected_card = num;
   document.getElementById("picker-nominal").value = "";
   document.getElementById("picker-amount").value = "1";
 
-  var str=this.sertificates[this.selected_card].standard_nominals_raw.replace(/ /g, "").replace(/;/g, ",");
-  this.nominals = str.split(",");
+  var str=$rootScope.sertificates[$rootScope.selected_card].standard_nominals_raw.replace(/ /g, "").replace(/;/g, ",");
+  $rootScope.nominals = str.split(",");
 
-  if (this.sertificates[this.selected_card].nominals_raw.search(/-/)!=-1){
-    var min_index = this.sertificates[this.selected_card].nominals_raw.search(/-/);
-    var max_index = this.sertificates[this.selected_card].nominals_raw.search(/:/);
-    var min_sum = parseInt(this.sertificates[this.selected_card].nominals_raw.slice(0,min_index));
-    var max_sum = parseInt(this.sertificates[this.selected_card].nominals_raw.slice(min_index+1,max_index));
-    var step = parseInt(this.sertificates[this.selected_card].nominals_raw.slice(max_index+1));
-    this.all_nominals = [];
+  if ($rootScope.sertificates[$rootScope.selected_card].nominals_raw.search(/-/)!=-1){
+    var min_index = $rootScope.sertificates[$rootScope.selected_card].nominals_raw.search(/-/);
+    var max_index = $rootScope.sertificates[$rootScope.selected_card].nominals_raw.search(/:/);
+    var min_sum = parseInt($rootScope.sertificates[$rootScope.selected_card].nominals_raw.slice(0,min_index));
+    var max_sum = parseInt($rootScope.sertificates[$rootScope.selected_card].nominals_raw.slice(min_index+1,max_index));
+    var step = parseInt($rootScope.sertificates[$rootScope.selected_card].nominals_raw.slice(max_index+1));
+    $rootScope.all_nominals = [];
     for (var i = 0; i <= (max_sum-min_sum)/step; i++) {
       var s = min_sum+i*step;
-      this.all_nominals.push(s);
+      $rootScope.all_nominals.push(s);
     }
 
   } else {
-    this.all_nominals = [];
-    var str=this.sertificates[this.selected_card].nominals_raw.replace(/ /g, "").replace(/;/g, ",");
-    this.all_nominals = str.split(",");
+    $rootScope.all_nominals = [];
+    var str=$rootScope.sertificates[$rootScope.selected_card].nominals_raw.replace(/ /g, "").replace(/;/g, ",");
+    $rootScope.all_nominals = str.split(",");
   }
 
-  //console.log(this.all_nominals);
-  this.pickerSum = Olymp.fw7.app.picker({
+  //console.log($rootScope.all_nominals);
+  $rootScope.pickerSum = Olymp.fw7.app.picker({
     input: '#picker-nominal',
     toolbarCloseText: 'Готово',
     cols: [
         {
             textAlign: 'center',
-            values: this.all_nominals
+            values: $rootScope.all_nominals
         }
     ]
 });
 
-  this.autocompleteDropdownAll = Olymp.fw7.app.autocomplete({
+  $rootScope.autocompleteDropdownAll = Olymp.fw7.app.autocomplete({
     input: '#autocomplete-nominal',
     openIn: 'dropdown',
     source: function (autocomplete, query, render) {
         var results = [];
-        for (var i = 0; i < Ctrl.nominals.length; i++) {
-            if (Ctrl.nominals[i].indexOf(query.toLowerCase()) >= 0) results.push(Ctrl.nominals[i]);
+        for (var i = 0; i < $rootScope.nominals.length; i++) {
+            if ($rootScope.nominals[i].indexOf(query.toLowerCase()) >= 0) results.push($rootScope.nominals[i]);
         }
         render(results);
     }
 });
-  this.refresh();
+  $rootScope.refresh();
   Olymp.fw7.app.views[0].router.loadPage("#buy-sertificate");
 }
 
-this.Logout = function () {
+$rootScope.Logout = function () {
   Olymp.fw7.app.closePanel();
-  localStorage["OlympPhone"] = "";
-  localStorage["OlympPass"] = "";
+  localStorage["OlympID"] = "";
   Olymp.fw7.app.loginScreen();
 }
 
 /*-----------functions for ng-if------------*/
 
-/*this.IsWide = function () {
+/*$rootScope.IsWide = function () {
   return $("#lpan").hasClass("panel-visible-by-breakpoint")
 }*/
 
 /*-----------Regular functions------------*/
 
 
-this.refresh = function() {
+$rootScope.refresh = function() {
 //helps to update changing inputs
 $timeout(function () {
     $scope.$apply();
     },50)
 }
 
-this.TakePhoto = function(){
+$rootScope.TakePhoto = function(){
   navigator.camera.getPicture(
   function success(imageData) {
      var image = document.getElementById('billImage');
      image.src =  'data:image/jpg;base64,'+imageData;
-     Ctrl.image = imageData;
-     Ctrl.SetPhoto('data:image/jpg;base64,'+imageData);
+     $rootScope.image = imageData;
+     $rootScope.SetPhoto('data:image/jpg;base64,'+imageData);
   }, 
 
   function error(error) {
@@ -508,8 +482,8 @@ this.TakePhoto = function(){
   {destinationType: Camera.DestinationType.DATA_URL});
 }
 
-this.SetPhoto = function (photo) {
-  Ctrl.billView = Olymp.fw7.app.photoBrowser({
+$rootScope.SetPhoto = function (photo) {
+  $rootScope.billView = Olymp.fw7.app.photoBrowser({
     photos : [photo],
     theme: 'dark',
     type: 'standalone',
@@ -519,84 +493,126 @@ this.SetPhoto = function (photo) {
 }
 
 
-this.ForgotPass = function(){
+$rootScope.ForgotPass = function(){
   Olymp.fw7.app.prompt('Введите свой номер телефона', function (value) {
-    Ctrl.phone = value;
-    Ctrl.TokenPass(value);
+    $rootScope.phone = value;
+    $rootScope.TokenPass(value);
   });
 
 }
 
-this.SetupProfile = function(profile,pass){
+$rootScope.SetupProfile = function(profile){
   Olymp.fw7.app.closeModal();
-      localStorage["OlympPhone"] = profile.phone_mobile;
-      localStorage["OlympPass"] = pass;
-  this.user = profile;
+      localStorage["OlympID"] = profile.profile_id;
+  $rootScope.user = profile;
   console.log(profile);
-  this.GetSales();
-  this.GetProducts(profile.dealer.name);
-  this.GetTransactions();
-  this.GetNDFL();
-  this.GetPayments();
-  this.GetSertificates();
-  this.GetContest();
+
+  $rootScope.GetInfo('sales/api/sales/sales',
+    {'profile_id' : localStorage["OlympID"]},
+    {'sales_array':'sales'});
+ 
+  $rootScope.GetInfo('sales/api/sales/products',
+    {"dealer_name": $rootScope.user.dealer.name},
+    {'products':'products'});
+
+  $rootScope.GetInfo('sales/api/sales/transaction-history',
+    {'profile_id' : localStorage["OlympID"]},
+    {'transactions':'transactions',
+    'cards_history':'sertificates'},
+    function(){
+      for (var i = 0; i < $rootScope.cards_history.length; i++) {
+        var message = '';
+        switch ($rootScope.cards_history[i].cards[0].status){
+          case 'new' : message = 'Новый'; break;
+          case 'ordered' : message = 'Передан в заказ'; break;
+          case 'partiallyReady' : message = 'Частично выдан'; break;
+          case 'ready' : message = 'Полностью выдан'; break;
+          case 'rejected' : message = 'Отказ'; break;
+          case 'userCancel' : message = 'Отмена участником'; break;
+          default: message = "";
+        }
+        $rootScope.cards_history[i].status = message;
+      }
+    });
+       
+  $rootScope.GetInfo('profiles/api/ndfl/ndfl-info',
+    {'profile_id' : localStorage["OlympID"]},
+    {'ndfl_countries':'countries',
+    'ndfl_doctypes':'doc_types',
+    'ndfl_form':'form'}
+    );
+  $rootScope.GetInfo('/payments/api-v3/payments/by-profile',
+    {"profile_id": $rootScope.user.profile_id},
+    {'payments':'payments'});
+
+  $rootScope.GetInfo('sales/api/sales/cards',{},
+    {'sertificates':'cards'});
+
+  $rootScope.GetInfo('sales/api/sales/feedback-categories',{},
+    {'feedback_categories':'categories'});
+
+  $rootScope.GetInfo('sales/api/sales/competition',{},
+     {'contest_users':'top',
+      'contest_desc':'desc'});
+   //function(response){$rootScope.contest_plaintext = response.data.desc.replace(/(<([^>]+)>)/ig,"")}
 }
 
-this.IfShowAddProductButton = function(){
- if ((document.getElementById('products-dropdown').value == "")||(Ctrl.serial.length == 0)){
+
+$rootScope.IfShowAddProductButton = function(){
+ if ((document.getElementById('products-dropdown').value == "")||($rootScope.serial.length == 0)){
   return false} else {return true}
 }
 
-this.IfNdflFilled = function(){
-  if (this.ndfl_form.is_fulfilled){
+$rootScope.IfNdflFilled = function(){
+  if ($rootScope.ndfl_form.is_fulfilled){
     return true} else {return false}
 }
 
-this.AddProduct = function(){
+$rootScope.AddProduct = function(){
     var prod = Olymp.fw7.app.formToJSON('#product-form');
-    for (var i = 0; i < this.products.length; i++) {
-      if (this.products[i].name == prod.name) {
-        prod.id = this.products[i].id;
-        prod.category_id = this.products[i].category_id;
+    for (var i = 0; i < $rootScope.products.length; i++) {
+      if ($rootScope.products[i].name == prod.name) {
+        prod.id = $rootScope.products[i].id;
+        prod.category_id = $rootScope.products[i].category_id;
       }
     }
-    this.sell.push(prod);
+    $rootScope.sell.push(prod);
     document.getElementById('products-dropdown').value = "";
     document.getElementById('prod-num').value = "";
 }
 
-this.DeleteProduct = function(i){
-  this.sell.splice(i,1);
+$rootScope.DeleteProduct = function(i){
+  $rootScope.sell.splice(i,1);
 }
 
 
-this.EditSale = function(){
-  this.sell = [];
-  var products_array = this.sales_array[this.selected_sale].positions;
+$rootScope.EditSale = function(){
+  $rootScope.sell = [];
+  var products_array = $rootScope.sales_array[$rootScope.selected_sale].positions;
   for (var i = 0; i < products_array.length; i++) {
-    this.sell.push({'name': products_array[i].product.name,
+    $rootScope.sell.push({'name': products_array[i].product.name,
       'serial_number': products_array[i].custom_serial,
       'id': products_array[i].product.id,
       'category_id': products_array[i].product.category.id
     });
   }
   var re = /([0-9]+).([0-9]+).([0-9]+)/;
-  var swapMonthDay = this.sales_array[this.selected_sale].sold_on.replace(re, '$2.$1.$3');
-  this.calendarDefault.value[0] = swapMonthDay;
-  document.getElementById('calendar-sell').value = this.sales_array[this.selected_sale].sold_on;
+  var swapMonthDay = $rootScope.sales_array[$rootScope.selected_sale].sold_on.replace(re, '$2.$1.$3');
+  $rootScope.calendarDefault.value[0] = swapMonthDay;
+  document.getElementById('calendar-sell').value = $rootScope.sales_array[$rootScope.selected_sale].sold_on;
   document.getElementById('products-dropdown').value = "";
   document.getElementById('prod-num').value = "";
   var image = document.getElementById('billImage');
-  image.src = this.sales_array[this.selected_sale].documents[0].image_url;
-  this.SetPhoto(this.sales_array[this.selected_sale].documents[0].image_url);
+  image.src = $rootScope.sales_array[$rootScope.selected_sale].documents[0].image_url;
+  $rootScope.SetPhoto($rootScope.sales_array[$rootScope.selected_sale].documents[0].image_url);
   Olymp.fw7.app.views[0].router.loadPage("#sale");
 }
 
-this.WarnCard = function(){
+$rootScope.WarnCard = function(){
   Olymp.fw7.app.alert('Обратите внимание, что обработка заказов на нестандартные номиналы может занять больше времени.')
 }
 
-this.ShowError = function(err) {
+$rootScope.ShowError = function(err) {
   var error = '';
   for (var key in err){
       error = error + err[key] + '\n'
@@ -607,21 +623,47 @@ this.ShowError = function(err) {
 
 /*---------------REST API-----------------*/
 
-this.GetProfile = function () {
-  // var loginfo = {"phone":localStorage["OlympPhone"], "password":localStorage["OlympPass"]};
-  var loginfo = {"phone":localStorage["OlympPhone"]};
+$rootScope.GetInfo = function(url,info,data_and_keys,success_func){
   var req = {
    method: 'POST',
-   url: Ctrl.REST_URL+'profiles/api/auth/profile-info',
+   url: $rootScope.REST_URL+url,
    headers: {
        'Content-Type': 'application/json',
-       'X-Token' : Ctrl.Token
+       'X-Token' : $rootScope.Token
+     },
+     data: info
+    };
+  $http(req).then(
+    function successCallback(response){
+      console.log(response.data);
+      for (var property in data_and_keys) {
+        if (data_and_keys.hasOwnProperty(property)) {
+          $rootScope[property]  = response.data[data_and_keys[property]];
+        }
+      };
+    if (success_func){success_func(response)};     
+    }, 
+    function errorCallback(response){
+      console.log(response);
+  });
+
+}
+
+
+$rootScope.GetProfile = function () {
+  var loginfo = {'profile_id' : localStorage["OlympID"]};
+  var req = {
+   method: 'POST',
+   url: $rootScope.REST_URL+'profiles/api/auth/profile-info',
+   headers: {
+       'Content-Type': 'application/json',
+       'X-Token' : $rootScope.Token
      },
      data: loginfo
     };
   $http(req).then(
     function successCallback(response){
-      Ctrl.SetupProfile(response.data.profile,loginfo.password);
+      $rootScope.SetupProfile(response.data.profile);
     }, 
     function errorCallback(response){
       Olymp.fw7.app.alert(response.data.reason);
@@ -629,109 +671,19 @@ this.GetProfile = function () {
   });
 }
 
-this.GetNDFL = function(){
+$rootScope.GetDealers = function(){
   var req = {
    method: 'POST',
-   url: Ctrl.REST_URL+'sales/api/sales/ndfl-info',
+   url: $rootScope.REST_URL+'profiles/api/auth/register-info',
    headers: {
        'Content-Type': 'application/json',
-       'X-Token' : Ctrl.Token
-     },
-     data: {'phone_mobile': localStorage["OlympPhone"]}
-    };
-  $http(req).then(
-    function successCallback(response){
-      console.log(response.data);
-      Ctrl.ndfl_countries = response.data.countries;
-      Ctrl.ndfl_doctypes = response.data.doc_types;
-      Ctrl.ndfl_form = response.data.form;
-    }, 
-    function errorCallback(response){
-      Olymp.fw7.app.alert(response.data.reason);
-      console.log(response);
-  });
-}
-
-this.GetTransactions = function(){
-  var req = {
-   method: 'POST',
-   url: Ctrl.REST_URL+'sales/api/sales/transaction-history',
-   headers: {
-       'Content-Type': 'application/json',
-       'X-Token' : Ctrl.Token
-     },
-     data: {'phone': localStorage["OlympPhone"]}
-    };
-  $http(req).then(
-    function successCallback(response){
-      console.log("transaction history:");
-      console.log(response.data);
-      Ctrl.transactions = response.data.transactions;
-      Ctrl.cards_history = response.data.sertificates;
-    }, 
-    function errorCallback(response){
-      Olymp.fw7.app.alert(response.data.reason);
-      console.log(response);
-  });
-}
-
-this.GetSertificates = function(){
-  var req = {
-   method: 'POST',
-   url: Ctrl.REST_URL+'sales/api/sales/cards',
-   headers: {
-       'Content-Type': 'application/json',
-       'X-Token' : Ctrl.Token
-     }
-    };
-  $http(req).then(
-    function successCallback(response){
-      console.log("cards:");
-      console.log(response.data);
-      Ctrl.sertificates = response.data.cards;
-    }, 
-    function errorCallback(response){
-      Olymp.fw7.app.alert(response.data.reason);
-      console.log(response);
-  });
-}
-
-this.GetContest = function(){
-  var req = {
-   method: 'POST',
-   url: Ctrl.REST_URL+'sales/api/sales/top',
-   headers: {
-       'Content-Type': 'application/json',
-       'X-Token' : Ctrl.Token
-     }
-    };
-  $http(req).then(
-    function successCallback(response){
-      console.log("contest");
-      console.log(response.data);
-      Ctrl.contest.desc = response.data.desc;
-      Ctrl.contest.users = response.data.top;
-      Ctrl.contest.plaintext = response.data.desc.replace(/(<([^>]+)>)/ig,"");
-    }, 
-    function errorCallback(response){
-      Olymp.fw7.app.alert(response.data.reason);
-      console.log(response);
-  });
-}
-
-this.GetDealers = function(){
-  var req = {
-   method: 'POST',
-   url: this.REST_URL+'profiles/api/auth/register-info',
-   headers: {
-       'Content-Type': 'application/json',
-       'X-Token' : Ctrl.Token
+       'X-Token' : $rootScope.Token
      }
     };
   $http(req).then(
 
     function successCallback(response){
-      Ctrl.allDealers = response.data.dealers;
+      $rootScope.allDealers = response.data.dealers;
       console.log(response);
     }, 
     function errorCallback(response){
@@ -739,58 +691,16 @@ this.GetDealers = function(){
     });
 }
 
-this.GetPayments = function(){
-  var req = {
-   method: 'POST',
-   url: this.REST_URL+'/payments/api-v3/payments/by-profile',
-   headers: {
-       'Content-Type': 'application/json',
-       'X-Token' : Ctrl.Token
-     },
-     data: {"profile_id": this.user.profile_id}
-    };
-  $http(req).then(
-    function successCallback(response){
-      Ctrl.payments = response.data.payments;
-      console.log(response);
-    }, 
-    function errorCallback(response){
-      console.log(response);
-    });
-}
 
-this.GetProducts = function(name){
-  var info = {"dealer_name": name}
-  var req = {
-    method: 'POST',
-    url: this.REST_URL+'sales/api/sales/products',
-    headers: {
-       'Content-Type': 'application/json',
-       'X-Token' : Ctrl.Token
-    },
-    data: info
-  };
-  $http(req).then(
-
-  function successCallback(response){
-    Ctrl.products = response.data.products;
-    console.log(response);
-  }, 
-  function errorCallback(response){
-    console.log(response);
-  });
-
-}
-
-this.TokenPass = function(num){
+$rootScope.TokenPass = function(num){
   Olymp.fw7.app.showPreloader(["Подождите..."]);
   var info = {'phone': num};
   var req = {
    method: 'POST',
-   url: this.REST_URL+'profiles/api/auth/token-remind',
+   url: $rootScope.REST_URL+'profiles/api/auth/token-remind',
    headers: {
        'Content-Type': 'application/json',
-       'X-Token' : Ctrl.Token
+       'X-Token' : $rootScope.Token
      },
      data: info
     };
@@ -802,7 +712,7 @@ this.TokenPass = function(num){
         function(code){
           if (code==response.data.token){
             Olymp.fw7.app.modalLogin('Придумайте новый пароль:', function (pass1,pass2) {
-            Ctrl.ResetPass(Ctrl.phone,pass1,pass2);
+            $rootScope.ResetPass($rootScope.phone,pass1,pass2);
             });
           }
           else{
@@ -821,7 +731,7 @@ this.TokenPass = function(num){
     });
 }
 
-this.ResetPass = function(phone,pass1,pass2){
+$rootScope.ResetPass = function(phone,pass1,pass2){
   Olymp.fw7.app.showPreloader(["Подождите..."]);
   var info = {
     "phone": phone,
@@ -830,17 +740,17 @@ this.ResetPass = function(phone,pass1,pass2){
   };
   var req = {
    method: 'POST',
-   url: this.REST_URL+'profiles/api/auth/remind-password',
+   url: $rootScope.REST_URL+'profiles/api/auth/remind-password',
    headers: {
        'Content-Type': 'application/json',
-       'X-Token' : Ctrl.Token
+       'X-Token' : $rootScope.Token
      },
      data: info
     };
   $http(req).then(
     function successCallback(response){
       Olymp.fw7.app.hidePreloader();
-      Ctrl.SetupProfile(response.data.profile, pass1);
+      $rootScope.SetupProfile(response.data.profile);
     }, 
     function errorCallback(response){
   Olymp.fw7.app.hidePreloader();
@@ -849,22 +759,22 @@ this.ResetPass = function(phone,pass1,pass2){
     });
 }
 
-this.CheatLogin = function () {
+$rootScope.CheatLogin = function () {
   Olymp.fw7.app.showPreloader(["Подождите..."]);
   var loginfo = Olymp.fw7.app.formToJSON('#login-form');
   var req = {
    method: 'POST',
-   url: this.REST_URL+'profiles/api/auth/profile-info',
+   url: $rootScope.REST_URL+'profiles/api/auth/profile-info',
    headers: {
        'Content-Type': 'application/json',
-       'X-Token' : Ctrl.Token
+       'X-Token' : $rootScope.Token
      },
      data: {"phone":loginfo.phone}
     };
   $http(req).then(
     function successCallback(response){
         Olymp.fw7.app.hidePreloader();
-      Ctrl.SetupProfile(response.data.profile,loginfo.password);
+      $rootScope.SetupProfile(response.data.profile);
     }, 
     function errorCallback(response){
   Olymp.fw7.app.hidePreloader();
@@ -873,22 +783,22 @@ this.CheatLogin = function () {
     });
 }
 
-this.PullLoginForm = function () {
+$rootScope.PullLoginForm = function () {
   Olymp.fw7.app.showPreloader(["Подождите..."]);
   var loginfo = Olymp.fw7.app.formToJSON('#login-form');
   var req = {
    method: 'POST',
-   url: this.REST_URL+'profiles/api/auth/login',
+   url: $rootScope.REST_URL+'profiles/api/auth/login',
    headers: {
        'Content-Type': 'application/json',
-       'X-Token' : Ctrl.Token
+       'X-Token' : $rootScope.Token
      },
      data: loginfo
     };
   $http(req).then(
     function successCallback(response){
         Olymp.fw7.app.hidePreloader();
-      Ctrl.SetupProfile(response.data.profile,loginfo.password);
+      $rootScope.SetupProfile(response.data.profile);
     }, 
     function errorCallback(response){
   Olymp.fw7.app.hidePreloader();
@@ -898,24 +808,24 @@ this.PullLoginForm = function () {
 }
 
 
-this.SendSMS = function () {
+$rootScope.SendSMS = function () {
   Olymp.fw7.app.showPreloader(["Подождите..."]);
   var loginfo = Olymp.fw7.app.formToJSON('#pre-reg-form');
   console.log(loginfo);
-  this.phone=loginfo.phone;
+  $rootScope.phone=loginfo.phone;
   var req = {
    method: 'POST',
-   url: this.REST_URL+'profiles/api/auth/token',
+   url: $rootScope.REST_URL+'profiles/api/auth/token',
    headers: {
        'Content-Type': 'application/json',
-       'X-Token' : Ctrl.Token
+       'X-Token' : $rootScope.Token
      },
      data: loginfo
     };
   $http(req).then(
     function successCallback(response){
       Olymp.fw7.app.hidePreloader();
-/*      Ctrl.testToken = response.data.token;*/
+/*      $rootScope.testToken = response.data.token;*/
       Olymp.fw7.app.prompt("Введите присланный код", " ",
         function(code){
           if (code==response.data.token){
@@ -939,31 +849,31 @@ this.SendSMS = function () {
 }
 
 
-this.Register = function(){
+$rootScope.Register = function(){
 Olymp.fw7.app.showPreloader(["Подождите..."]);
 var reginfo = Olymp.fw7.app.formToJSON('#reg-form');
-if ((Ctrl.DropSelected.id)&&(reginfo.first_name)&&(reginfo.last_name)&&(reginfo.email)){
+if (($rootScope.DropSelected.id)&&(reginfo.first_name)&&(reginfo.last_name)&&(reginfo.email)){
 
   if (reginfo.agreeWithTerms[0]) {reginfo.agreeWithTerms=1} 
     else {reginfo.agreeWithTerms=0};
   if (reginfo.allowPersonalDataProcessing[0]) {reginfo.allowPersonalDataProcessing=1} 
     else {reginfo.allowPersonalDataProcessing=0};
-  reginfo.phone_mobile_local = this.phone;
-  reginfo.dealer_id = Ctrl.DropSelected.id;
+  reginfo.phone_mobile_local = $rootScope.phone;
+  reginfo.dealer_id = $rootScope.DropSelected.id;
   console.log(reginfo);
   var req = {
    method: 'POST',
-   url: this.REST_URL+'profiles/api/auth/register',
+   url: $rootScope.REST_URL+'profiles/api/auth/register',
    headers: {
        'Content-Type': 'application/json',
-       'X-Token' : Ctrl.Token
+       'X-Token' : $rootScope.Token
      },
      data: reginfo
     };
   $http(req).then(
     function successCallback(response){
       Olymp.fw7.app.hidePreloader();
-      Ctrl.SetupProfile(response.data.profile,reginfo.password);
+      $rootScope.SetupProfile(response.data.profile);
     }, 
     function errorCallback(response){
   Olymp.fw7.app.hidePreloader();
@@ -976,18 +886,18 @@ if ((Ctrl.DropSelected.id)&&(reginfo.first_name)&&(reginfo.last_name)&&(reginfo.
     Olymp.fw7.app.alert('Заполните все обязательные поля!')};
 }
 
-this.UpdateProfile = function(){
+$rootScope.UpdateProfile = function(){
 Olymp.fw7.app.showPreloader(["Подождите..."]);
   var info = Olymp.fw7.app.formToJSON('#update-profile-form');
-  info.phone = localStorage["OlympPhone"];
+  info.profile_id = localStorage["OlympID"];
   console.log("new profile info");
   console.log(info);
   var req = {
    method: 'POST',
-   url: this.REST_URL+'profiles/api/auth/profile-edit',
+   url: $rootScope.REST_URL+'profiles/api/auth/profile-edit',
    headers: {
        'Content-Type': 'application/json',
-       'X-Token' : Ctrl.Token
+       'X-Token' : $rootScope.Token
      },
      data: info
     };
@@ -995,7 +905,7 @@ Olymp.fw7.app.showPreloader(["Подождите..."]);
     function successCallback(response){
       Olymp.fw7.app.hidePreloader();
       Olymp.fw7.app.alert('Данные успешно обновлены!', function () {
-        Ctrl.SetupProfile(response.data.profile,localStorage["OlympPass"]);
+        $rootScope.SetupProfile(response.data.profile);
         Olymp.fw7.app.views[0].router.back();
     });
      
@@ -1007,21 +917,21 @@ Olymp.fw7.app.showPreloader(["Подождите..."]);
     });
 }
 
-this.GetSales = function(){
-  var info = {"phone": localStorage["OlympPhone"]}
+$rootScope.GetSales = function(){
+  var info = {'profile_id' : localStorage["OlympID"]}
   var req = {
    method: 'POST',
-   url: this.REST_URL+'sales/api/sales/sales',
+   url: $rootScope.REST_URL+'sales/api/sales/sales',
    headers: {
        'Content-Type': 'application/json',
-       'X-Token' : Ctrl.Token
+       'X-Token' : $rootScope.Token
      },
      data: info
     };
   $http(req).then(
     function successCallback(response){
       Olymp.fw7.app.hidePreloader();
-      Ctrl.sales_array = response.data.sales;
+      $rootScope.sales_array = response.data.sales;
       console.log(response.data.sales);
     }, 
     function errorCallback(response){
@@ -1031,31 +941,31 @@ this.GetSales = function(){
     });
 }
 
-this.CheckSale = function(status){
-  if (Ctrl.selected_sale==-1) {
-    this.SendSale(status)
+$rootScope.CheckSale = function(status){
+  if ($rootScope.selected_sale==-1) {
+    $rootScope.SendSale(status)
   } else {
-    this.UpdateSale(status)
+    $rootScope.UpdateSale(status)
   }
 }
 
-this.SendSale = function (status) {
-if (!Ctrl.image) {
+$rootScope.SendSale = function (status) {
+if (!$rootScope.image) {
   Olymp.fw7.app.alert('Сделайте фотографию чека!')
 }else {
 
   Olymp.fw7.app.showPreloader(["Подождите..."]);
   var form_info = Olymp.fw7.app.formToJSON('#new-sale');
   var products = [];
-  for (var i = 0; i < this.sell.length; i++) {
+  for (var i = 0; i < $rootScope.sell.length; i++) {
 
-    products.push({"category_id": this.sell[i].category_id,
-            "product_id": this.sell[i].id,
+    products.push({"category_id": $rootScope.sell[i].category_id,
+            "product_id": $rootScope.sell[i].id,
             "quantityLocal": 1,
-            "serialNumberValue": this.sell[i].serial_number,
+            "serialNumberValue": $rootScope.sell[i].serial_number,
             "validation_method": "serial"});
   };
-  var info = {"phone": localStorage["OlympPhone"],
+  var info = {'profile_id' : localStorage["OlympID"],
     "sale": {
       "status": status,
         "sold_on_local": form_info.date,
@@ -1063,22 +973,22 @@ if (!Ctrl.image) {
     },
     "documents": [{
         "type": "jpg",
-        "image": Ctrl.image
+        "image": $rootScope.image
     }]}
     console.log(info);
   var req = {
    method: 'POST',
-   url: this.REST_URL+'sales/api/sales/create',
+   url: $rootScope.REST_URL+'sales/api/sales/create',
    headers: {
        'Content-Type': 'application/json',
-       'X-Token' : Ctrl.Token
+       'X-Token' : $rootScope.Token
      },
      data: info
     };
   $http(req).then(
     function successCallback(response){
       Olymp.fw7.app.hidePreloader();
-      Ctrl.GetSales();
+      $rootScope.GetSales();
       Olymp.fw7.app.views[0].router.loadPage("#old_sales");
       console.log(response.data.sales);
     }, 
@@ -1090,45 +1000,45 @@ if (!Ctrl.image) {
   }
 }
 
-this.UpdateSale = function(status){
+$rootScope.UpdateSale = function(status){
 
   Olymp.fw7.app.showPreloader(["Подождите..."]);
   var form_info = Olymp.fw7.app.formToJSON('#new-sale');
   var products = [];
-  for (var i = 0; i < this.sell.length; i++) {
+  for (var i = 0; i < $rootScope.sell.length; i++) {
 
-    products.push({"category_id": this.sell[i].category_id,
-            "product_id": this.sell[i].id,
+    products.push({"category_id": $rootScope.sell[i].category_id,
+            "product_id": $rootScope.sell[i].id,
             "quantityLocal": 1,
-            "serialNumberValue": this.sell[i].serial_number,
+            "serialNumberValue": $rootScope.sell[i].serial_number,
             "validation_method": "serial"});
   };
   var info = {
-    "sale_id": Ctrl.sales_array[Ctrl.selected_sale].sale_id,
+    "sale_id": $rootScope.sales_array[$rootScope.selected_sale].sale_id,
     "sale": {
       "status": status,
         "sold_on_local": form_info.date,
         "positions": products
     }};
-    if (Ctrl.image) {
+    if ($rootScope.image) {
       info.documents = [{
         "type": "jpg",
-        "image": Ctrl.image}]
+        "image": $rootScope.image}]
     }
     console.log(info);
   var req = {
    method: 'POST',
-   url: this.REST_URL+'sales/api/sales/update',
+   url: $rootScope.REST_URL+'sales/api/sales/update',
    headers: {
        'Content-Type': 'application/json',
-       'X-Token' : Ctrl.Token
+       'X-Token' : $rootScope.Token
      },
      data: info
     };
   $http(req).then(
     function successCallback(response){
       Olymp.fw7.app.hidePreloader();
-      Ctrl.GetSales();
+      $rootScope.GetSales();
       Olymp.fw7.app.views[0].router.loadPage("#old_sales");
       console.log(response.data.sales);
     }, 
@@ -1139,16 +1049,16 @@ this.UpdateSale = function(status){
     });
 }
 
-this.Feedback = function(){
+$rootScope.Feedback = function(){
   Olymp.fw7.app.showPreloader(["Подождите..."]);
   var info = Olymp.fw7.app.formToJSON('#help-form');
-  info.phone_mobile = localStorage["OlympPhone"];
+  info.profile_id = localStorage["OlympID"];
   var req = {
    method: 'POST',
-   url: this.REST_URL+'sales/api/sales/feedback',
+   url: $rootScope.REST_URL+'feedback/api/feedback/feedback',
    headers: {
        'Content-Type': 'application/json',
-       'X-Token' : Ctrl.Token
+       'X-Token' : $rootScope.Token
      },
      data: info
     };
@@ -1167,18 +1077,18 @@ this.Feedback = function(){
     });
 }
 
-this.BuySertificate = function(){
+$rootScope.BuySertificate = function(){
     Olymp.fw7.app.showPreloader(["Подождите..."]);
  var info = Olymp.fw7.app.formToJSON('#sertificate-form');
  if (info.nominal!=-1){
-  info.nominal = this.nominals[info.nominal];
+  info.nominal = $rootScope.nominals[info.nominal];
  } else {
   info.nominal = info.special_nominal;
  };
-  info.type = this.sertificates[this.selected_card].type;
+  info.type = $rootScope.sertificates[$rootScope.selected_card].type;
   var json = {
     cards: [info],
-    phone: localStorage["OlympPhone"],
+    profile_id : localStorage["OlympID"],
     is_allow_cancel: 1,
     action: 'create'
   };
@@ -1186,10 +1096,10 @@ this.BuySertificate = function(){
 
   var req = {
    method: 'POST',
-   url: this.REST_URL+'sales/api/sales/buy-sertificate',
+   url: $rootScope.REST_URL+'sales/api/sales/buy-sertificate',
    headers: {
        'Content-Type': 'application/json',
-       'X-Token' : Ctrl.Token
+       'X-Token' : $rootScope.Token
      },
      data: json
     };
@@ -1197,31 +1107,31 @@ this.BuySertificate = function(){
     function successCallback(response){
       Olymp.fw7.app.hidePreloader();
       console.log(response.data);
-      Olymp.fw7.app.alert("Покупка сертификата прошла успешно!");
-      Ctrl.GetProfile();
+      Olymp.fw7.app.alert("В течение 8 дней сертификат придёт на почту, указанную в вашем профиле!");
+      $rootScope.GetProfile();
     }, 
     function errorCallback(response){
       Olymp.fw7.app.hidePreloader();
       console.log(response);
-      Ctrl.ShowError(response.data.errors);
+      $rootScope.ShowError(response.data.errors);
     });
 
 }
 
-this.Payment = function(){
+$rootScope.Payment = function(){
   Olymp.fw7.app.showPreloader(["Подождите..."]);
  var info = Olymp.fw7.app.formToJSON('#payment-form');
-   var json = {"profile_id":this.user.profile_id,
+   var json = {"profile_id":$rootScope.user.profile_id,
    "type":"card",
    "amount":info.money,
    "parameters":{"phone_mobile": info.card}}
 
   var req = {
    method: 'POST',
-   url: this.REST_URL+'/payments/api-v3/payments/create',
+   url: $rootScope.REST_URL+'/payments/api-v3/payments/create',
    headers: {
        'Content-Type': 'application/json',
-       'X-Token' : Ctrl.Token
+       'X-Token' : $rootScope.Token
      },
      data: json
     };
@@ -1229,21 +1139,21 @@ this.Payment = function(){
     function successCallback(response){
       Olymp.fw7.app.hidePreloader();
       console.log(response.data);
-      Olymp.fw7.app.alert("Перевод денег прошёл успешно!", function(){Ctrl.GetProfile()});
+      Olymp.fw7.app.alert("Перевод денег прошёл успешно!", function(){$rootScope.GetProfile()});
     }, 
     function errorCallback(response){
       Olymp.fw7.app.hidePreloader();
       console.log(response);
-      Ctrl.ShowError(response.data.errors);
+      $rootScope.ShowError(response.data.errors);
     });
 }
 
-this.SendNdflForm = function(){
+$rootScope.SendNdflForm = function(){
   Olymp.fw7.app.showPreloader(["Подождите..."]);
   var info = Olymp.fw7.app.formToJSON('#ndfl-form');
-  info.phone_mobile = localStorage["OlympPhone"];
+  info.profile_id = localStorage["OlympID"];
 
-  var countryCheck = $.grep(Ctrl.ndfl_countries, function(e){return (info.country==e.name)});
+  var countryCheck = $.grep($rootScope.ndfl_countries, function(e){return (info.country==e.name)});
   if (countryCheck[0]) {
     info.citizenship_id = countryCheck[0].id
   } else {
@@ -1251,7 +1161,7 @@ this.SendNdflForm = function(){
     Olymp.fw7.app.alert("Выберите страну из списка!");
     return;
   }
-  var docCheck = $.grep(Ctrl.ndfl_doctypes, function(e){return (info.document_type==e.name)});
+  var docCheck = $.grep($rootScope.ndfl_doctypes, function(e){return (info.document_type==e.name)});
   if (docCheck[0]) {
     info.document_type_id = docCheck[0].id
   } else {
@@ -1262,10 +1172,10 @@ this.SendNdflForm = function(){
 
   var req = {
    method: 'POST',
-   url: this.REST_URL+'sales/api/sales/ndfl-form',
+   url: $rootScope.REST_URL+'profiles/api/ndfl/ndfl-form',
    headers: {
        'Content-Type': 'application/json',
-       'X-Token' : Ctrl.Token
+       'X-Token' : $rootScope.Token
      },
      data: info
     };
@@ -1278,7 +1188,7 @@ this.SendNdflForm = function(){
     function errorCallback(response){
       Olymp.fw7.app.hidePreloader();
       console.log(response);
-      Ctrl.ShowError(response.data.errors);
+      $rootScope.ShowError(response.data.errors);
     });
 }
 

@@ -39,22 +39,22 @@
     <div id="lpan" class="panel panel-left panel-reveal">
       <div class="page-content">
         <div class="content-block left-block">
-          <div class="leftPanelName">Привет, {{mainCtrl.user.first_name}}!</div>
-          <div ng-click="mainCtrl.GotoBonus()" class="leftPanelPoints">Бонусный баланс: {{mainCtrl.user.balance}} баллов</div>
-          <div class="leftPanelPoints">{{mainCtrl.user.balance | BonusCheer}}</div>
-          <div class="leftPanelExit" ng-click="mainCtrl.Logout()">Выйти</div>
+          <div class="leftPanelName">Привет, {{user.first_name}}!</div>
+          <div ng-click="GotoBonus()" class="leftPanelPoints">Бонусный баланс: {{user.balance}} баллов</div>
+          <div class="leftPanelPoints">{{user.balance | BonusCheer}}</div>
+          <div class="leftPanelExit" ng-click="Logout()">Выйти</div>
           <div class="leftPanelColumn">
-            <div ng-click="mainCtrl.Goto('#index')" class="leftPanelButton profilePanel">Главная</div>
+            <div ng-click="Goto('#index')" class="leftPanelButton profilePanel">Главная</div>
             
-            <div ng-click="mainCtrl.Goto('#old_sales')" class="leftPanelButton salePanel">Продажи</div>
-            <div ng-click="mainCtrl.Goto('#bonus')" class="leftPanelButton bonusPanel">Бонусы</div>
-            <div ng-click="mainCtrl.Goto('#transaction')" class="leftPanelButton transPanel">Перевод на карту</div>
-            <div ng-click="mainCtrl.Goto('#sertificate')" class="leftPanelButton sertPanel">Сертификаты</div> 
-            <div ng-click="mainCtrl.GotoContact()" class="leftPanelButton contactPanel">Помощь</div>
-            <div ng-click="mainCtrl.Goto('#ndfl')" class="leftPanelButton formPanel">Анкета</div>
+            <div ng-click="Goto('#old_sales')" class="leftPanelButton salePanel">Продажи</div>
+            <div ng-click="Goto('#bonus')" class="leftPanelButton bonusPanel">Бонусы</div>
+            <div ng-click="Goto('#transaction')" class="leftPanelButton transPanel">Перевод на карту</div>
+            <div ng-click="Goto('#sertificate')" class="leftPanelButton sertPanel">Сертификаты</div> 
+            <div ng-click="GotoContact()" class="leftPanelButton contactPanel">Помощь</div>
+            <div ng-click="Goto('#ndfl')" class="leftPanelButton formPanel">Анкета</div>
           </div> 
         </div>
-        <a href="#" ng-click="mainCtrl.rulesPhoto.open()" class="back-button item-link button button-normal color-white bg-black">о проекте</a>
+        <a href="#" ng-click="rulesPhoto.open()" class="back-button item-link button button-normal color-white bg-black">о проекте</a>
       </div>
     </div>
 
@@ -71,7 +71,7 @@
                   <div class="left sliding"><a href="#" class="open-panel link icon-only">
                     <i class="icon color-white icon-bars"></i></a>
                   </div>
-                  <div class="right sliding"><a href="#" ng-click="mainCtrl.Goto('#index','#tab7')" class="link icon-only"><i class="f7-icons">home</i></a></div>
+                  <div class="right sliding"><a href="#" ng-click="Goto('#index','#tab7')" class="link icon-only"><i class="f7-icons">home</i></a></div>
                 </div>
               </div>
               <div class="toolbar tabbar">
@@ -86,10 +86,25 @@
                 <div class="tabs">
                   <div id="tab7" class="page-content tab active">
 
-                    <div class="banner_container">
+   <!--                  <div class="banner_container">
                       <img class="banner_image" src="img/banner.png">
+                    </div> -->
+
+                    <div class="swiper-container">
+                        <div class="swiper-wrapper">
+                            <div class="swiper-slide">
+                              <img src="img/banner1.png" class="banner_image">
+                            </div>
+                            <div class="swiper-slide">
+                              <img src="img/banner2.png" class="banner_image">
+                            </div>
+                            <div class="swiper-slide">
+                              <img src="img/banner3.png" class="banner_image">
+                            </div>
+                        </div>
                     </div>
-                    <div ng-click="mainCtrl.Goto('#ndfl')" class="card white-border-block" ng-hide="mainCtrl.IfNdflFilled()">
+
+                    <div ng-click="Goto('#ndfl')" class="card white-border-block" ng-hide="IfNdflFilled()">
                         <div class="card-content">
                           <div class="card-content-inner">
                             Заполните анкету НДФЛ!
@@ -97,7 +112,7 @@
                         </div>
                       </div>
                     <div class="content-block">
-                    <a href="#" ng-click="mainCtrl.OpenNewSale()" class="item-link button button-big color-white bg-black">Новая продажа</a>
+                    <a href="#" ng-click="OpenNewSale()" class="item-link button button-big color-white bg-black">Новая продажа</a>
                     </div>
                     <div class="content-block-title">Конкурс</div>
                     <div class="list-block white-border-block">
@@ -107,7 +122,7 @@
                               <div class="white-border-block">Описание конкурса</div>
                             </div></a>
                           <div class="accordion-item-content">
-                            <div ng-bind-html="mainCtrl.contest.desc" class="content-block">
+                            <div ng-bind-html="contest_desc" class="content-block">
                              
                             </div>
                           </div>
@@ -118,7 +133,7 @@
                             <div class="item-after">Кол-во продаж</div>
                           </div>
                         </li>
-                        <li ng-repeat="user in mainCtrl.contest.users track by $index" class="item-content">
+                        <li ng-repeat="user in contest_users track by $index" class="item-content">
                           <div class="item-inner">
                             <div class="item-title">{{user.full_name}}</div>
                             <div class="item-after">{{user.sum_quantity}}</div>
@@ -135,43 +150,43 @@
                         <li class="item-content">
                           <div class="item-inner">
                             <div class="item-title">Имя</div>
-                            <div class="item-after">{{mainCtrl.user.first_name}}</div>
+                            <div class="item-after">{{user.first_name}}</div>
                           </div>
                         </li>
                         <li class="item-content">
                           <div class="item-inner">
                             <div class="item-title">Фамилия</div>
-                            <div class="item-after">{{mainCtrl.user.last_name}}</div>
+                            <div class="item-after">{{user.last_name}}</div>
                           </div>
                         </li>
                         <li class="item-content">
                           <div class="item-inner">
                             <div class="item-title">Почта</div>
-                            <div class="item-after">{{mainCtrl.user.email}}</div>
+                            <div class="item-after">{{user.email}}</div>
                           </div>
                         </li>
                         <li class="item-content">
                           <div class="item-inner">
                             <div class="item-title">Телефон</div>
-                            <div class="item-after">{{mainCtrl.user.phone_mobile}}</div>
+                            <div class="item-after">{{user.phone_mobile}}</div>
                           </div>
                         </li>
                         <li class="item-content">
                           <div class="item-inner">
                             <div class="item-title">Дилер</div>
-                            <div class="item-after">{{mainCtrl.user.dealer.name}}</div>
+                            <div class="item-after">{{user.dealer.name}}</div>
                           </div>
                         </li>
                       </ul>
-                      <div class="card" ng-hide="mainCtrl.user.blocking_reason==null">
+                      <div class="card" ng-hide="user.blocking_reason==null">
                         <div class="card-content">
                           <div class="card-content-inner">
                             Пользователь временно заблокирован.<br>Причина:<br>
-                            {{mainCtrl.user.blocking_reason}}
+                            {{user.blocking_reason}}
                           </div>
                         </div>
                       </div>
-                      <div ng-click="mainCtrl.Goto('#ndfl')" class="card white-border-block" ng-hide="mainCtrl.IfNdflFilled()">
+                      <div ng-click="Goto('#ndfl')" class="card white-border-block" ng-hide="IfNdflFilled()">
                         <div class="card-content">
                           <div class="card-content-inner">
                             Заполните анкету НДФЛ!
@@ -196,7 +211,7 @@
                 <div class="left sliding"><a href="#" class="open-panel link icon-only">
                   <i class="icon color-white icon-bars"></i></a>
                 </div>
-                <div class="right sliding"><a href="#" ng-click="mainCtrl.Goto('#index','#tab7')" class="link icon-only"><i class="f7-icons">home</i></a></div>
+                <div class="right sliding"><a href="#" ng-click="Goto('#index','#tab7')" class="link icon-only"><i class="f7-icons">home</i></a></div>
               </div>
             </div>
             <div class="page-content">
@@ -209,7 +224,7 @@
                       <div class="item-inner">
                         <div class="item-title label">Фамилия</div>
                         <div class="item-input">
-                          <input type="text" ng-model="mainCtrl.user.last_name" name="last_name" placeholder="...">
+                          <input type="text" ng-model="user.last_name" name="last_name" placeholder="...">
                         </div>
                       </div>
                     </li>
@@ -217,7 +232,7 @@
                       <div class="item-inner">
                         <div class="item-title label">Имя</div>
                         <div class="item-input">
-                          <input type="text" ng-model="mainCtrl.user.first_name" name="first_name" placeholder="...">
+                          <input type="text" ng-model="user.first_name" name="first_name" placeholder="...">
                         </div>
                       </div>
                     </li>
@@ -225,7 +240,7 @@
                       <div class="item-inner">
                         <div class="item-title label">Отчество</div>
                         <div class="item-input">
-                          <input type="text" ng-model="mainCtrl.user.middle_name" name="middle_name" placeholder="...">
+                          <input type="text" ng-model="user.middle_name" name="middle_name" placeholder="...">
                         </div>
                       </div>
                     </li>
@@ -233,12 +248,12 @@
                       <div class="item-inner">
                         <div class="item-title label">Email</div>
                         <div class="item-input">
-                          <input type="email" ng-model="mainCtrl.user.email" name="email" placeholder="...">
+                          <input type="email" ng-model="user.email" name="email" placeholder="...">
                         </div>
                       </div>
                     </li>
                     <li>
-                      <a href="#" ng-click="mainCtrl.UpdateProfile()" class="item-link button button-big color-white bg-black">Обновить</a>
+                      <a href="#" ng-click="UpdateProfile()" class="item-link button button-big color-white bg-black">Обновить</a>
                     </li>
                   </ul>
 
@@ -255,7 +270,7 @@
                 <div class="left sliding"><a href="#" class="open-panel link icon-only">
                   <i class="icon color-white icon-bars"></i></a>
                 </div>
-                <div class="right sliding"><a href="#" ng-click="mainCtrl.Goto('#index','#tab7')" class="link icon-only"><i class="f7-icons">home</i></a></div>
+                <div class="right sliding"><a href="#" ng-click="Goto('#index','#tab7')" class="link icon-only"><i class="f7-icons">home</i></a></div>
               </div>
             </div>
             <div class="page-content">
@@ -267,7 +282,7 @@
                     <div class="item-inner">
                       <div class="item-title label">Гражданство</div>
                       <div class="item-input">
-                        <input type="text" ng-click="mainCtrl.DropCountries.open()" id="countries-dropdown" name="country" readonly placeholder="...">
+                        <input type="text" ng-click="DropCountries.open()" id="countries-dropdown" name="country" readonly placeholder="...">
                       </div>
                     </div>
                   </li>
@@ -275,7 +290,7 @@
                     <div class="item-inner">
                       <div class="item-title label">Имя</div>
                       <div class="item-input">
-                        <input type="text" ng-model="mainCtrl.user.first_name" name="first_name" placeholder="...">
+                        <input type="text" ng-model="user.first_name" name="first_name" placeholder="...">
                       </div>
                     </div>
                   </li>
@@ -283,7 +298,7 @@
                     <div class="item-inner">
                       <div class="item-title label">Фамилия</div>
                       <div class="item-input">
-                        <input type="text" ng-model="mainCtrl.user.last_name" name="last_name" placeholder="...">
+                        <input type="text" ng-model="user.last_name" name="last_name" placeholder="...">
                       </div>
                     </div>
                   </li>
@@ -291,7 +306,7 @@
                     <div class="item-inner">
                       <div class="item-title label">Отчество</div>
                       <div class="item-input">
-                        <input type="text" ng-model="mainCtrl.user.middle_name" name="middle_name" placeholder="...">
+                        <input type="text" ng-model="user.middle_name" name="middle_name" placeholder="...">
                       </div>
                     </div>
                   </li>
@@ -312,7 +327,7 @@
                     <div class="item-inner">
                       <div class="item-title label">Тип документа</div>
                       <div class="item-input">
-                        <input type="text" ng-click="mainCtrl.DropDocs.open()" id="docs-dropdown" name="document_type" readonly placeholder="...">
+                        <input type="text" ng-click="DropDocs.open()" id="docs-dropdown" name="document_type" readonly placeholder="...">
                       </div>
                     </div>
                   </li>
@@ -352,7 +367,7 @@
                   </li>
                 </ul>
               </div>
-              <a href="#" ng-click="mainCtrl.SendNdflForm()" class="item-link button button-big color-white bg-black">Отправить анкету</a>
+              <a href="#" ng-click="SendNdflForm()" class="item-link button button-big color-white bg-black">Отправить анкету</a>
               </form>
               <div class="empty-space"></div>
             </div>
@@ -365,7 +380,7 @@
                 <div class="left sliding"><a href="#" class="open-panel link icon-only">
                   <i class="icon color-white icon-bars"></i></a>
                 </div>
-                <div class="right sliding"><a href="#" ng-click="mainCtrl.Goto('#index','#tab7')" class="link icon-only"><i class="f7-icons">home</i></a></div>
+                <div class="right sliding"><a href="#" ng-click="Goto('#index','#tab7')" class="link icon-only"><i class="f7-icons">home</i></a></div>
               </div>
             </div>
             <div class="toolbar tabbar">
@@ -390,7 +405,7 @@
                           </div>
                         </div>
                       </li>
-                      <li ng-repeat="element in mainCtrl.products track by $index">
+                      <li ng-repeat="element in products track by $index">
                         <div class="item-content">
                           <div class="item-inner">
                             <div class="item-title product-title">{{element.name}}</div>
@@ -403,9 +418,9 @@
                 </div>
                 <div id="tab3" class="page-content tab">
                   <div class="content-block">
-                    <div class="no-items-message" ng-hide="mainCtrl.transactions[0]">История пуста!</div>
+                    <div class="no-items-message" ng-hide="transactions[0]">История пуста!</div>
                     <div class="timeline">
-                      <div ng-repeat="element in mainCtrl.transactions track by $index" class="timeline-item">
+                      <div ng-repeat="element in transactions track by $index" class="timeline-item">
                         <div class="timeline-item-date">{{element.balance_after}}<small> руб</small></div>
                         <div class="timeline-item-divider"></div>
                         <div class="timeline-item-content">
@@ -431,7 +446,7 @@
                 <div class="left sliding"><a href="#" class="open-panel link icon-only">
                   <i class="icon color-white icon-bars"></i></a>
                 </div>
-                <div class="right sliding"><a href="#" ng-click="mainCtrl.Goto('#index','#tab7')" class="link icon-only"><i class="f7-icons">home</i></a></div>
+                <div class="right sliding"><a href="#" ng-click="Goto('#index','#tab7')" class="link icon-only"><i class="f7-icons">home</i></a></div>
               </div>
             </div>
             <div class="toolbar tabbar">
@@ -465,7 +480,7 @@
                             </div>
                           </li>
                           <li>
-                            <a href="#" ng-click="mainCtrl.Payment()" class="item-link button button-big color-white bg-black">&#8381; &nbsp;&nbsp;&nbsp;оплатить</a>
+                            <a href="#" ng-click="Payment()" class="item-link button button-big color-white bg-black">&#8381; &nbsp;&nbsp;&nbsp;оплатить</a>
                           </li>
                         </ul>
                       </form>
@@ -473,9 +488,9 @@
                   </div>
                   <div id="tab6" class="page-content tab">
                     <div class="content-block">
-                      <div class="no-items-message" ng-hide="mainCtrl.payments[0]">История пуста!</div>
+                      <div class="no-items-message" ng-hide="payments[0]">История пуста!</div>
                       <div class="timeline">
-                        <div ng-repeat="element in mainCtrl.payments track by $index" class="timeline-item">
+                        <div ng-repeat="element in payments track by $index" class="timeline-item">
                           <div class="timeline-item-date">-{{element.amount}}<small> руб</small></div>
                           <div class="timeline-item-divider"></div>
                           <div class="timeline-item-content">
@@ -498,7 +513,7 @@
                 <div class="left sliding"><a href="#" class="open-panel link icon-only">
                   <i class="icon color-white icon-bars"></i></a>
                 </div>
-                <div class="right sliding"><a href="#" ng-click="mainCtrl.Goto('#index','#tab7')" class="link icon-only"><i class="f7-icons">home</i></a></div>
+                <div class="right sliding"><a href="#" ng-click="Goto('#index','#tab7')" class="link icon-only"><i class="f7-icons">home</i></a></div>
               </div>
             </div>
             <div class="toolbar tabbar">
@@ -513,7 +528,7 @@
 
                   <div id="tab2" class="page-content tab active">
                     <div class="content-block-title">Бонусные карты</div>
-                    <div ng-click="mainCtrl.OpenSertificate($index)" class="card white-border-block card-header-pic" ng-repeat="element in mainCtrl.sertificates track by $index">
+                    <div ng-click="OpenSertificate($index)" class="card white-border-block card-header-pic" ng-repeat="element in sertificates track by $index">
                       <div ng-style="{'background-image':'url({{element.imgUrl}})'}" valign="bottom" class="card-header color-white no-border">
                         <div class="card-layer">{{element.title}}</div>
                       </div>
@@ -522,13 +537,13 @@
 
                   <div id="tab1" class="page-content tab">
                     <div class="content-block">
-                      <div class="no-items-message" ng-hide="mainCtrl.cards_history[0]">История пуста!</div>
+                      <div class="no-items-message" ng-hide="cards_history[0]">История пуста!</div>
                       <div class="timeline">
-                        <div ng-repeat="element in mainCtrl.cards_history track by $index" class="timeline-item">
+                        <div ng-repeat="element in cards_history track by $index" class="timeline-item">
                           <div class="timeline-item-date">- {{element.amount}}<small> руб</small></div>
                           <div class="timeline-item-divider"></div>
                           <div class="timeline-item-content">
-                            <div class="timeline-item-time">{{element.created_at}}</div>
+                            <div class="timeline-item-time">{{element.created_at}}<br>{{element.status}}</div>
                             <div class="card-history" ng-repeat="card in element.cards track by $index">
                               <div class="timeline-item-title">{{card.type}}</div>
                               <div class="timeline-item-text">Количество:{{card.quantity}}<br>Номинал:{{card.nominal}} руб.</div>
@@ -551,14 +566,14 @@
                 <div class="left sliding"><a href="#" class="open-panel link icon-only">
                   <i class="icon color-white icon-bars"></i></a>
                 </div>
-                <div class="right sliding"><a href="#" ng-click="mainCtrl.Goto('#index','#tab7')" class="link icon-only"><i class="f7-icons">home</i></a></div>
+                <div class="right sliding"><a href="#" ng-click="Goto('#index','#tab7')" class="link icon-only"><i class="f7-icons">home</i></a></div>
               </div>
             </div>
             <div class="page-content">
               <a href="#" class="back-button back item-link button button-normal color-white bg-black">Назад</a>
               <div class="white-border-block">
-                <div class="card-title">{{mainCtrl.sertificates[mainCtrl.selected_card].title}}</div>
-                <img class="card-image" ng-src="{{mainCtrl.sertificates[mainCtrl.selected_card].imgUrl}}">
+                <div class="card-title">{{sertificates[selected_card].title}}</div>
+                <img class="card-image" ng-src="{{sertificates[selected_card].imgUrl}}">
               </div>
 
               <form id="sertificate-form">
@@ -576,9 +591,9 @@
                   </li>
                 </ul>
                 <ul>
-                  <li ng-repeat="element in mainCtrl.nominals track by $index">
+                  <li ng-repeat="element in nominals track by $index">
                     <label class="label-radio item-content no-fastclick">
-                      <input type="radio" name="nominal" id="radio-nominal" ng-model="mainCtrl.selected_nominal" ng-value={{($index)}}>
+                      <input type="radio" name="nominal" id="radio-nominal" ng-model="selected_nominal" ng-value={{($index)}}>
                       <div class="item-media">
                         <i class="icon icon-form-radio"></i>
                       </div>
@@ -590,17 +605,17 @@
                   <!-- if other nominals are supported -->
                   <li>
                     <label class="label-radio item-content no-fastclick">
-                      <input type="radio" ng-model="mainCtrl.selected_nominal" name="nominal" ng-value="-1">
-                      <div ng-click="mainCtrl.WarnCard()" class="item-media">
+                      <input type="radio" ng-model="selected_nominal" name="nominal" ng-value="-1">
+                      <div ng-click="WarnCard()" class="item-media">
                         <i class="icon icon-form-radio"></i>
                       </div>
-                      <div ng-click="mainCtrl.WarnCard()" class="item-inner">
+                      <div ng-click="WarnCard()" class="item-inner">
                         <div class="item-title">Другой номинал</div>
                       </div>
                     </label>
                   </li>
                 </ul>
-                <ul ng-show="mainCtrl.selected_nominal==-1">
+                <ul ng-show="selected_nominal==-1">
                   <li>
                     <div class="item-content">
                       <div class="item-inner">
@@ -613,7 +628,7 @@
                 </ul>
                 <ul>
                   <li>
-                    <a href="#" ng-click="mainCtrl.BuySertificate()" class="item-link button button-big color-white bg-black">Купить</a>
+                    <a href="#" ng-click="BuySertificate()" class="item-link button button-big color-white bg-black">Купить</a>
                   </li>
                 </ul>
               </div>   
@@ -632,18 +647,18 @@
                 <div class="left sliding"><a href="#" class="open-panel link icon-only">
                   <i class="icon color-white icon-bars"></i></a>
                 </div>
-                <div class="right sliding"><a href="#" ng-click="mainCtrl.Goto('#index','#tab7')" class="link icon-only"><i class="f7-icons">home</i></a></div>
+                <div class="right sliding"><a href="#" ng-click="Goto('#index','#tab7')" class="link icon-only"><i class="f7-icons">home</i></a></div>
               </div>
             </div>
             <div class="page-content">
             <div class="content-block"></div>
-              <a href="#" ng-click="mainCtrl.OpenNewSale()" class="item-link button button-normal color-white bg-black">Новая продажа</a>
-              <div ng-if="mainCtrl.sales_array[0]">
+              <a href="#" ng-click="OpenNewSale()" class="item-link button button-normal color-white bg-black">Новая продажа</a>
+              <div ng-if="sales_array[0]">
                 <div class="content-block-title">История продаж</div>
                 <div class="list-block white-border-block">
                   <ul>
-                    <li ng-repeat="element in mainCtrl.sales_array track by $index">
-                      <a href="#view_sale" ng-click="mainCtrl.selected_sale = $index" class="item-content item-link">
+                    <li ng-repeat="element in sales_array track by $index">
+                      <a href="#view_sale" ng-click="selected_sale = $index" class="item-content item-link">
                         <div class="item-inner">
                           <div class="item-title">{{element.sold_on}}</div>
                           <div class="item-after">{{element.status | Status}}</div>
@@ -653,7 +668,7 @@
                   </ul>
                 </div>
               </div>
-              <div class="no-items-message" ng-hide="mainCtrl.sales_array[0]">
+              <div class="no-items-message" ng-hide="sales_array[0]">
                 Продажи отсутствуют!
               </div>
             </div>
@@ -666,7 +681,7 @@
                 <div class="left sliding"><a href="#" class="open-panel link icon-only">
                   <i class="icon color-white icon-bars"></i></a>
                 </div>
-                <div class="right sliding"><a href="#" ng-click="mainCtrl.Goto('#index','#tab7')" class="link icon-only"><i class="f7-icons">home</i></a></div>
+                <div class="right sliding"><a href="#" ng-click="Goto('#index','#tab7')" class="link icon-only"><i class="f7-icons">home</i></a></div>
               </div>
             </div>
             <div class="page-content">
@@ -677,34 +692,34 @@
                   <li class="item-content">
                     <div class="item-inner">
                       <div class="item-title">Статус</div>
-                      <div class="item-after">{{mainCtrl.sales_array[mainCtrl.selected_sale].status | Status}}</div>
+                      <div class="item-after">{{sales_array[selected_sale].status | Status}}</div>
                     </div>
                   </li>
                   <li class="item-content">
                     <div class="item-inner">
                       <div class="item-title">ID</div>
-                      <div class="item-after">{{mainCtrl.sales_array[mainCtrl.selected_sale].sale_id}}</div>
+                      <div class="item-after">{{sales_array[selected_sale].sale_id}}</div>
                     </div>
                   </li>
                   <li class="item-content">
                     <div class="item-inner">
                       <div class="item-title">Бонусы</div>
-                      <div class="item-after">{{mainCtrl.sales_array[mainCtrl.selected_sale].bonuses}}</div>
+                      <div class="item-after">{{sales_array[selected_sale].bonuses}}</div>
                     </div>
                   </li>
                   <li class="item-content">
                     <div class="item-inner">
                       <div class="item-title">Дата продажи</div>
-                      <div class="item-after">{{mainCtrl.sales_array[mainCtrl.selected_sale].sold_on}}</div>
+                      <div class="item-after">{{sales_array[selected_sale].sold_on}}</div>
                     </div>
                   </li>
                   <li class="item-content">
                     <div class="item-inner">
                       <div class="item-title">Дата создания</div>
-                      <div class="item-after">{{mainCtrl.sales_array[mainCtrl.selected_sale].created_at}}</div>
+                      <div class="item-after">{{sales_array[selected_sale].created_at}}</div>
                     </div>
                   </li>
-                  <li ng-repeat="element in mainCtrl.sales_array[mainCtrl.selected_sale].positions track by $index" class="item-content">
+                  <li ng-repeat="element in sales_array[selected_sale].positions track by $index" class="item-content">
                     <div class="item-inner">
                       <div class="item-title">Товар №{{$index+1}}</div>
                       <div class="item-text">{{element.product.name}}</div>
@@ -712,8 +727,8 @@
                   </li>
                 </ul>
               </div>
-              <div ng-show="mainCtrl.sales_array[mainCtrl.selected_sale].status=='draft'">
-                <a href="#" ng-click="mainCtrl.EditSale()" class="item-link button button-normal color-white bg-black">Редактировать</a>
+              <div ng-show="sales_array[selected_sale].status=='draft'">
+                <a href="#" ng-click="EditSale()" class="item-link button button-normal color-white bg-black">Редактировать</a>
               </div>
 
             </div>
@@ -726,7 +741,7 @@
                 <div class="left sliding"><a href="#" class="open-panel link icon-only">
                   <i class="icon color-white icon-bars"></i></a>
                 </div>
-                <div class="right sliding"><a href="#" ng-click="mainCtrl.Goto('#index','#tab7')" class="link icon-only"><i class="f7-icons">home</i></a></div>
+                <div class="right sliding"><a href="#" ng-click="Goto('#index','#tab7')" class="link icon-only"><i class="f7-icons">home</i></a></div>
               </div>
             </div>
             <div class="page-content">
@@ -744,9 +759,9 @@
                   </li>
                 </ul>
                 <ul>
-                  <li ng-repeat="element in mainCtrl.sell track by $index">
+                  <li ng-repeat="element in sell track by $index">
                     <div class="item-content">
-                      <a href="" class="item-media item-link" ng-click="mainCtrl.DeleteProduct($index)"><span class="delete_helper"></span>
+                      <a href="" class="item-media item-link" ng-click="DeleteProduct($index)"><span class="delete_helper"></span>
                       <img src="img/Delete.png" class="delete_cross"></a>
                       <div class="item-inner">
                         <div class="item-title-row">
@@ -758,13 +773,13 @@
                   </li>
                 </ul>
                 <a href="#" data-popup=".popup-new-sale" class="open-popup item-link button button-normal color-white bg-black button-left">+ добавить позицию</a>
-                <a href="#" ng-click="mainCtrl.TakePhoto()" class="takeImage item-link button button-normal color-white bg-black button-left">Фото чека</a>
-                <div class="cropImage" ng-click="mainCtrl.billView.open()"><img id="billImage" class="billImage pb-popup-dark" src=""></div>
+                <a href="#" ng-click="TakePhoto()" class="takeImage item-link button button-normal color-white bg-black button-left">Фото чека</a>
+                <div class="cropImage" ng-click="billView.open()"><img id="billImage" class="billImage pb-popup-dark" src=""></div>
               </div>
               </form>
-              <div class="content-block" ng-show="mainCtrl.sell[0]">
-                <a href="#" ng-click="mainCtrl.CheckSale('adminReview')" class="item-link button button-big color-white bg-black">Отправить на проверку</a>
-                <a href="#" ng-click="mainCtrl.CheckSale('draft')" class="item-link button button-big color-white bg-black white-button">Сохр. как черновик</a>
+              <div class="content-block" ng-show="sell[0]">
+                <a href="#" ng-click="CheckSale('adminReview')" class="item-link button button-big color-white bg-black">Отправить на проверку</a>
+                <a href="#" ng-click="CheckSale('draft')" class="item-link button button-big color-white bg-black white-button">Сохр. как черновик</a>
               </div>
             </div>
             
@@ -777,7 +792,7 @@
                 <div class="left sliding"><a href="#" class="open-panel link icon-only">
                   <i class="icon color-white icon-bars"></i></a>
                 </div>
-                <div class="right sliding"><a href="#" ng-click="mainCtrl.Goto('#index','#tab7')" class="link icon-only"><i class="f7-icons">home</i></a></div>
+                <div class="right sliding"><a href="#" ng-click="Goto('#index','#tab7')" class="link icon-only"><i class="f7-icons">home</i></a></div>
               </div>
             </div>
             <div class="page-content">
@@ -785,6 +800,35 @@
               <div class="list-block white-border-block">
                 <form id="help-form">
                   <ul>
+                    <li>
+                      <div class="accordion-item">
+                        <div class="accordion-item-toggle">
+                          <a href="#" class="item-link item-content">
+                            <div class="item-inner">
+                              <div class="item-title">Категория вопроса</div>
+                            </div>
+                          </a> 
+                        </div>
+                        <div class="accordion-item-content">
+                          <div class="list-block">
+                            <ul>
+                              <li ng-repeat="element in feedback_categories track by $index">
+                                <label class="label-radio item-content">
+                                  <input type="radio" name="category_id" ng-value="element.id" >
+                                  <div class="item-media">
+                                    <i class="icon icon-form-radio"></i>
+                                  </div>
+                                  <div class="item-inner">
+                                    <div class="item-title">{{element.name}}</div>
+                                  </div>
+                                </label>
+                              </li>
+                            </ul>
+                          </div>    
+                        </div>
+                      </div>
+                    </li>
+     
                     <li class="item-content">
                       <div class="item-inner">
                         <div class="item-title label">Имя</div>
@@ -818,7 +862,7 @@
                       </div>
                     </li>
                     <li>
-                      <a href="#" ng-click="mainCtrl.Feedback()" class="item-link button button-big color-white bg-black">Задать вопрос</a>
+                      <a href="#" ng-click="Feedback()" class="item-link button button-big color-white bg-black">Задать вопрос</a>
                     </li>
                   </ul>
                 </form>
@@ -864,14 +908,14 @@
               <div class="list-block">
                 <ul>
                   <li>
-                    <a href="#" ng-click="mainCtrl.PullLoginForm()" class="item-link button button-big color-white bg-black">Войти</a>
+                    <a href="#" ng-click="PullLoginForm()" class="item-link button button-big color-white bg-black">Войти</a>
                   </li>
                 </ul>
                 <div class="list-block-label">
                     <p><a href="#" data-popup=".pre-reg" class="open-popup regText">Регистрация</a></p>
                 </div>
                  <div class="list-block-label">
-                    <p><a href="#" class="orangeText" ng-click="mainCtrl.ForgotPass()">Забыли пароль?</a></p>
+                    <p><a href="#" class="orangeText" ng-click="ForgotPass()">Забыли пароль?</a></p>
                 </div> 
               </div>
             </form>
@@ -906,7 +950,7 @@
               <div class="list-block">
                 <ul>
                   <li>
-                    <a href="#" ng-click="mainCtrl.SendSMS()" class="item-link button button-big color-white bg-black">Отправить СМС</a>
+                    <a href="#" ng-click="SendSMS()" class="item-link button button-big color-white bg-black">Отправить СМС</a>
                   </li>
                 </ul>
                 <div class="list-block-label">
@@ -936,7 +980,7 @@
                     <div class="item-inner">
                       <div class="item-title label">Дилер *</div>
                       <div class="item-input">
-                        <input type="text" id="dropdown_dealer" ng-click="mainCtrl.DropDealer.open()" readonly placeholder="...">
+                        <input type="text" id="dropdown_dealer" ng-click="DropDealer.open()" readonly placeholder="...">
                       </div>
                     </div>
                   </li>
@@ -944,7 +988,7 @@
                     <div class="item-inner">
                       <div class="item-title label">Город *</div>
                       <div class="item-input">
-                        <input type="text" id="dropdown_city" ng-value="mainCtrl.DropSelected.city" ng-click="mainCtrl.DropCity.open()" readonly placeholder="...">
+                        <input type="text" id="dropdown_city" ng-value="DropSelected.city" ng-click="DropCity.open()" readonly placeholder="...">
                       </div>
                     </div>
                   </li>
@@ -952,7 +996,7 @@
                     <div class="item-inner">
                       <div class="item-title label">Адрес *</div>
                       <div class="item-input">
-                        <input type="text" id="dropdown_address" ng-value="mainCtrl.DropSelected.address" ng-click="mainCtrl.DropAddress.open()" readonly placeholder="...">
+                        <input type="text" id="dropdown_address" ng-value="DropSelected.address" ng-click="DropAddress.open()" readonly placeholder="...">
                       </div>
                     </div>
                   </li>
@@ -1007,7 +1051,7 @@
                   <li>
                   <div class="item-content">
                     <div class="item-inner">
-                      <a href="#" ng-click="mainCtrl.rulesPhoto.open()" class="item-title label">Даю согласие с правилами программы</a>
+                      <a href="#" ng-click="rulesPhoto.open()" class="item-title label">Даю согласие с правилами программы</a>
                       <div class="item-input">
                         <label class="label-switch">
                           <input name="agreeWithTerms" type="checkbox" checked>
@@ -1020,7 +1064,7 @@
                 <li>
                   <div class="item-content">
                     <div class="item-inner">
-                      <div ng-click="mainCtrl.persPhoto.open()" class="item-title label">Даю согласие на обработку данных</div>
+                      <div ng-click="persPhoto.open()" class="item-title label">Даю согласие на обработку данных</div>
                       <div class="item-input">
                         <label class="label-switch">
                           <input name="allowPersonalDataProcessing" type="checkbox" checked>
@@ -1035,7 +1079,7 @@
               <div class="list-block">
                 <ul>
                   <li>
-                    <a href="#" ng-click="mainCtrl.Register()" class="item-link button button-big color-white bg-black">Регистрация</a>
+                    <a href="#" ng-click="Register()" class="item-link button button-big color-white bg-black">Регистрация</a>
                   </li>
                 </ul>
                 <div class="list-block-label">
@@ -1063,7 +1107,7 @@
                 <div class="item-inner">
                   <div class="item-title label">Товар</div>
                   <div class="item-input">
-                    <input type="text" name="name" ng-click="mainCtrl.DropProducts.open()" readonly id="products-dropdown" placeholder="...">
+                    <input type="text" name="name" ng-click="DropProducts.open()" readonly id="products-dropdown" placeholder="...">
                   </div>
                 </div>
               </li>
@@ -1071,13 +1115,13 @@
                 <div class="item-inner">
                   <div class="item-title label">Серийный номер</div>
                   <div class="item-input">
-                    <input type="text" ng-model="mainCtrl.serial" id="prod-num" name="serial_number" placeholder="">
+                    <input type="text" ng-model="serial" id="prod-num" name="serial_number" placeholder="">
                   </div>
                 </div>
               </li>
             </ul>
           </form>
-          <a href="#" ng-show="mainCtrl.IfShowAddProductButton()" ng-click="mainCtrl.AddProduct()" class="close-popup item-link button button-normal color-white bg-black">+ добавить позицию</a>
+          <a href="#" ng-show="IfShowAddProductButton()" ng-click="AddProduct()" class="close-popup item-link button button-normal color-white bg-black">+ добавить позицию</a>
           </div>
         </div>
       </div>
@@ -1094,6 +1138,8 @@
   <script src="./js/moment.js"></script>
   <script src="./js/my-app.js"></script>
   <script src="./js/InitService.js"></script>
+  <script src="./js/DeclareService.js"></script>
+  <script src="./js/filters.js"></script>
   <script src="./js/mainController.js"></script>
 </body>
 
