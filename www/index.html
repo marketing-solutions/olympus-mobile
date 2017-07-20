@@ -658,7 +658,7 @@
                 <div class="list-block white-border-block">
                   <ul>
                     <li ng-repeat="element in sales_array track by $index">
-                      <a href="#view_sale" ng-click="selected_sale = $index" class="item-content item-link">
+                      <a href="#view_sale" ng-click="mainCtrl.selected_sale = $index" class="item-content item-link">
                         <div class="item-inner">
                           <div class="item-title">{{element.sold_on}}</div>
                           <div class="item-after">{{element.status | Status}}</div>
@@ -692,34 +692,34 @@
                   <li class="item-content">
                     <div class="item-inner">
                       <div class="item-title">Статус</div>
-                      <div class="item-after">{{sales_array[selected_sale].status | Status}}</div>
+                      <div class="item-after">{{sales_array[mainCtrl.selected_sale].status | Status}}</div>
                     </div>
                   </li>
                   <li class="item-content">
                     <div class="item-inner">
                       <div class="item-title">ID</div>
-                      <div class="item-after">{{sales_array[selected_sale].sale_id}}</div>
+                      <div class="item-after">{{sales_array[mainCtrl.selected_sale].sale_id}}</div>
                     </div>
                   </li>
                   <li class="item-content">
                     <div class="item-inner">
                       <div class="item-title">Бонусы</div>
-                      <div class="item-after">{{sales_array[selected_sale].bonuses}}</div>
+                      <div class="item-after">{{sales_array[mainCtrl.selected_sale].bonuses}}</div>
                     </div>
                   </li>
                   <li class="item-content">
                     <div class="item-inner">
                       <div class="item-title">Дата продажи</div>
-                      <div class="item-after">{{sales_array[selected_sale].sold_on}}</div>
+                      <div class="item-after">{{sales_array[mainCtrl.selected_sale].sold_on}}</div>
                     </div>
                   </li>
                   <li class="item-content">
                     <div class="item-inner">
                       <div class="item-title">Дата создания</div>
-                      <div class="item-after">{{sales_array[selected_sale].created_at}}</div>
+                      <div class="item-after">{{sales_array[mainCtrl.selected_sale].created_at}}</div>
                     </div>
                   </li>
-                  <li ng-repeat="element in sales_array[selected_sale].positions track by $index" class="item-content">
+                  <li ng-repeat="element in sales_array[mainCtrl.selected_sale].positions track by $index" class="item-content">
                     <div class="item-inner">
                       <div class="item-title">Товар №{{$index+1}}</div>
                       <div class="item-text">{{element.product.name}}</div>
@@ -727,7 +727,7 @@
                   </li>
                 </ul>
               </div>
-              <div ng-show="sales_array[selected_sale].status=='draft'">
+              <div ng-show="sales_array[mainCtrl.selected_sale].status=='draft'">
                 <a href="#" ng-click="EditSale()" class="item-link button button-normal color-white bg-black">Редактировать</a>
               </div>
 
@@ -1137,8 +1137,9 @@
   <script src="./js/angular-sanitize.min.js"></script>
   <script src="./js/moment.js"></script>
   <script src="./js/my-app.js"></script>
-  <script src="./js/InitService.js"></script>
+  <script src="./js/DomService.js"></script>
   <script src="./js/DeclareService.js"></script>
+  <script src="./js/HttpService.js"></script>
   <script src="./js/filters.js"></script>
   <script src="./js/mainController.js"></script>
 </body>

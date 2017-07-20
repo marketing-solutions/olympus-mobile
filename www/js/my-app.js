@@ -9,7 +9,7 @@ var $$ = Dom7;
 */
 
 function onBackKeyDown() {
-  if (localStorage["OlympPhone"]) {
+  if (localStorage["OlympID"]) {
     Olymp.fw7.app.closeModal();
     Olymp.fw7.app.views[0].router.back();
     }

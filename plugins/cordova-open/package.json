@@ -1,57 +1,7 @@
 {
-  "_args": [
-    [
-      {
-        "raw": "cordova-open",
-        "scope": null,
-        "escapedName": "cordova-open",
-        "name": "cordova-open",
-        "rawSpec": "",
-        "spec": "latest",
-        "type": "tag"
-      },
-      "C:\\Users\\bushmin\\Desktop\\Projects\\Olympus\\node_modules"
-    ]
-  ],
-  "_from": "cordova-open@latest",
-  "_id": "cordova-open@1.0.12",
-  "_inCache": true,
-  "_location": "/cordova-open",
-  "_nodeVersion": "7.0.0",
-  "_npmOperationalInternal": {
-    "host": "packages-18-east.internal.npmjs.com",
-    "tmp": "tmp/cordova-open-1.0.12.tgz_1478651838767_0.6377787587698549"
-  },
-  "_npmUser": {
-    "name": "disusered",
-    "email": "crosquillas@gmail.com"
-  },
-  "_npmVersion": "3.10.8",
-  "_phantomChildren": {},
-  "_requested": {
-    "raw": "cordova-open",
-    "scope": null,
-    "escapedName": "cordova-open",
-    "name": "cordova-open",
-    "rawSpec": "",
-    "spec": "latest",
-    "type": "tag"
-  },
-  "_requiredBy": [
-    "#USER",
-    "/"
-  ],
-  "_resolved": "https://registry.npmjs.org/cordova-open/-/cordova-open-1.0.12.tgz",
-  "_shasum": "3dd6efc192cec5a3e746955f3cd61b999f4d8430",
-  "_shrinkwrap": null,
-  "_spec": "cordova-open",
-  "_where": "C:\\Users\\bushmin\\Desktop\\Projects\\Olympus\\node_modules",
-  "author": {
-    "name": "Carlos Antonio"
-  },
-  "bugs": {
-    "url": "https://github.com/disusered/cordova-open/issues"
-  },
+  "name": "cordova-open",
+  "version": "1.0.12",
+  "description": "Open audio, video, images and more with applications installed on the user's device",
   "cordova": {
     "id": "com.disusered.open",
     "platforms": [
@@ -59,20 +9,14 @@
       "ios"
     ]
   },
-  "dependencies": {},
-  "description": "Open audio, video, images and more with applications installed on the user's device",
-  "devDependencies": {
-    "eslint": "^0.24.1",
-    "gulp": "^3.9.0",
-    "gulp-eslint": "^0.15.0"
+  "scripts": {
+    "lint": "gulp lint",
+    "watch": "gulp watch"
   },
-  "directories": {},
-  "dist": {
-    "shasum": "3dd6efc192cec5a3e746955f3cd61b999f4d8430",
-    "tarball": "https://registry.npmjs.org/cordova-open/-/cordova-open-1.0.12.tgz"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/disusered/cordova-open.git"
   },
-  "gitHead": "0f8cd1eafbfda44cdf78ed17ae1d5944ff143fdf",
-  "homepage": "https://github.com/disusered/cordova-open",
   "keywords": [
     "cordova",
     "file",
@@ -87,23 +31,15 @@
     "cordova-android",
     "cordova-ios"
   ],
+  "author": "Carlos Antonio",
   "license": "MIT",
-  "maintainers": [
-    {
-      "name": "disusered",
-      "email": "crosquillas@gmail.com"
-    }
-  ],
-  "name": "cordova-open",
-  "optionalDependencies": {},
-  "readme": "ERROR: No README data found!",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/disusered/cordova-open.git"
+  "bugs": {
+    "url": "https://github.com/disusered/cordova-open/issues"
   },
-  "scripts": {
-    "lint": "gulp lint",
-    "watch": "gulp watch"
-  },
-  "version": "1.0.12"
+  "homepage": "https://github.com/disusered/cordova-open",
+  "devDependencies": {
+    "eslint": "^0.24.1",
+    "gulp": "^3.9.0",
+    "gulp-eslint": "^0.15.0"
+  }
 }
