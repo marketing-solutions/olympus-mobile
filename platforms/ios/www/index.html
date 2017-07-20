@@ -1,0 +1,1147 @@
+<!DOCTYPE html>
+<html ng-cloak ng-app="Olymp" class="ng-scope with-statusbar-overlay">
+<head>
+    <!--
+        Customize this policy to fit your own app's needs. For more guidance, see:
+            https://github.com/apache/cordova-plugin-whitelist/blob/master/README.md#content-security-policy
+        Some notes:
+            * gap: is required only on iOS (when using UIWebView) and is needed for JS->native communication
+            * https://ssl.gstatic.com is required only on Android and is needed for TalkBack to function properly
+            * Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
+                * Enable inline JS: add 'unsafe-inline' to default-src
+        -->
+<!--     <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *"> -->
+<!-- <meta http-equiv="Content-Security-Policy" content="default-src *; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; img-src 'self' data:"> -->
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="msapplication-tap-highlight" content="no">
+
+    <title>Olympus</title>
+
+      <link rel="stylesheet" href="./f7/css/framework7.material.css">
+    <link rel="stylesheet" href="./f7/css/framework7.material.colors.css">
+    <link rel="stylesheet" href="./f7/css/framework7.keypad.min.css">
+    <link rel="stylesheet" href="./css/styles.css">
+    <link rel="stylesheet" href="./css/framework7-icons.css">
+
+    
+</head>
+
+<body class="theme-white layout-dark" ng-controller="mainController as mainCtrl">
+    <div class="statusbar-overlay"></div>
+
+    <!-- Left panel-->
+    <div class="panel-overlay"></div>
+    <div id="lpan" class="panel panel-left panel-reveal">
+      <div class="page-content">
+        <div class="content-block left-block">
+          <div class="leftPanelName">Привет, {{user.first_name}}!</div>
+          <div ng-click="GotoBonus()" class="leftPanelPoints">Бонусный баланс: {{user.balance}} баллов</div>
+          <div class="leftPanelPoints">{{user.balance | BonusCheer}}</div>
+          <div class="leftPanelExit" ng-click="Logout()">Выйти</div>
+          <div class="leftPanelColumn">
+            <div ng-click="Goto('#index')" class="leftPanelButton profilePanel">Главная</div>
+            
+            <div ng-click="Goto('#old_sales')" class="leftPanelButton salePanel">Продажи</div>
+            <div ng-click="Goto('#bonus')" class="leftPanelButton bonusPanel">Бонусы</div>
+            <div ng-click="Goto('#transaction')" class="leftPanelButton transPanel">Перевод на карту</div>
+            <div ng-click="Goto('#sertificate')" class="leftPanelButton sertPanel">Сертификаты</div> 
+            <div ng-click="GotoContact()" class="leftPanelButton contactPanel">Помощь</div>
+            <div ng-click="Goto('#ndfl')" class="leftPanelButton formPanel">Анкета</div>
+          </div> 
+        </div>
+        <a href="#" ng-click="rulesPhoto.open()" class="back-button item-link button button-normal color-white bg-black">о проекте</a>
+      </div>
+    </div>
+
+    <!-- Views -->
+    <div class="views">
+        <!-- main view -->
+        <div class="view view-main">
+          <div class="pages navbar-fixed toolbar-fixed">
+
+            <div data-page="index" class="page ng-scope">
+              <div class="navbar Olympus-navbar no-border">
+                <div class="navbar-inner">
+                  <div class="center open-panel Olympus-header sliding">&nbsp;</div>
+                  <div class="left sliding"><a href="#" class="open-panel link icon-only">
+                    <i class="icon color-white icon-bars"></i></a>
+                  </div>
+                  <div class="right sliding"><a href="#" ng-click="Goto('#index','#tab7')" class="link icon-only"><i class="f7-icons">home</i></a></div>
+                </div>
+              </div>
+              <div class="toolbar tabbar">
+              <div class="toolbar-inner">
+                  <a href="#tab7" class="button active tab-link">Главная</a>
+                  <a href="#tab8" class="button tab-link">Профиль</a>
+              </div>
+            </div>
+              
+            <div class="page-content">
+              <div class="tabs-animated-wrap">
+                <div class="tabs">
+                  <div id="tab7" class="page-content tab active">
+
+   <!--                  <div class="banner_container">
+                      <img class="banner_image" src="img/banner.png">
+                    </div> -->
+
+                    <div class="swiper-container">
+                        <div class="swiper-wrapper">
+                            <div class="swiper-slide">
+                              <img src="img/banner1.png" class="banner_image">
+                            </div>
+                            <div class="swiper-slide">
+                              <img src="img/banner2.png" class="banner_image">
+                            </div>
+                            <div class="swiper-slide">
+                              <img src="img/banner3.png" class="banner_image">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div ng-click="Goto('#ndfl')" class="card white-border-block" ng-hide="IfNdflFilled()">
+                        <div class="card-content">
+                          <div class="card-content-inner">
+                            Заполните анкету НДФЛ!
+                          </div>
+                        </div>
+                      </div>
+                    <div class="content-block">
+                    <a href="#" ng-click="OpenNewSale()" class="item-link button button-big color-white bg-black">Новая продажа</a>
+                    </div>
+                    <div class="content-block-title">Конкурс</div>
+                    <div class="list-block white-border-block">
+                      <ul>
+                        <li class="accordion-item"><a href="#" class="align-center item-link">
+                            <div class="">
+                              <div class="white-border-block">Описание конкурса</div>
+                            </div></a>
+                          <div class="accordion-item-content">
+                            <div ng-bind-html="contest_desc" class="content-block">
+                             
+                            </div>
+                          </div>
+                        </li>
+                        <li class="item-content">
+                          <div class="item-inner">
+                            <div class="item-title">Лидеры</div>
+                            <div class="item-after">Кол-во продаж</div>
+                          </div>
+                        </li>
+                        <li ng-repeat="user in contest_users track by $index" class="item-content">
+                          <div class="item-inner">
+                            <div class="item-title">{{user.full_name}}</div>
+                            <div class="item-after">{{user.sum_quantity}}</div>
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div id="tab8" class="page-content tab">
+                  <div class="content-block"></div>
+                    <div class="list-block white-border-block">
+                      <ul>
+                        <li class="item-content">
+                          <div class="item-inner">
+                            <div class="item-title">Имя</div>
+                            <div class="item-after">{{user.first_name}}</div>
+                          </div>
+                        </li>
+                        <li class="item-content">
+                          <div class="item-inner">
+                            <div class="item-title">Фамилия</div>
+                            <div class="item-after">{{user.last_name}}</div>
+                          </div>
+                        </li>
+                        <li class="item-content">
+                          <div class="item-inner">
+                            <div class="item-title">Почта</div>
+                            <div class="item-after">{{user.email}}</div>
+                          </div>
+                        </li>
+                        <li class="item-content">
+                          <div class="item-inner">
+                            <div class="item-title">Телефон</div>
+                            <div class="item-after">{{user.phone_mobile}}</div>
+                          </div>
+                        </li>
+                        <li class="item-content">
+                          <div class="item-inner">
+                            <div class="item-title">Дилер</div>
+                            <div class="item-after">{{user.dealer.name}}</div>
+                          </div>
+                        </li>
+                      </ul>
+                      <div class="card" ng-hide="user.blocking_reason==null">
+                        <div class="card-content">
+                          <div class="card-content-inner">
+                            Пользователь временно заблокирован.<br>Причина:<br>
+                            {{user.blocking_reason}}
+                          </div>
+                        </div>
+                      </div>
+                      <div ng-click="Goto('#ndfl')" class="card white-border-block" ng-hide="IfNdflFilled()">
+                        <div class="card-content">
+                          <div class="card-content-inner">
+                            Заполните анкету НДФЛ!
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <a href="#setup-profile" class="item-link button button-normal color-white bg-black">Настроить профиль</a>
+                    <div class="empty-space"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+
+          <div data-page="setup-profile" class="page ng-scope cached">
+            <div class="navbar Olympus-navbar no-border">
+              <div class="navbar-inner">
+                <div class="center open-panel Olympus-header sliding">&nbsp;</div>
+                <div class="left sliding"><a href="#" class="open-panel link icon-only">
+                  <i class="icon color-white icon-bars"></i></a>
+                </div>
+                <div class="right sliding"><a href="#" ng-click="Goto('#index','#tab7')" class="link icon-only"><i class="f7-icons">home</i></a></div>
+              </div>
+            </div>
+            <div class="page-content">
+            <a href="#" class="back-button back item-link button button-normal color-white bg-black">Назад</a>
+              <div class="content-block-title">Персональные данные</div>
+              <div class="list-block white-border-block">
+                <form id="update-profile-form">
+                  <ul>
+                    <li class="item-content">
+                      <div class="item-inner">
+                        <div class="item-title label">Фамилия</div>
+                        <div class="item-input">
+                          <input type="text" ng-model="user.last_name" name="last_name" placeholder="...">
+                        </div>
+                      </div>
+                    </li>
+                    <li class="item-content">
+                      <div class="item-inner">
+                        <div class="item-title label">Имя</div>
+                        <div class="item-input">
+                          <input type="text" ng-model="user.first_name" name="first_name" placeholder="...">
+                        </div>
+                      </div>
+                    </li>
+                    <li class="item-content">
+                      <div class="item-inner">
+                        <div class="item-title label">Отчество</div>
+                        <div class="item-input">
+                          <input type="text" ng-model="user.middle_name" name="middle_name" placeholder="...">
+                        </div>
+                      </div>
+                    </li>
+                    <li class="item-content">
+                      <div class="item-inner">
+                        <div class="item-title label">Email</div>
+                        <div class="item-input">
+                          <input type="email" ng-model="user.email" name="email" placeholder="...">
+                        </div>
+                      </div>
+                    </li>
+                    <li>
+                      <a href="#" ng-click="UpdateProfile()" class="item-link button button-big color-white bg-black">Обновить</a>
+                    </li>
+                  </ul>
+
+                </form>
+              </div>
+              <div class="empty-space"></div>
+            </div>
+          </div>
+
+          <div data-page="ndfl" class="page ng-scope cached with-subnavbar">
+            <div class="navbar Olympus-navbar no-border">
+              <div class="navbar-inner">
+                <div class="center open-panel Olympus-header sliding">&nbsp;</div>
+                <div class="left sliding"><a href="#" class="open-panel link icon-only">
+                  <i class="icon color-white icon-bars"></i></a>
+                </div>
+                <div class="right sliding"><a href="#" ng-click="Goto('#index','#tab7')" class="link icon-only"><i class="f7-icons">home</i></a></div>
+              </div>
+            </div>
+            <div class="page-content">
+            <form id="ndfl-form">
+            <div class="content-block-title">Личная информация</div>
+              <div class="list-block white-border-block">
+                <ul>
+                  <li class="item-content">
+                    <div class="item-inner">
+                      <div class="item-title label">Гражданство</div>
+                      <div class="item-input">
+                        <input type="text" ng-click="DropCountries.open()" id="countries-dropdown" name="country" readonly placeholder="...">
+                      </div>
+                    </div>
+                  </li>
+                  <li class="item-content">
+                    <div class="item-inner">
+                      <div class="item-title label">Имя</div>
+                      <div class="item-input">
+                        <input type="text" ng-model="user.first_name" name="first_name" placeholder="...">
+                      </div>
+                    </div>
+                  </li>
+                  <li class="item-content">
+                    <div class="item-inner">
+                      <div class="item-title label">Фамилия</div>
+                      <div class="item-input">
+                        <input type="text" ng-model="user.last_name" name="last_name" placeholder="...">
+                      </div>
+                    </div>
+                  </li>
+                  <li class="item-content">
+                    <div class="item-inner">
+                      <div class="item-title label">Отчество</div>
+                      <div class="item-input">
+                        <input type="text" ng-model="user.middle_name" name="middle_name" placeholder="...">
+                      </div>
+                    </div>
+                  </li>
+                  <li class="item-content">
+                    <div class="item-inner">
+                      <div class="item-title label">Дата рождения</div>
+                      <div class="item-input">
+                        <input type="text" id="date-picker" name="birthday_on" placeholder="...">
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+              <div class="content-block-title">Документ, удостоверяющий личность</div>
+              <div class="list-block white-border-block">
+                <ul>
+                  <li class="item-content">
+                    <div class="item-inner">
+                      <div class="item-title label">Тип документа</div>
+                      <div class="item-input">
+                        <input type="text" ng-click="DropDocs.open()" id="docs-dropdown" name="document_type" readonly placeholder="...">
+                      </div>
+                    </div>
+                  </li>
+                  <li class="item-content">
+                    <div class="item-inner">
+                      <div class="item-title label">Серия и номер документа</div>
+                      <div class="item-input">
+                        <input type="text" name="document_series_and_number" placeholder="...">
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+              <div class="content-block-title">Идентификационный номер налогоплательщика</div>
+              <div class="list-block white-border-block">
+                <ul>
+                  <li class="item-content">
+                    <div class="item-inner">
+                      <div class="item-title label">ИНН</div>
+                      <div class="item-input">
+                        <input type="number" name="inn" placeholder="...">
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+              <div class="content-block-title">Адрес места жительства в РФ</div>
+              <div class="list-block white-border-block">
+                <ul>
+                  <li class="item-content">
+                    <div class="item-inner">
+                      <div class="item-title label">Укажите адрес</div>
+                      <div class="item-input">
+                        <textarea  name="address" placeholder="..." class="resizable"></textarea>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+              <a href="#" ng-click="SendNdflForm()" class="item-link button button-big color-white bg-black">Отправить анкету</a>
+              </form>
+              <div class="empty-space"></div>
+            </div>
+          </div>
+
+          <div data-page="bonus" class="page ng-scope cached with-subnavbar">
+            <div class="navbar Olympus-navbar no-border">
+              <div class="navbar-inner">
+                <div class="center open-panel Olympus-header sliding">&nbsp;</div>
+                <div class="left sliding"><a href="#" class="open-panel link icon-only">
+                  <i class="icon color-white icon-bars"></i></a>
+                </div>
+                <div class="right sliding"><a href="#" ng-click="Goto('#index','#tab7')" class="link icon-only"><i class="f7-icons">home</i></a></div>
+              </div>
+            </div>
+            <div class="toolbar tabbar">
+              <div class="toolbar-inner">
+              <a href="#tab4" class="button active tab-link">Таблица</a>
+                  <a href="#tab3" class="button tab-link">История</a>
+                  
+              </div>
+            </div>
+            <div class="page-content">
+            <div class="tabs-animated-wrap">
+              <div class="tabs">
+                <div id="tab4" class="page-content active tab">
+                <div style="" class="content-block-title">Таблица бонусов</div>
+                  <div class="list-block white-border-block">
+                    <ul>
+                      <li>
+                        <div class="item-content">
+                          <div class="item-inner">
+                            <div class="item-title orangeText">Товар</div>
+                            <div class="item-after orangeText">Бонус за продажу</div>
+                          </div>
+                        </div>
+                      </li>
+                      <li ng-repeat="element in products track by $index">
+                        <div class="item-content">
+                          <div class="item-inner">
+                            <div class="item-title product-title">{{element.name}}</div>
+                            <div class="item-after">{{element.bonuses_formula | Bonus}}</div>
+                          </div>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                <div id="tab3" class="page-content tab">
+                  <div class="content-block">
+                    <div class="no-items-message" ng-hide="transactions[0]">История пуста!</div>
+                    <div class="timeline">
+                      <div ng-repeat="element in transactions track by $index" class="timeline-item">
+                        <div class="timeline-item-date">{{element.balance_after}}<small> руб</small></div>
+                        <div class="timeline-item-divider"></div>
+                        <div class="timeline-item-content">
+                          <div class="timeline-item-time">{{element.created_at}}</div>
+                          <div class="timeline-item-title">{{element.title}}</div>
+                           <div class="timeline-item-subtitle">{{element.comment}}</div>
+                           <div class="timeline-item-text">[ {{element.balance_after-element.balance_before}} руб. ]</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+            </div>
+          </div>
+
+          <div data-page="transaction" class="page ng-scope cached">
+            <div class="navbar Olympus-navbar no-border">
+              <div class="navbar-inner">
+                <div class="center open-panel Olympus-header sliding">&nbsp;</div>
+                <div class="left sliding"><a href="#" class="open-panel link icon-only">
+                  <i class="icon color-white icon-bars"></i></a>
+                </div>
+                <div class="right sliding"><a href="#" ng-click="Goto('#index','#tab7')" class="link icon-only"><i class="f7-icons">home</i></a></div>
+              </div>
+            </div>
+            <div class="toolbar tabbar">
+              <div class="toolbar-inner">
+                  <a href="#tab5" class="button active tab-link">Перевод</a>
+                  <a href="#tab6" class="button tab-link">История</a>
+              </div>
+            </div>
+            <div class="page-content">
+              <div class="tabs-animated-wrap">
+                <div class="tabs">
+                  <div id="tab5" class="page-content tab active">
+                    <div class="content-block-title">Реквизиты</div>
+                    <div class="list-block white-border-block">
+                      <form id="payment-form">
+                        <ul>
+                          <li class="item-content">
+                            <div class="item-inner">
+                              <div class="item-title label">Номер карты</div>
+                              <div class="item-input">
+                                <input type="text" name="card" class="mask_card" placeholder="____ ____ ____ ____">
+                              </div>
+                            </div>
+                          </li>
+                          <li class="item-content">
+                            <div class="item-inner">
+                              <div class="item-title label">Сумма, руб</div>
+                              <div class="item-input">
+                                <input type="text" class="mask_money" name="money" placeholder="...">
+                              </div>
+                            </div>
+                          </li>
+                          <li>
+                            <a href="#" ng-click="Payment()" class="item-link button button-big color-white bg-black">&#8381; &nbsp;&nbsp;&nbsp;оплатить</a>
+                          </li>
+                        </ul>
+                      </form>
+                    </div>
+                  </div>
+                  <div id="tab6" class="page-content tab">
+                    <div class="content-block">
+                      <div class="no-items-message" ng-hide="payments[0]">История пуста!</div>
+                      <div class="timeline">
+                        <div ng-repeat="element in payments track by $index" class="timeline-item">
+                          <div class="timeline-item-date">-{{element.amount}}<small> руб</small></div>
+                          <div class="timeline-item-divider"></div>
+                          <div class="timeline-item-content">
+                            <div class="timeline-item-time">{{element.created_at}}</div>
+                            <div class="timeline-item-title">Перевод денег #{{element.ms_payment_id}}</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div data-page="sertificate" class="page ng-scope cached">
+            <div class="navbar Olympus-navbar no-border">
+              <div class="navbar-inner">
+                <div class="center open-panel Olympus-header sliding">&nbsp;</div>
+                <div class="left sliding"><a href="#" class="open-panel link icon-only">
+                  <i class="icon color-white icon-bars"></i></a>
+                </div>
+                <div class="right sliding"><a href="#" ng-click="Goto('#index','#tab7')" class="link icon-only"><i class="f7-icons">home</i></a></div>
+              </div>
+            </div>
+            <div class="toolbar tabbar">
+              <div class="toolbar-inner">
+                  <a href="#tab2" class="button active tab-link">Заказать</a>
+                  <a href="#tab1" class="button tab-link">История</a>
+              </div>
+            </div>
+            <div class="page-content">
+              <div class="tabs-animated-wrap">
+                <div class="tabs">
+
+                  <div id="tab2" class="page-content tab active">
+                    <div class="content-block-title">Бонусные карты</div>
+                    <div ng-click="OpenSertificate($index)" class="card white-border-block card-header-pic" ng-repeat="element in sertificates track by $index">
+                      <div ng-style="{'background-image':'url({{element.imgUrl}})'}" valign="bottom" class="card-header color-white no-border">
+                        <div class="card-layer">{{element.title}}</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div id="tab1" class="page-content tab">
+                    <div class="content-block">
+                      <div class="no-items-message" ng-hide="cards_history[0]">История пуста!</div>
+                      <div class="timeline">
+                        <div ng-repeat="element in cards_history track by $index" class="timeline-item">
+                          <div class="timeline-item-date">- {{element.amount}}<small> руб</small></div>
+                          <div class="timeline-item-divider"></div>
+                          <div class="timeline-item-content">
+                            <div class="timeline-item-time">{{element.created_at}}<br>{{element.status}}</div>
+                            <div class="card-history" ng-repeat="card in element.cards track by $index">
+                              <div class="timeline-item-title">{{card.type}}</div>
+                              <div class="timeline-item-text">Количество:{{card.quantity}}<br>Номинал:{{card.nominal}} руб.</div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                   </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div data-page="buy-sertificate" class="page ng-scope cached">
+            <div class="navbar Olympus-navbar no-border">
+              <div class="navbar-inner">
+                <div class="center open-panel Olympus-header sliding">&nbsp;</div>
+                <div class="left sliding"><a href="#" class="open-panel link icon-only">
+                  <i class="icon color-white icon-bars"></i></a>
+                </div>
+                <div class="right sliding"><a href="#" ng-click="Goto('#index','#tab7')" class="link icon-only"><i class="f7-icons">home</i></a></div>
+              </div>
+            </div>
+            <div class="page-content">
+              <a href="#" class="back-button back item-link button button-normal color-white bg-black">Назад</a>
+              <div class="white-border-block">
+                <div class="card-title">{{sertificates[selected_card].title}}</div>
+                <img class="card-image" ng-src="{{sertificates[selected_card].imgUrl}}">
+              </div>
+
+              <form id="sertificate-form">
+              <div class="list-block">
+                <ul>
+                  <li>
+                    <div class="item-content">
+                      <div class="item-inner">
+                        <div class="item-title label">Количество карт</div>
+                        <div class="item-input">
+                          <input type="text" placeholder="1" name="quantity" value="1" readonly id="picker-amount">
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+                <ul>
+                  <li ng-repeat="element in nominals track by $index">
+                    <label class="label-radio item-content no-fastclick">
+                      <input type="radio" name="nominal" id="radio-nominal" ng-model="selected_nominal" ng-value={{($index)}}>
+                      <div class="item-media">
+                        <i class="icon icon-form-radio"></i>
+                      </div>
+                      <div class="item-inner">
+                        <div class="item-title">{{element}} руб.</div>
+                      </div>
+                    </label>
+                  </li>
+                  <!-- if other nominals are supported -->
+                  <li>
+                    <label class="label-radio item-content no-fastclick">
+                      <input type="radio" ng-model="selected_nominal" name="nominal" ng-value="-1">
+                      <div ng-click="WarnCard()" class="item-media">
+                        <i class="icon icon-form-radio"></i>
+                      </div>
+                      <div ng-click="WarnCard()" class="item-inner">
+                        <div class="item-title">Другой номинал</div>
+                      </div>
+                    </label>
+                  </li>
+                </ul>
+                <ul ng-show="selected_nominal==-1">
+                  <li>
+                    <div class="item-content">
+                      <div class="item-inner">
+                        <div class="item-input">
+                          <input type="text" placeholder="Выбор номинала" name="special_nominal" readonly id="picker-nominal">
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+                <ul>
+                  <li>
+                    <a href="#" ng-click="BuySertificate()" class="item-link button button-big color-white bg-black">Купить</a>
+                  </li>
+                </ul>
+              </div>   
+
+
+              </form> 
+
+            </div>
+          </div>
+
+
+          <div data-page="old_sales" class="page ng-scope cached">
+            <div class="navbar Olympus-navbar no-border">
+              <div class="navbar-inner">
+                <div class="center open-panel Olympus-header sliding">&nbsp;</div>
+                <div class="left sliding"><a href="#" class="open-panel link icon-only">
+                  <i class="icon color-white icon-bars"></i></a>
+                </div>
+                <div class="right sliding"><a href="#" ng-click="Goto('#index','#tab7')" class="link icon-only"><i class="f7-icons">home</i></a></div>
+              </div>
+            </div>
+            <div class="page-content">
+            <div class="content-block"></div>
+              <a href="#" ng-click="OpenNewSale()" class="item-link button button-normal color-white bg-black">Новая продажа</a>
+              <div ng-if="sales_array[0]">
+                <div class="content-block-title">История продаж</div>
+                <div class="list-block white-border-block">
+                  <ul>
+                    <li ng-repeat="element in sales_array track by $index">
+                      <a href="#view_sale" ng-click="mainCtrl.selected_sale = $index" class="item-content item-link">
+                        <div class="item-inner">
+                          <div class="item-title">{{element.sold_on}}</div>
+                          <div class="item-after">{{element.status | Status}}</div>
+                        </div>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div class="no-items-message" ng-hide="sales_array[0]">
+                Продажи отсутствуют!
+              </div>
+            </div>
+          </div>
+
+          <div data-page="view_sale" class="page ng-scope cached">
+            <div class="navbar Olympus-navbar no-border">
+              <div class="navbar-inner">
+                <div class="center open-panel Olympus-header sliding">&nbsp;</div>
+                <div class="left sliding"><a href="#" class="open-panel link icon-only">
+                  <i class="icon color-white icon-bars"></i></a>
+                </div>
+                <div class="right sliding"><a href="#" ng-click="Goto('#index','#tab7')" class="link icon-only"><i class="f7-icons">home</i></a></div>
+              </div>
+            </div>
+            <div class="page-content">
+              <a href="#sale" class="back-button back item-link button button-normal color-white bg-black">Назад</a>
+              <div class="content-block-title">Просмотр продажи</div>
+              <div class="list-block white-border-block">
+                <ul>
+                  <li class="item-content">
+                    <div class="item-inner">
+                      <div class="item-title">Статус</div>
+                      <div class="item-after">{{sales_array[mainCtrl.selected_sale].status | Status}}</div>
+                    </div>
+                  </li>
+                  <li class="item-content">
+                    <div class="item-inner">
+                      <div class="item-title">ID</div>
+                      <div class="item-after">{{sales_array[mainCtrl.selected_sale].sale_id}}</div>
+                    </div>
+                  </li>
+                  <li class="item-content">
+                    <div class="item-inner">
+                      <div class="item-title">Бонусы</div>
+                      <div class="item-after">{{sales_array[mainCtrl.selected_sale].bonuses}}</div>
+                    </div>
+                  </li>
+                  <li class="item-content">
+                    <div class="item-inner">
+                      <div class="item-title">Дата продажи</div>
+                      <div class="item-after">{{sales_array[mainCtrl.selected_sale].sold_on}}</div>
+                    </div>
+                  </li>
+                  <li class="item-content">
+                    <div class="item-inner">
+                      <div class="item-title">Дата создания</div>
+                      <div class="item-after">{{sales_array[mainCtrl.selected_sale].created_at}}</div>
+                    </div>
+                  </li>
+                  <li ng-repeat="element in sales_array[mainCtrl.selected_sale].positions track by $index" class="item-content">
+                    <div class="item-inner">
+                      <div class="item-title">Товар №{{$index+1}}</div>
+                      <div class="item-text">{{element.product.name}}</div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+              <div ng-show="sales_array[mainCtrl.selected_sale].status=='draft'">
+                <a href="#" ng-click="EditSale()" class="item-link button button-normal color-white bg-black">Редактировать</a>
+              </div>
+
+            </div>
+          </div>
+
+          <div data-page="sale" class="page ng-scope cached">
+            <div class="navbar Olympus-navbar no-border">
+              <div class="navbar-inner">
+                <div class="center open-panel Olympus-header sliding">&nbsp;</div>
+                <div class="left sliding"><a href="#" class="open-panel link icon-only">
+                  <i class="icon color-white icon-bars"></i></a>
+                </div>
+                <div class="right sliding"><a href="#" ng-click="Goto('#index','#tab7')" class="link icon-only"><i class="f7-icons">home</i></a></div>
+              </div>
+            </div>
+            <div class="page-content">
+            <form id="new-sale">
+            <a href="#" class="back-button back item-link button button-normal color-white bg-black">Назад</a>
+              <div class="list-block white-border-block">
+                <ul>
+                  <li class="item-content">
+                    <div class="item-inner">
+                      <div class="item-title label">Дата продажи</div>
+                      <div class="item-input">
+                        <input id="calendar-sell" type="text" name="date" readonly placeholder="сегодня">
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+                <ul>
+                  <li ng-repeat="element in sell track by $index">
+                    <div class="item-content">
+                      <a href="" class="item-media item-link" ng-click="DeleteProduct($index)"><span class="delete_helper"></span>
+                      <img src="img/Delete.png" class="delete_cross"></a>
+                      <div class="item-inner">
+                        <div class="item-title-row">
+                          <div class="item-title product-title">{{element.name}}</div>
+                        </div>
+                        <div class="item-text">{{element.serial_number}}</div>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+                <a href="#" data-popup=".popup-new-sale" class="open-popup item-link button button-normal color-white bg-black button-left">+ добавить позицию</a>
+                <a href="#" ng-click="TakePhoto()" class="takeImage item-link button button-normal color-white bg-black button-left">Фото чека</a>
+                <div class="cropImage" ng-click="billView.open()"><img id="billImage" class="billImage pb-popup-dark" src=""></div>
+              </div>
+              </form>
+              <div class="content-block" ng-show="sell[0]">
+                <a href="#" ng-click="CheckSale('adminReview')" class="item-link button button-big color-white bg-black">Отправить на проверку</a>
+                <a href="#" ng-click="CheckSale('draft')" class="item-link button button-big color-white bg-black white-button">Сохр. как черновик</a>
+              </div>
+            </div>
+            
+          </div>
+
+          <div data-page="contact" class="page ng-scope cached">
+            <div class="navbar Olympus-navbar no-border">
+              <div class="navbar-inner">
+                <div class="center open-panel Olympus-header sliding">&nbsp;</div>
+                <div class="left sliding"><a href="#" class="open-panel link icon-only">
+                  <i class="icon color-white icon-bars"></i></a>
+                </div>
+                <div class="right sliding"><a href="#" ng-click="Goto('#index','#tab7')" class="link icon-only"><i class="f7-icons">home</i></a></div>
+              </div>
+            </div>
+            <div class="page-content">
+              <div class="content-block-title">Задайте Ваш вопрос с помощью формы</div>
+              <div class="list-block white-border-block">
+                <form id="help-form">
+                  <ul>
+                    <li>
+                      <div class="accordion-item">
+                        <div class="accordion-item-toggle">
+                          <a href="#" class="item-link item-content">
+                            <div class="item-inner">
+                              <div class="item-title">Категория вопроса</div>
+                            </div>
+                          </a> 
+                        </div>
+                        <div class="accordion-item-content">
+                          <div class="list-block">
+                            <ul>
+                              <li ng-repeat="element in feedback_categories track by $index">
+                                <label class="label-radio item-content">
+                                  <input type="radio" name="category_id" ng-value="element.id" >
+                                  <div class="item-media">
+                                    <i class="icon icon-form-radio"></i>
+                                  </div>
+                                  <div class="item-inner">
+                                    <div class="item-title">{{element.name}}</div>
+                                  </div>
+                                </label>
+                              </li>
+                            </ul>
+                          </div>    
+                        </div>
+                      </div>
+                    </li>
+     
+                    <li class="item-content">
+                      <div class="item-inner">
+                        <div class="item-title label">Имя</div>
+                        <div class="item-input">
+                          <input type="text" id="help-name" name="name">
+                        </div>
+                      </div>
+                    </li>
+                    <li class="item-content">
+                      <div class="item-inner">
+                        <div class="item-title label">E-mail</div>
+                        <div class="item-input">
+                          <input type="email" id="help-email" name="email">
+                        </div>
+                      </div>
+                    </li>
+                     <li class="item-content">
+                      <div class="item-inner">
+                        <div class="item-title label">Телефон</div>
+                        <div class="item-input">
+                          <input type="text" id="help-phone" name="phone_mobile_local">
+                        </div>
+                      </div>
+                    </li> 
+                    <li class="item-content">
+                      <div class="item-inner">
+                        <div class="item-title label">Сообщение</div>
+                        <div class="item-input">
+                          <textarea class="resizable" name="content"></textarea>
+                        </div>
+                      </div>
+                    </li>
+                    <li>
+                      <a href="#" ng-click="Feedback()" class="item-link button button-big color-white bg-black">Задать вопрос</a>
+                    </li>
+                  </ul>
+                </form>
+              </div>
+              <div class="empty-space"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+<!-- ===========Login and other Popups============ -->
+
+    <div class="login-screen theme-white popup log tablet-fullscreen">
+      <div class="view">
+        <div class="page">
+          <div class="page-content login-screen-content">
+          <img src="img/olympus.png" class="logimg">
+            <div class="loginTitle">Авторизация</div>
+            <!-- Login form -->
+            <form id="login-form">
+              <div class="list-block">
+                <ul>
+                  <li class="item-content">
+                    <div class="item-inner">
+                      <div class="item-title label">Телефон</div>
+                      <div class="item-input">
+                        <input type="text" ng-model='PhoneInput' class="mask_phone" name="phone">
+                      </div>
+                    </div>
+                  </li>
+                  <li class="item-content">
+                    <div class="item-inner">
+                      <div class="item-title label">Пароль</div>
+                      <div class="item-input">
+                        <input type="password" name="password" placeholder="******">
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+              <div class="list-block">
+                <ul>
+                  <li>
+                    <a href="#" ng-click="PullLoginForm()" class="item-link button button-big color-white bg-black">Войти</a>
+                  </li>
+                </ul>
+                <div class="list-block-label">
+                    <p><a href="#" data-popup=".pre-reg" class="open-popup regText">Регистрация</a></p>
+                </div>
+                 <div class="list-block-label">
+                    <p><a href="#" class="orangeText" ng-click="ForgotPass()">Забыли пароль?</a></p>
+                </div> 
+              </div>
+            </form>
+
+          </div>
+        </div>
+      </div>
+  </div>
+
+  <div class="popup pre-reg tablet-fullscreen">
+      
+      <div class="view">
+        <div class="page">
+
+          <div class="page-content login-screen-content">
+          <img src="img/olympus.png" class="logimg">
+            <div class="loginTitle">Введите свой телефон</div>
+            <!-- Login form -->
+            <form id="pre-reg-form">
+              <div class="list-block">
+                <ul>
+                  <li class="item-content">
+                    <div class="item-inner">
+                      <div class="item-title label">Телефон</div>
+                      <div class="item-input">
+                        <input type="text" ng-model='PhoneInput' class="mask_phone2" name="phone">
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+              <div class="list-block">
+                <ul>
+                  <li>
+                    <a href="#" ng-click="SendSMS()" class="item-link button button-big color-white bg-black">Отправить СМС</a>
+                  </li>
+                </ul>
+                <div class="list-block-label">
+                    <p><a href="#" data-popup=".pre-reg" class="close-popup regText">Назад</a></p>
+                </div>
+              </div>
+            </form>
+
+
+          </div>
+        </div>
+      </div>
+
+  </div>
+
+  <div class="popup reg tablet-fullscreen">
+      <div class="view">
+        <div class="page">
+          <div class="page-content login-screen-content">
+          <img src="img/olympus.png" class="logimg">
+            <div class="loginTitle">Регистрация</div>
+            <!-- Login form -->
+            <form id="reg-form">
+              <div class="list-block">
+                <ul>
+                <li class="item-content">
+                    <div class="item-inner">
+                      <div class="item-title label">Дилер *</div>
+                      <div class="item-input">
+                        <input type="text" id="dropdown_dealer" ng-click="DropDealer.open()" readonly placeholder="...">
+                      </div>
+                    </div>
+                  </li>
+                  <li class="item-content">
+                    <div class="item-inner">
+                      <div class="item-title label">Город *</div>
+                      <div class="item-input">
+                        <input type="text" id="dropdown_city" ng-value="DropSelected.city" ng-click="DropCity.open()" readonly placeholder="...">
+                      </div>
+                    </div>
+                  </li>
+                  <li class="item-content">
+                    <div class="item-inner">
+                      <div class="item-title label">Адрес *</div>
+                      <div class="item-input">
+                        <input type="text" id="dropdown_address" ng-value="DropSelected.address" ng-click="DropAddress.open()" readonly placeholder="...">
+                      </div>
+                    </div>
+                  </li>
+                  <li class="item-content">
+                    <div class="item-inner">
+                      <div class="item-title label">Почта *</div>
+                      <div class="item-input">
+                        <input type="text" name="email" placeholder="example@mail.com">
+                      </div>
+                    </div>
+                  </li>
+                  <li class="item-content">
+                    <div class="item-inner">
+                      <div class="item-title label">Пароль *</div>
+                      <div class="item-input">
+                        <input type="password" name="password" placeholder="***">
+                      </div>
+                    </div>
+                  </li>
+                  <li class="item-content">
+                    <div class="item-inner">
+                      <div class="item-title label">Повторить пароль *</div>
+                      <div class="item-input">
+                        <input type="password" name="passwordCompare" placeholder="***">
+                      </div>
+                    </div>
+                  </li>
+                  <li class="item-content">
+                    <div class="item-inner">
+                      <div class="item-title label">Фамилия *</div>
+                      <div class="item-input">
+                        <input type="text" name="last_name" placeholder="...">
+                      </div>
+                    </div>
+                  </li>
+                  <li class="item-content">
+                    <div class="item-inner">
+                      <div class="item-title label">Имя *</div>
+                      <div class="item-input">
+                        <input type="text" name="first_name" placeholder="...">
+                      </div>
+                    </div>
+                  </li>
+                  <li class="item-content">
+                    <div class="item-inner">
+                      <div class="item-title label">Отчество</div>
+                      <div class="item-input">
+                        <input type="text" name="middle_name" placeholder="...">
+                      </div>
+                    </div>
+                  </li>
+                  <li>
+                  <div class="item-content">
+                    <div class="item-inner">
+                      <a href="#" ng-click="rulesPhoto.open()" class="item-title label">Даю согласие с правилами программы</a>
+                      <div class="item-input">
+                        <label class="label-switch">
+                          <input name="agreeWithTerms" type="checkbox" checked>
+                          <div class="checkbox"></div>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+                <li>
+                  <div class="item-content">
+                    <div class="item-inner">
+                      <div ng-click="persPhoto.open()" class="item-title label">Даю согласие на обработку данных</div>
+                      <div class="item-input">
+                        <label class="label-switch">
+                          <input name="allowPersonalDataProcessing" type="checkbox" checked>
+                          <div class="checkbox"></div>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+                </ul>
+              </div>
+              <div class="list-block">
+                <ul>
+                  <li>
+                    <a href="#" ng-click="Register()" class="item-link button button-big color-white bg-black">Регистрация</a>
+                  </li>
+                </ul>
+                <div class="list-block-label">
+                    <p><a href="#" data-popup=".reg" class="close-popup regText">Отмена</a></p>
+                </div>
+              </div>
+            </form>
+
+          </div>
+        </div>
+    </div>
+  </div>
+
+<!-- New sale popup -->
+  <div class="popup popup-new-sale">
+    <div class="view">
+      <div class="page">
+        <div style="padding-top: 0px !important" class="page-content">
+        <img src="img/olympus.png" class="logimg">
+        <a href="#" class="close-popup back-button item-link button button-normal color-white bg-black">Назад</a>
+          <div class="list-block white-border-block">
+          <form id="product-form">
+            <ul>
+              <li class="item-content">
+                <div class="item-inner">
+                  <div class="item-title label">Товар</div>
+                  <div class="item-input">
+                    <input type="text" name="name" ng-click="DropProducts.open()" readonly id="products-dropdown" placeholder="...">
+                  </div>
+                </div>
+              </li>
+              <li class="item-content">
+                <div class="item-inner">
+                  <div class="item-title label">Серийный номер</div>
+                  <div class="item-input">
+                    <input type="text" ng-model="serial" id="prod-num" name="serial_number" placeholder="">
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </form>
+          <a href="#" ng-show="IfShowAddProductButton()" ng-click="AddProduct()" class="close-popup item-link button button-normal color-white bg-black">+ добавить позицию</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="cordova.js"></script> 
+  <script src="./f7/js/framework7.js"></script>
+  <script src="./f7/js/framework7.keypad.min.js"></script>
+  <script src="./js/jquery-3.2.1.min.js"></script>
+  <script src="./js/jquery.mask.min.js"></script>
+  <script src="./js/angular.min.js"></script>
+  <script src="./js/angular-sanitize.min.js"></script>
+  <script src="./js/moment.js"></script>
+  <script src="./js/my-app.js"></script>
+  <script src="./js/DomService.js"></script>
+  <script src="./js/DeclareService.js"></script>
+  <script src="./js/HttpService.js"></script>
+  <script src="./js/filters.js"></script>
+  <script src="./js/mainController.js"></script>
+</body>
+
+</html>

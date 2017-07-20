@@ -31,7 +31,6 @@
         <icon density="xhdpi" src="www/res/icon/android/mipmap-xhdpi/ic_launcher.png" />
         <icon density="xxhdpi" src="www/res/icon/android/mipmap-xxhdpi/ic_launcher.png" />
         <icon density="xxxhdpi" src="www/res/icon/android/mipmap-xxxhdpi/ic_launcher.png" />
-
         <splash density="land-ldpi" src="www/res/screen/android/drawable-land-ldpi\screen.png" />
         <splash density="land-mdpi" src="www/res/screen/android/drawable-land-mdpi\screen.png" />
         <splash density="land-hdpi" src="www/res/screen/android/drawable-land-hdpi\screen.png" />
@@ -79,4 +78,5 @@
     <plugin name="cordova-plugin-file" spec="~4.0.0" />
     <plugin name="cordova-plugin-file-transfer" spec="~1.6.3" />
     <plugin name="cordova-open" spec="~1.0.12" />
+    <engine name="ios" spec="~4.3.1" />
 </widget>
