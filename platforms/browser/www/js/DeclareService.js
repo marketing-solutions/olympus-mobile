@@ -306,7 +306,7 @@ $rootScope.MoneyKeypad = Olymp.fw7.app.keypad({
     toolbarCloseText: 'Готово'
 });
 
-$rootScope.PhoneKeypad = Olymp.fw7.app.keypad({
+/*$rootScope.PhoneKeypad = Olymp.fw7.app.keypad({
     input: '.mask_phone',
     valueMaxLength: 13,
     dotButton: false,
@@ -317,7 +317,7 @@ $rootScope.PhoneKeypad2 = Olymp.fw7.app.keypad({
     valueMaxLength: 13,
     dotButton: false,
     toolbarCloseText: 'Готово'
-});
+});*/
 
 
 /*-----------Banner Slider------------*/

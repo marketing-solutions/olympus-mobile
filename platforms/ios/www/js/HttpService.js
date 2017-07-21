@@ -460,23 +460,19 @@ $rootScope.Feedback = function(){
 $rootScope.BuySertificate = function(){
     Olymp.fw7.app.showPreloader(["Подождите..."]);
  var info = Olymp.fw7.app.formToJSON('#sertificate-form');
- if (info.nominal!=-1){
-  info.nominal = $rootScope.nominals[info.nominal];
- } else {
-  info.nominal = info.special_nominal;
- };
-  info.type = $rootScope.sertificates[$rootScope.selected_card].type;
+  info.nominal = $rootScope.sertificates[$rootScope.selected_card].nominals[info.nominal];
+
+  info.card = $rootScope.sertificates[$rootScope.selected_card].type;
   var json = {
-    cards: [info],
+    items: [info],
     profile_id : localStorage["OlympID"],
-    is_allow_cancel: 1,
-    action: 'create'
+    delivery_email: $rootScope.user.email
   };
   console.log(json);
 
   var req = {
    method: 'POST',
-   url: $rootScope.REST_URL+'sales/api/sales/buy-sertificate',
+   url: $rootScope.REST_URL+'/catalog/api-v3/orders/create',
    headers: {
        'Content-Type': 'application/json',
        'X-Token' : $rootScope.Token
@@ -570,6 +566,32 @@ $rootScope.SendNdflForm = function(){
       console.log(response);
       $rootScope.ShowError(response.data.errors);
     });
+}
+
+$rootScope.DownloadSertificate = function(order, card, status){
+if (status=="ready") {
+  Olymp.fw7.app.showPreloader(["Подождите..."]);
+  var req = {
+   method: 'POST',
+   url: $rootScope.REST_URL+'/catalog/api-v3/cards/download',
+   headers: {
+       'Content-Type': 'application/json',
+       'X-Token' : $rootScope.Token
+     },
+     data: {"ms_order_id": order, "ms_card_id": card}
+    };
+  $http(req).then(
+    function successCallback(response){
+      Olymp.fw7.app.hidePreloader();
+      console.log(response.data);
+      window.open(response.data.url, '_system');
+    }, 
+    function errorCallback(response){
+      Olymp.fw7.app.hidePreloader();
+      console.log(response);
+      $rootScope.ShowError(response.data.errors);
+    });
+  }
 }
 
   

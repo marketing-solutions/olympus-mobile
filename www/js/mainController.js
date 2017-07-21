@@ -9,7 +9,7 @@ function($http,$scope,$rootScope,$timeout,DomService,DeclareService,HttpService)
 
 /*-----------Some var-s for REST------------*/
 
-$rootScope.REST_URL = "http://olympus.msforyou.ru/";
+$rootScope.REST_URL = "http://test.olympus.msforyou.ru/";
 
 $http({method: 'GET', url: 'q.env'}).then(
   function(response) {
@@ -33,12 +33,16 @@ $http({method: 'GET', url: 'q.env'}).then(
 /*----------Watch phone input-----------*/
 
 $scope.$watch('PhoneInput', function() {
-  if ((!$scope.PhoneInput)||(!$scope.PhoneInput[3])){
-    $scope.PhoneInput = "+7 ";
-    $rootScope.PhoneKeypad.value = "+7 ";
-    $rootScope.PhoneKeypad2.value = "+7 ";
+  if ((!$scope.PhoneInput)||(!$scope.PhoneInput[2])){
+    $scope.PhoneInput = "+7";
   }
+  else{
+    $scope.PhoneInput = $scope.PhoneInput.slice(0,12);
+    $scope.PhoneInput = $scope.PhoneInput.replace(/[^+0-9]/g, "");
+  }
+  
   });
+
 
 /*----------Navigation functions-----------*/
 
@@ -71,56 +75,11 @@ $rootScope.OpenNewSale = function() {
 
 $rootScope.OpenSertificate = function(num){
   $rootScope.selected_card = num;
-  document.getElementById("picker-nominal").value = "";
   document.getElementById("picker-amount").value = "1";
-
-  var str=$rootScope.sertificates[$rootScope.selected_card].standard_nominals_raw.replace(/ /g, "").replace(/;/g, ",");
-  $rootScope.nominals = str.split(",");
-
-  if ($rootScope.sertificates[$rootScope.selected_card].nominals_raw.search(/-/)!=-1){
-    var min_index = $rootScope.sertificates[$rootScope.selected_card].nominals_raw.search(/-/);
-    var max_index = $rootScope.sertificates[$rootScope.selected_card].nominals_raw.search(/:/);
-    var min_sum = parseInt($rootScope.sertificates[$rootScope.selected_card].nominals_raw.slice(0,min_index));
-    var max_sum = parseInt($rootScope.sertificates[$rootScope.selected_card].nominals_raw.slice(min_index+1,max_index));
-    var step = parseInt($rootScope.sertificates[$rootScope.selected_card].nominals_raw.slice(max_index+1));
-    $rootScope.all_nominals = [];
-    for (var i = 0; i <= (max_sum-min_sum)/step; i++) {
-      var s = min_sum+i*step;
-      $rootScope.all_nominals.push(s);
-    }
-
-  } else {
-    $rootScope.all_nominals = [];
-    var str=$rootScope.sertificates[$rootScope.selected_card].nominals_raw.replace(/ /g, "").replace(/;/g, ",");
-    $rootScope.all_nominals = str.split(",");
-  }
-
-  //console.log($rootScope.all_nominals);
-  $rootScope.pickerSum = Olymp.fw7.app.picker({
-    input: '#picker-nominal',
-    toolbarCloseText: 'Готово',
-    cols: [
-        {
-            textAlign: 'center',
-            values: $rootScope.all_nominals
-        }
-    ]
-  });
-
-  $rootScope.autocompleteDropdownAll = Olymp.fw7.app.autocomplete({
-    input: '#autocomplete-nominal',
-    openIn: 'dropdown',
-    source: function (autocomplete, query, render) {
-        var results = [];
-        for (var i = 0; i < $rootScope.nominals.length; i++) {
-            if ($rootScope.nominals[i].indexOf(query.toLowerCase()) >= 0) results.push($rootScope.nominals[i]);
-        }
-        render(results);
-    }
-  });
   $rootScope.refresh();
   Olymp.fw7.app.views[0].router.loadPage("#buy-sertificate");
 }
+
 
 $rootScope.Logout = function () {
   Olymp.fw7.app.closePanel();
@@ -188,23 +147,11 @@ $rootScope.SetupProfile = function(profile){
 
   $rootScope.GetInfo('sales/api/sales/transaction-history',
     {'profile_id' : localStorage["OlympID"]},
-    {'transactions':'transactions',
-    'cards_history':'sertificates'},
-    function(){
-      for (var i = 0; i < $rootScope.cards_history.length; i++) {
-        var message = '';
-        switch ($rootScope.cards_history[i].cards[0].status){
-          case 'new' : message = 'Новый'; break;
-          case 'ordered' : message = 'Передан в заказ'; break;
-          case 'partiallyReady' : message = 'Частично выдан'; break;
-          case 'ready' : message = 'Полностью выдан'; break;
-          case 'rejected' : message = 'Отказ'; break;
-          case 'userCancel' : message = 'Отмена участником'; break;
-          default: message = "";
-        }
-        $rootScope.cards_history[i].status = message;
-      }
-    });
+    {'transactions':'transactions'});
+
+  $rootScope.GetInfo('/catalog/api-v3/users/orders',
+    {'profile_id' : localStorage["OlympID"]},
+    {'cards_history':'orders'});
        
   $rootScope.GetInfo('profiles/api/ndfl/ndfl-info',
     {'profile_id' : localStorage["OlympID"]},
@@ -216,7 +163,7 @@ $rootScope.SetupProfile = function(profile){
     {"profile_id": $rootScope.user.profile_id},
     {'payments':'payments'});
 
-  $rootScope.GetInfo('sales/api/sales/cards',{},
+  $rootScope.GetInfo('/catalog/api-v3/cards/list',{},
     {'sertificates':'cards'});
 
   $rootScope.GetInfo('sales/api/sales/feedback-categories',{},

@@ -264,6 +264,21 @@ module.exports = [
         "merges": [
             "cordova.plugins.disusered"
         ]
+    },
+    {
+        "file": "plugins/cordova-plugin-inappbrowser/www/inappbrowser.js",
+        "id": "cordova-plugin-inappbrowser.inappbrowser",
+        "pluginId": "cordova-plugin-inappbrowser",
+        "clobbers": [
+            "cordova.InAppBrowser.open",
+            "window.open"
+        ]
+    },
+    {
+        "file": "plugins/cordova-plugin-inappbrowser/src/browser/InAppBrowserProxy.js",
+        "id": "cordova-plugin-inappbrowser.InAppBrowserProxy",
+        "pluginId": "cordova-plugin-inappbrowser",
+        "runs": true
     }
 ];
 module.exports.metadata = 
@@ -278,7 +293,8 @@ module.exports.metadata =
     "cordova-plugin-device": "1.1.6",
     "cordova-plugin-file": "4.0.0",
     "cordova-plugin-file-transfer": "1.6.3",
-    "cordova-open": "1.0.12"
+    "cordova-open": "1.0.12",
+    "cordova-plugin-inappbrowser": "1.7.1"
 }
 // BOTTOM OF METADATA
 });

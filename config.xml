@@ -23,7 +23,6 @@
         <allow-intent href="itms:*" />
         <allow-intent href="itms-apps:*" />
         <preference name="BackupWebStorage" value="none" />
-
         <icon height="57" platform="ios" src="www/res/icon/ios/Icon-App-57x57@1x.png" width="57" />
         <icon height="114" platform="ios" src="www/res/icon/ios/Icon-App-57x57@2x.png" width="114" />
         <icon height="40" platform="ios" src="www/res/icon/ios/Icon-App-40x40@1x.png" width="40" />
@@ -53,7 +52,6 @@
         <splash height="960" platform="ios" src="www/res/screen/ios/Default@2x~iphone.png" width="640" />
         <splash height="480" platform="ios" src="www/res/screen/ios/Default~iphone.png" width="320" />
     </platform>
-
     <platform name="android">
         <icon density="ldpi" src="www/res/icon/android/mipmap-ldpi/ic_launcher.png" />
         <icon density="mdpi" src="www/res/icon/android/mipmap-mdpi/ic_launcher.png" />
@@ -109,4 +107,5 @@
     <plugin name="cordova-plugin-file-transfer" spec="~1.6.3" />
     <plugin name="cordova-open" spec="~1.0.12" />
     <engine name="ios" spec="~4.3.1" />
+    <plugin name="cordova-plugin-inappbrowser" spec="~1.7.1" />
 </widget>

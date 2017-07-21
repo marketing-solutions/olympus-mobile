@@ -14,6 +14,23 @@ Olymp.angJS.filter('Status', function() {
   };
 });
 
+Olymp.angJS.filter('CardStatus', function() {
+  return function(x) {
+    var message = '';
+    switch (x){
+      case 'new' : message = 'Новый'; break;
+      case 'ordered' : message = 'Передан в заказ'; break;
+      case 'partiallyReady' : message = 'Частично выдан'; break;
+      case 'ready' : message = 'Полностью выдан'; break;
+      case 'rejected' : message = 'Отказ'; break;
+      case 'userCancel' : message = 'Отмена участником'; break;
+      default: message = "";
+    }
+    return message;
+  };
+});
+
+
 Olymp.angJS.filter('Bonus', function() {
   return function(x) {
     return x.slice(0, -2);

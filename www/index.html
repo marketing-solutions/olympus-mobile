@@ -528,9 +528,9 @@
 
                   <div id="tab2" class="page-content tab active">
                     <div class="content-block-title">Бонусные карты</div>
-                    <div ng-click="OpenSertificate($index)" class="card white-border-block card-header-pic" ng-repeat="element in sertificates track by $index">
-                      <div ng-style="{'background-image':'url({{element.imgUrl}})'}" valign="bottom" class="card-header color-white no-border">
-                        <div class="card-layer">{{element.title}}</div>
+                    <div ng-show="{{element.is_allow_to_order}}" ng-click="OpenSertificate($index)" class="card white-border-block card-header-pic" ng-repeat="element in sertificates track by $index">
+                      <div ng-style="{'background-image':'url({{element.image}})'}" valign="bottom" class="card-header color-white no-border">
+                        <div class="card-layer">{{element.name}}</div>
                       </div>
                     </div>
                   </div>
@@ -543,10 +543,11 @@
                           <div class="timeline-item-date">- {{element.amount}}<small> руб</small></div>
                           <div class="timeline-item-divider"></div>
                           <div class="timeline-item-content">
-                            <div class="timeline-item-time">{{element.created_at}}<br>{{element.status}}</div>
-                            <div class="card-history" ng-repeat="card in element.cards track by $index">
-                              <div class="timeline-item-title">{{card.type}}</div>
-                              <div class="timeline-item-text">Количество:{{card.quantity}}<br>Номинал:{{card.nominal}} руб.</div>
+                            <div class="timeline-item-time">{{element.created_at}}</div>
+                            <div class="card-history" ng-click="DownloadSertificate(cards_history[$parent.$index].ms_order_id,cards_history[$parent.$index].items[$index].ms_card_id,card.status)" ng-class="{'white-border-block': card.status == 'ready'}" ng-repeat="card in element.items track by $index">
+                              <div class="timeline-item-title">{{card.card}}</div>
+                              <div class="timeline-item-subtitle">{{card.status | CardStatus}}</div>
+                              <div class="timeline-item-text">Количество:{{card.qty}}<br>Номинал:{{card.nominal}} руб.</div>
                             </div>
                           </div>
                         </div>
@@ -571,10 +572,16 @@
             </div>
             <div class="page-content">
               <a href="#" class="back-button back item-link button button-normal color-white bg-black">Назад</a>
-              <div class="white-border-block">
-                <div class="card-title">{{sertificates[selected_card].title}}</div>
-                <img class="card-image" ng-src="{{sertificates[selected_card].imgUrl}}">
+              <div class="white-border-block accordion-item"><a href="#" class="align-center item-link">
+                <div class="">
+                  <div class="card-title">{{sertificates[selected_card].name}}</div>
+                  <img class="card-image" ng-src="{{sertificates[selected_card].image}}">
+                </div></a>
+                <div class="accordion-item-content">
+                  <div ng-bind-html="sertificates[selected_card].description" class="content-block">
+                </div>
               </div>
+            </div>
 
               <form id="sertificate-form">
               <div class="list-block">
@@ -584,14 +591,14 @@
                       <div class="item-inner">
                         <div class="item-title label">Количество карт</div>
                         <div class="item-input">
-                          <input type="text" placeholder="1" name="quantity" value="1" readonly id="picker-amount">
+                          <input type="text" placeholder="1" name="qty" value="1" readonly id="picker-amount">
                         </div>
                       </div>
                     </div>
                   </li>
                 </ul>
                 <ul>
-                  <li ng-repeat="element in nominals track by $index">
+                  <li ng-repeat="element in sertificates[selected_card].nominals track by $index">
                     <label class="label-radio item-content no-fastclick">
                       <input type="radio" name="nominal" id="radio-nominal" ng-model="selected_nominal" ng-value={{($index)}}>
                       <div class="item-media">
@@ -603,15 +610,15 @@
                     </label>
                   </li>
                   <!-- if other nominals are supported -->
-                  <li>
+                  <!--<li>
                     <label class="label-radio item-content no-fastclick">
                       <input type="radio" ng-model="selected_nominal" name="nominal" ng-value="-1">
                       <div ng-click="WarnCard()" class="item-media">
                         <i class="icon icon-form-radio"></i>
                       </div>
-                      <div ng-click="WarnCard()" class="item-inner">
+                       <div ng-click="WarnCard()" class="item-inner">
                         <div class="item-title">Другой номинал</div>
-                      </div>
+                      </div> -->
                     </label>
                   </li>
                 </ul>

@@ -1,0 +1,8 @@
+{
+    "QuickLook.framework": 1,
+    "Foundation.framework": 1,
+    "ImageIO.framework": 1,
+    "CoreLocation.framework": 1,
+    "AVFoundation.framework": 1,
+    "libz.tbd": 1
+}
